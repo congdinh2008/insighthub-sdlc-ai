@@ -1,0 +1,19 @@
+name: Developer application checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  application:
+    runs-on: ubuntu-latest
+    env:
+      COMPOSE_PROJECT_NAME: insighthub-sdlc-ci
+      RAG_MODE: fixture
+      LLM_PROVIDER: fixture
+      EMBEDDING_PROVIDER: fixture
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - run: make up
+      - run: make test
+      - run: make smoke
+      - if: always()
+        run: docker compose --profile checks down --volumes --remove-orphans
