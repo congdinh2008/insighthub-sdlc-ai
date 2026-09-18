@@ -22,6 +22,9 @@ def check_schema(conn):
         conn.execute(
             "SELECT identity_id, identity, dimension FROM embedding_index LIMIT 0"
         )
+        conn.execute("SELECT original_bytes, extracted_text FROM document_sources LIMIT 0")
+        conn.execute("SELECT locator_type, locator_value FROM source_segments LIMIT 0")
+        conn.execute("SELECT operation_type, operation_key, status FROM operation_records LIMIT 0")
     except Error:
         raise SchemaMismatch() from None
 

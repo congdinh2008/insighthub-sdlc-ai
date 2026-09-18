@@ -1,36 +1,52 @@
-# Chạy InsightHub bản khởi động lại
+# Chạy InsightHub Starter
 
-18/09/2026. Code/config giữ first commit; dùng namespace riêng để không đụng database của project đã archive. Các lệnh dưới đây là hướng dẫn, chưa được chạy lại trong lượt khôi phục.
+## Yêu cầu
 
-## Môi trường local riêng
+- Docker Desktop có Docker Compose v2.
+- RAM trống tối thiểu khoảng 2 GiB.
+- Cổng 8107 và 3107 trống, hoặc đặt `API_PORT`/`WEB_PORT` khác.
 
-Cần Docker Compose và cổng 8117/3117 trống. Chạy từ thư mục project, dùng cấu hình mẫu không có khóa thật:
+## Khởi động offline fixture
 
 ```sh
-export API_PORT=8117 WEB_PORT=3117
-export RAG_MODE=fixture LLM_PROVIDER=fixture EMBEDDING_PROVIDER=fixture
-docker compose --env-file .env.example -p insighthub-c07 up --build -d --wait
+cp .env.example .env
+docker compose --env-file .env -p insighthub-c07-starter up --build -d --wait
 ```
 
-Web: http://localhost:3117. API docs: http://localhost:8117/docs. Namespace `insighthub-c07` tạo volume riêng; không dùng `insighthub-sdlc` hoặc `insighthub-c07-reference` của hướng cũ. Chưa có Auth, chỉ dùng local với tài liệu giả lập.
+- Web: http://localhost:3107
+- API docs: http://localhost:8107/docs
+- Readiness: http://localhost:8107/readyz
+
+Upload riêng từng file trong `sample-docs/`. Fixture trả trích đoạn có nhãn để kiểm flow. Nó không chứng minh câu trả lời AI có chất lượng.
 
 ## Kiểm tra
 
-Giữ các biến môi trường ở terminal trên. Các target Makefile gốc vẫn giữ nguyên; truyền đúng namespace và cổng:
-
 ```sh
-make COMPOSE="docker compose --env-file .env.example -p insighthub-c07" test
-make API_URL=http://127.0.0.1:8117 WEB_URL=http://127.0.0.1:3117 smoke
+make COMPOSE="docker compose --env-file .env.example -p insighthub-c07-check" test
+make API_URL=http://127.0.0.1:8107 WEB_URL=http://127.0.0.1:3107 smoke
+git diff --check
 ```
 
-Nạp tài liệu trong `sample-docs/`, kiểm trạng thái Ready và hỏi một câu. Fixture trả kết quả giả lập có nhãn; không dùng kết quả đó làm bằng chứng AI thật đạt chất lượng. Backend integration test dùng schema riêng; smoke chỉ xóa dữ liệu do chính lần kiểm tạo.
+Backend integration tests tạo PostgreSQL schema ngẫu nhiên và tự xóa. Smoke test chỉ xóa document do chính lần chạy tạo.
 
-## Dừng môi trường
+## Migration dữ liệu cũ
+
+API tự chạy migration forward-only trong `api/migrations/` khi startup. Có thể chạy riêng:
 
 ```sh
-docker compose --env-file .env.example -p insighthub-c07 stop
+make COMPOSE="docker compose --env-file .env -p insighthub-c07-starter" migrate
 ```
 
-Giữ nguyên volume. Provider thật là việc riêng, chỉ cấu hình sau khi có yêu cầu và môi trường được xác nhận; cần index riêng khi đổi embedding identity. Lỗi provider không được âm thầm đổi thành fixture.
+Không xóa volume để xử lý schema mismatch. Sao lưu trước khi thay embedding dimension hoặc identity; vector cũ không được diễn giải bằng model mới.
 
-[Quay lại project](README.md) | [Quyết định và provenance](../00_INDEX.md).
+## Provider thật
+
+Đặt `RAG_MODE=real`, chọn rõ provider/model cho chat và embedding, sau đó dùng index riêng. Không commit `.env` hoặc khóa API. Provider lỗi không được fallback sang fixture.
+
+## Dừng
+
+```sh
+docker compose --env-file .env -p insighthub-c07-starter down
+```
+
+Lệnh trên giữ volume. Chỉ dùng `down -v` với namespace test có thể hủy và sau khi đã kiểm đúng project.

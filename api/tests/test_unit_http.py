@@ -1,4 +1,5 @@
 import asyncio
+from contextlib import nullcontext
 import io
 import threading
 import unittest
@@ -15,6 +16,8 @@ from app.core.upload_limit import UploadLimitMiddleware
 from app.main import app
 from app.routers.documents import upload_document
 from app.services.ingestion import extract_text
+from app.routers.chat import ChatRequest
+from pydantic import ValidationError
 
 
 class HttpTests(unittest.TestCase):
@@ -39,25 +42,33 @@ class HttpTests(unittest.TestCase):
                 self.assertEqual(client.post("/chat", json=data).status_code, 422)
 
     def test_provider_error_response_is_sanitized(self):
-        with patch("app.routers.chat.retrieve", side_effect=ProviderError()):
-            response = TestClient(app).post("/chat", json={"question": "question"})
+        with (
+            patch("app.routers.chat.serialized_operation", return_value=nullcontext({"replay": False, "id": 1})),
+            patch("app.routers.chat.ready_document_ids", return_value=[1]),
+            patch("app.routers.chat.shared_document_locks", return_value=nullcontext()),
+            patch("app.routers.chat.complete_operation"),
+            patch("app.routers.chat.retrieve", side_effect=ProviderError()),
+        ):
+            response = TestClient(app).post("/chat", headers={"Idempotency-Key": "provider-error"}, json={"question": "question"})
         self.assertEqual(response.status_code, 502)
         self.assertEqual(response.json()["code"], "provider_error")
         self.assertNotIn("Traceback", response.text)
 
     def test_unexpected_errors_are_sanitized_and_counted_as_500(self):
-        with patch(
-            "app.routers.chat.retrieve",
-            side_effect=RuntimeError("secret-token private content"),
+        with (
+            patch("app.routers.chat.serialized_operation", return_value=nullcontext({"replay": False, "id": 1})),
+            patch("app.routers.chat.ready_document_ids", return_value=[1]),
+            patch("app.routers.chat.shared_document_locks", return_value=nullcontext()),
+            patch("app.routers.chat.retrieve", side_effect=RuntimeError("secret-token private content")),
         ):
-            response = TestClient(app).post("/chat", json={"question": "question"})
+            response = TestClient(app).post("/chat", headers={"Idempotency-Key": "unexpected-error"}, json={"question": "question"})
         self.assertEqual(response.status_code, 500)
         self.assertNotIn("secret", response.text)
 
     def test_empty_upload_returns_422(self):
         with patch("app.routers.documents.get_conn") as connection:
             response = TestClient(app).post(
-                "/documents", files={"file": ("empty.txt", b"")}
+                "/documents", headers={"Idempotency-Key": "empty"}, files={"file": ("empty.txt", b"")}
             )
         self.assertEqual(response.status_code, 422)
         connection.assert_not_called()
@@ -72,7 +83,7 @@ class HttpTests(unittest.TestCase):
 
         stream = GuardedFile(b"12345")
         with configured(max_upload_bytes=4), self.assertRaises(HTTPException) as raised:
-            upload_document(UploadFile(filename="test.txt", file=stream))
+            upload_document(UploadFile(filename="test.txt", file=stream), "bounded")
         self.assertEqual(raised.exception.status_code, 413)
         self.assertEqual(stream.requested, 5)
         self.assertTrue(stream.closed)
@@ -95,6 +106,17 @@ class HttpTests(unittest.TestCase):
             ):
                 extract_text(filename, content)
         self.assertEqual(extract_text("a.txt", b"\xef\xbb\xbfhello"), "hello")
+
+    def test_unicode_is_normalized_before_question_limit(self):
+        self.assertEqual(len(ChatRequest(question="e\u0301" * 2000).question), 2000)
+        with self.assertRaises(ValidationError):
+            ChatRequest(question="e\u0301" * 2001)
+
+    def test_extracted_text_limit_rejects_one_character_over(self):
+        with configured(max_extracted_chars=5):
+            self.assertEqual(extract_text("a.txt", b"12345"), "12345")
+            with self.assertRaises(InvalidDocument):
+                extract_text("a.txt", b"123456")
 
     def test_metrics_route_labels_do_not_include_user_paths_or_methods(self):
         client = TestClient(app)
@@ -127,12 +149,18 @@ class AsyncHttpTests(unittest.IsolatedAsyncioTestCase):
             release.wait(timeout=5)
             return []
 
-        with patch("app.routers.chat.retrieve", side_effect=blocked):
+        with (
+            patch("app.routers.chat.serialized_operation", return_value=nullcontext({"replay": False, "id": 1})),
+            patch("app.routers.chat.ready_document_ids", return_value=[1]),
+            patch("app.routers.chat.shared_document_locks", return_value=nullcontext()),
+            patch("app.routers.chat.complete_operation"),
+            patch("app.routers.chat.retrieve", side_effect=blocked),
+        ):
             async with httpx.AsyncClient(
                 transport=httpx.ASGITransport(app=app), base_url="http://test"
             ) as client:
                 task = asyncio.create_task(
-                    client.post("/chat", json={"question": "question"})
+                    client.post("/chat", headers={"Idempotency-Key": "blocking"}, json={"question": "question"})
                 )
                 try:
                     self.assertTrue(await asyncio.to_thread(started.wait, 1))

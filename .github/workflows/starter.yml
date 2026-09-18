@@ -15,5 +15,7 @@ jobs:
       - run: make up
       - run: make test
       - run: make smoke
+      - run: make package
+      - run: make verify-package
       - if: always()
         run: docker compose --profile checks down --volumes --remove-orphans

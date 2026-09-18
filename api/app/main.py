@@ -1,9 +1,11 @@
 """InsightHub synchronous starter API."""
 
 import logging
+import uuid
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
 from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
@@ -45,12 +47,22 @@ app.add_middleware(
 @app.exception_handler(ServiceError)
 async def service_error_handler(request: Request, exc: ServiceError):
     return JSONResponse(
-        {"detail": exc.message, "code": exc.code}, status_code=exc.status_code
+        {"detail": exc.message, "code": exc.code, "request_id": getattr(request.state, "request_id", None)},
+        status_code=exc.status_code,
+    )
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error_handler(request: Request, exc: RequestValidationError):
+    return JSONResponse(
+        {"detail": "Dữ liệu yêu cầu không hợp lệ.", "code": "validation_error", "request_id": getattr(request.state, "request_id", None)},
+        status_code=422,
     )
 
 
 @app.middleware("http")
 async def metrics_middleware(request: Request, call_next):
+    request.state.request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
     status = 500
     try:
         origin = request.headers.get("origin")
@@ -62,11 +74,14 @@ async def metrics_middleware(request: Request, call_next):
             )
         response = await call_next(request)
         status = response.status_code
+        response.headers["X-Request-ID"] = request.state.request_id
         return response
     except Exception:
         # Never expose uncaught driver/provider exception text to clients.
         return JSONResponse(
-            {"detail": "Không thể xử lý yêu cầu.", "code": "internal_error"}, 500
+            {"detail": "Không thể xử lý yêu cầu.", "code": "internal_error", "request_id": request.state.request_id},
+            500,
+            headers={"X-Request-ID": request.state.request_id},
         )
     finally:
         route = request.scope.get("route")

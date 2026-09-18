@@ -11,11 +11,16 @@ export interface Document {
   created_at: string | null;
   error_code?: string | null;
   embedding_identity_id?: string | null;
+  mime_type?: string | null;
+  size_bytes?: number | null;
+  updated_at?: string | null;
 }
 
 export interface ChatResult {
-  answer: string;
+  status: "Answered" | "NoEvidence";
+  answer: string | null;
   sources: string[];
+  citations: { citation_id: string; document_id: number; source_segment_id?: number; source: string; locator: { type: string; value: string }; excerpt: string }[];
   contexts: { source: string; similarity: number; chunk_text: string }[];
   latency_ms: number;
   mode?: "fixture" | "real";
@@ -29,12 +34,12 @@ export async function listDocuments(): Promise<Document[]> {
   return res.json();
 }
 
-export async function askQuestion(question: string): Promise<ChatResult> {
+export async function askQuestion(question: string, documentIds?: number[]): Promise<ChatResult> {
   const res = await fetch(`${API_URL}/chat`, {
     signal: AbortSignal.timeout(60000),
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ question }),
+    headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() },
+    body: JSON.stringify({ question, document_ids: documentIds }),
   });
   if (!res.ok) {
     const detail = await res.json().catch(() => ({}));

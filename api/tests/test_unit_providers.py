@@ -4,7 +4,7 @@ from unittest.mock import patch
 
 import httpx
 from support import configured, real_config
-from app.core.errors import ProviderError
+from app.core.errors import CitationValidationError, ProviderError
 from app.core.providers import post_json
 from app.core.metrics import (
     embedding_tokens_total,
@@ -12,7 +12,7 @@ from app.core.metrics import (
     record_embedding_usage,
 )
 from app.services.embeddings import embed, validate_vectors
-from app.services.llm import generate
+from app.services.llm import _parse_result, generate
 
 
 class EmbeddingTests(unittest.TestCase):
@@ -231,7 +231,9 @@ class EmbeddingTests(unittest.TestCase):
 
 class GenerationTests(unittest.TestCase):
     contexts = [
-        {"source": "test.txt", "chunk_text": "RAG is retrieval augmented generation."}
+        {"id": 1, "context_id": "chunk:1", "document_id": 1, "source_segment_id": 1,
+         "source": "test.txt", "locator": {"type": "paragraph", "value": "1"},
+         "chunk_text": "RAG is retrieval augmented generation."}
     ]
 
     def test_fixture_label_and_usage_truth(self):
@@ -243,13 +245,22 @@ class GenerationTests(unittest.TestCase):
         self.assertEqual(result["usage"]["source"], "unavailable")
         self.assertIsNone(result["usage"]["input_tokens"])
 
+    def test_unknown_citation_is_rejected_before_publication(self):
+        raw = '{"status":"Answered","answer":"invented","citation_ids":["chunk:999"]}'
+        with self.assertRaises(CitationValidationError):
+            _parse_result(raw, self.contexts)
+
+    def test_no_evidence_contract_has_no_answer_or_citation(self):
+        result = _parse_result('{"status":"NoEvidence","answer":null,"citation_ids":[]}', self.contexts)
+        self.assertEqual(result, {"status": "NoEvidence", "answer": None, "citation_ids": []})
+
     def test_openai_gateway_explicit_endpoint_and_usage(self):
         with (
             real_config(),
             patch(
                 "app.services.llm.post_json",
                 return_value={
-                    "choices": [{"message": {"content": "answer"}}],
+                    "choices": [{"message": {"content": '{"status":"Answered","answer":"answer","citation_ids":["chunk:1"]}'}}],
                     "usage": {"prompt_tokens": 10, "completion_tokens": 4},
                 },
             ) as transport,
@@ -272,7 +283,7 @@ class GenerationTests(unittest.TestCase):
                         "content": {
                             "parts": [
                                 {"text": "hidden", "thought": True},
-                                {"text": "answer"},
+                                {"text": '{"status":"Answered","answer":"answer","citation_ids":["chunk:1"]}'},
                             ]
                         }
                     }
@@ -280,11 +291,11 @@ class GenerationTests(unittest.TestCase):
                 "usageMetadata": {"promptTokenCount": 2, "candidatesTokenCount": 3},
             },
             "anthropic": {
-                "content": [{"type": "text", "text": "answer"}],
+                "content": [{"type": "text", "text": '{"status":"Answered","answer":"answer","citation_ids":["chunk:1"]}'}],
                 "usage": {"input_tokens": 2, "output_tokens": 3},
             },
             "ollama": {
-                "message": {"content": "answer"},
+                "message": {"content": '{"status":"Answered","answer":"answer","citation_ids":["chunk:1"]}'},
                 "prompt_eval_count": 2,
                 "eval_count": 3,
             },
@@ -322,7 +333,7 @@ class GenerationTests(unittest.TestCase):
             patch(
                 "app.services.llm.post_json",
                 return_value={
-                    "choices": [{"message": {"content": "answer"}}],
+                    "choices": [{"message": {"content": '{"status":"Answered","answer":"answer","citation_ids":["chunk:1"]}'}}],
                 },
             ),
         ):

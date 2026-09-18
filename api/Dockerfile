@@ -14,6 +14,7 @@ RUN groupadd --system --gid 1001 appuser \
 COPY --from=deps /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=deps /usr/local/bin /usr/local/bin
 COPY --chown=appuser:appuser app ./app
+COPY --chown=appuser:appuser migrations ./migrations
 COPY --chown=appuser:appuser tests ./tests
 USER appuser
 EXPOSE 8000

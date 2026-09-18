@@ -2,6 +2,7 @@
 import argparse
 import json
 import uuid
+from pathlib import Path
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError
 
@@ -13,7 +14,7 @@ args = parser.parse_args()
 def call(base, path, method="GET", data=None, headers=None):
     req = Request(base + path, data=data, method=method, headers=headers or {})
     try:
-        with urlopen(req, timeout=95) as res:
+        with urlopen(req, timeout=130) as res:
             return res.status, res.read()
     except HTTPError as exc:
         return exc.code, exc.read()
@@ -22,6 +23,7 @@ def upload(filename, content, origin=None):
     boundary = "----sdlc" + uuid.uuid4().hex
     body = (f'--{boundary}\r\nContent-Disposition: form-data; name="file"; filename="{filename}"\r\nContent-Type: text/plain\r\n\r\n').encode() + content + f"\r\n--{boundary}--\r\n".encode()
     headers = {"Content-Type": "multipart/form-data; boundary=" + boundary}
+    headers["Idempotency-Key"] = "smoke-upload-" + uuid.uuid4().hex
     if origin:
         headers["Origin"] = origin
     return call(args.api_url, "/documents", "POST", body, headers)
@@ -39,16 +41,25 @@ try:
     assert status == 201, (status, body)
     document = json.loads(body)
     created.append(document["id"])
+    pdf_path = Path(__file__).resolve().parents[1] / "evaluation/corpus/03_reference.pdf"
+    pdf_name = "sdlc-smoke-" + uuid.uuid4().hex + ".pdf"
+    status, body = upload(pdf_name, pdf_path.read_bytes())
+    assert status == 201, (status, body)
+    pdf_document = json.loads(body)
+    created.append(pdf_document["id"])
     status, body = call(args.api_url, "/documents")
     found = next(item for item in json.loads(body) if item["id"] == created[0])
     assert status == 200 and found["status"] == "ready" and found["chunk_count"] > 0
-    status, body = call(args.api_url, "/chat", "POST", json.dumps({"question": "What is the file limit?"}).encode(), {"Content-Type": "application/json"})
+    status, body = call(args.api_url, "/chat", "POST", json.dumps({"question": "What is the file limit?", "document_ids": [document["id"]]}).encode(), {"Content-Type": "application/json", "Idempotency-Key": "smoke-chat-" + uuid.uuid4().hex})
     answer = json.loads(body)
-    assert status == 200 and "FIXTURE" in answer["answer"] and name in answer["sources"]
+    assert status == 200 and answer["status"] == "Answered" and "FIXTURE" in answer["answer"] and name in answer["sources"] and answer["citations"]
+    citation = answer["citations"][0]
+    status, body = call(args.api_url, f"/documents/{citation['document_id']}/source?segment_id={citation['source_segment_id']}")
+    assert status == 200 and json.loads(body)["content"], "Citation source cannot be opened"
     assert upload("bad.exe", b"invalid")[0] == 400
     assert upload("foreign.md", b"blocked", "https://foreign.example")[0] == 403
     assert call(args.web_url, "/api/proxy?target=chat", "POST", b'{"question":"test"}', {"Content-Type": "application/json", "Origin": "https://foreign.example"})[0] == 403
-    print("PASS: health, web, upload/list/chat, validation and origin guards")
+    print("PASS: health, web, MD/PDF upload, source locator, chat, validation and origin guards")
 finally:
     for document_id in created:
         status, _ = call(args.api_url, f"/documents/{document_id}", "DELETE")

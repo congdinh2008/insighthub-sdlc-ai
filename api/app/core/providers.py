@@ -4,7 +4,8 @@ import logging
 import httpx
 
 from app.core.config import get_settings
-from app.core.errors import ProviderError
+from app.core.errors import ProviderError, ProviderTimeout
+from app.core.deadline import check_deadline, remaining_timeout
 
 logger = logging.getLogger("insighthub.providers")
 
@@ -13,7 +14,7 @@ def post_json(url: str, *, headers: dict, payload: dict) -> dict:
     try:
         # Do not inherit proxies, follow redirects, or log response bodies/URLs.
         with httpx.Client(
-            timeout=get_settings().provider_timeout_seconds,
+            timeout=remaining_timeout(get_settings().provider_timeout_seconds),
             trust_env=False,
             follow_redirects=False,
         ) as client:
@@ -23,6 +24,10 @@ def post_json(url: str, *, headers: dict, payload: dict) -> dict:
             if not isinstance(data, dict):
                 raise ValueError("Invalid JSON object")
             return data
+    except httpx.TimeoutException:
+        logger.warning("AI provider request timed out")
+        check_deadline()
+        raise ProviderTimeout() from None
     except (httpx.HTTPError, ValueError):
         logger.warning("AI provider request failed")
         raise ProviderError() from None

@@ -9,6 +9,7 @@ export default function UploadPanel({ initial, initialError = "" }: { initial: D
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(initialError);
   const [hasLoaded, setHasLoaded] = useState(!initialError);
+  const [detail, setDetail] = useState<{ id: number; attempts: { id: number; status: string; error_code?: string | null }[] } | null>(null);
   const pending = docs.some((doc) => doc.status === "pending");
 
   useEffect(() => {
@@ -39,8 +40,15 @@ export default function UploadPanel({ initial, initialError = "" }: { initial: D
     const res = await fetch("/api/documents", { cache: "no-store" });
     if (!res.ok) throw new Error("API chưa sẵn sàng.");
     setDocs(await res.json());
+    window.dispatchEvent(new Event("documents-changed"));
     setHasLoaded(true);
     setError("");
+  }
+
+  async function showDetail(id: number) {
+    const res = await fetch(`/api/documents/${id}`, { cache: "no-store" });
+    if (!res.ok) { setError("Không đọc được chi tiết tài liệu."); return; }
+    setDetail(await res.json());
   }
 
   async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
@@ -59,7 +67,8 @@ export default function UploadPanel({ initial, initialError = "" }: { initial: D
       const res = await fetch("/api/proxy?target=upload", {
         method: "POST",
         body: fd,
-        signal: AbortSignal.timeout(90000),
+        headers: { "Idempotency-Key": crypto.randomUUID() },
+        signal: AbortSignal.timeout(125000),
       });
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
@@ -74,6 +83,29 @@ export default function UploadPanel({ initial, initialError = "" }: { initial: D
       setBusy(false);
       e.target.value = "";
     }
+  }
+
+  async function removeDocument(id: number) {
+    if (!window.confirm("Xóa tài liệu và toàn bộ nguồn/chỉ mục liên quan?")) return;
+    setBusy(true); setError("");
+    try {
+      const res = await fetch(`/api/documents/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error("Không xóa được tài liệu.");
+      await refresh();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Không xóa được tài liệu.");
+    } finally { setBusy(false); }
+  }
+
+  async function retryDocument(id: number, file: File) {
+    setBusy(true); setError("");
+    try {
+      const fd = new FormData(); fd.append("file", file);
+      const res = await fetch(`/api/documents/${id}/retry`, { method: "POST", body: fd, headers: { "Idempotency-Key": crypto.randomUUID() } });
+      if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(errorMessage(data, "Retry thất bại.")); }
+      await refresh();
+    } catch (err) { setError(err instanceof Error ? err.message : "Retry thất bại."); }
+    finally { setBusy(false); }
   }
 
   return (
@@ -100,7 +132,14 @@ export default function UploadPanel({ initial, initialError = "" }: { initial: D
               {d.filename}{" "}
               <span className="meta">({d.chunk_count} chunks)</span>
             </span>
-            <span className={`badge ${d.status}`}>{d.status}</span>
+            <span className={`badge ${d.status}`}>{d.status === "ready" ? "Sẵn sàng" : d.status === "failed" ? "Thất bại" : "Đang xử lý"}</span>
+            <span>
+              <button className="action-link" onClick={() => showDetail(d.id)}>Chi tiết</button>
+              {d.status === "failed" && <label className="action-link">Thử lại<input hidden type="file" accept=".txt,.md,.pdf" onChange={(e) => { const file = e.target.files?.[0]; if (file) retryDocument(d.id, file); }} /></label>}
+              <button className="action-link" onClick={() => removeDocument(d.id)} disabled={busy}>Xóa</button>
+            </span>
+            {d.error_code && <span className="error">Mã lỗi: {d.error_code}</span>}
+            {detail?.id === d.id && <div className="document-detail"><strong>Lịch sử xử lý</strong>{detail.attempts.length === 0 ? <p className="meta">Chưa có attempt.</p> : <ul>{detail.attempts.map((attempt) => <li key={attempt.id}>#{attempt.id}: {attempt.status}{attempt.error_code ? ` (${attempt.error_code})` : ""}</li>)}</ul>}<button className="action-link" onClick={() => setDetail(null)}>Đóng</button></div>}
           </li>
         ))}
       </ul>

@@ -35,4 +35,5 @@ tmp/
 
 # Local scratch reports; curated evidence may be committed after review
 reports/
+dist/
 *.tsbuildinfo

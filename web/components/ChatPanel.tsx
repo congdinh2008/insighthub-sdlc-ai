@@ -1,13 +1,33 @@
 "use client";
 
-import { useState } from "react";
-import type { ChatResult } from "@/lib/api";
+import { useEffect, useState } from "react";
+import type { ChatResult, Document } from "@/lib/api";
 
 export default function ChatPanel() {
   const [question, setQuestion] = useState("");
   const [result, setResult] = useState<ChatResult | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [selected, setSelected] = useState<number[]>([]);
+  const [sourceView, setSourceView] = useState<{ title: string; content: string } | null>(null);
+
+  async function openSource(documentId: number, segmentId?: number) {
+    const query = segmentId ? `?segment_id=${segmentId}` : "";
+    const res = await fetch(`/api/documents/${documentId}/source${query}`, { cache: "no-store" });
+    if (!res.ok) { setError("Nguồn không còn khả dụng."); return; }
+    const data = await res.json();
+    setSourceView({ title: `${data.filename} - ${data.locator ? `${data.locator.type} ${data.locator.value}` : "toàn văn"}`, content: data.content });
+  }
+
+  useEffect(() => {
+    const loadDocuments = () => fetch("/api/documents", { cache: "no-store" }).then((res) => res.ok ? res.json() : []).then((items: Document[]) => {
+      const ready = items.filter((item) => item.status === "ready"); setDocuments(ready); setSelected(ready.map((item) => item.id));
+    }).catch(() => setDocuments([]));
+    loadDocuments();
+    window.addEventListener("documents-changed", loadDocuments);
+    return () => window.removeEventListener("documents-changed", loadDocuments);
+  }, []);
 
   async function handleAsk() {
     if (!question.trim()) return;
@@ -17,8 +37,8 @@ export default function ChatPanel() {
     try {
       const res = await fetch("/api/proxy?target=chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question }),
+        headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() },
+        body: JSON.stringify({ question, document_ids: selected }),
       });
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
@@ -42,17 +62,24 @@ export default function ChatPanel() {
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
       />
-      <button onClick={handleAsk} disabled={busy || !question.trim()}>
+      <fieldset className="source-picker">
+        <legend>Nguồn tra cứu</legend>
+        {documents.length === 0 && <span className="meta">Chưa có tài liệu ready.</span>}
+        {documents.map((doc) => <label key={doc.id}><input type="checkbox" checked={selected.includes(doc.id)} onChange={(event) => setSelected(event.target.checked ? [...selected, doc.id] : selected.filter((id) => id !== doc.id))} /> {doc.filename}</label>)}
+      </fieldset>
+      <button onClick={handleAsk} disabled={busy || !question.trim() || selected.length === 0}>
         {busy ? "Đang truy vấn..." : "Hỏi"}
       </button>
       {error && <p className="error" role="alert">{error}</p>}
       {result && (
         <>
-          <div className="answer">{result.answer}</div>
+          <div className="answer">{result.status === "NoEvidence" ? "Không tìm thấy bằng chứng phù hợp trong tài liệu đã chọn." : result.answer}</div>
           <div className="sources">
             Nguồn: {result.sources.join(", ") || "(không có)"}
           </div>
-          <div className="meta">Latency: {result.latency_ms} ms</div>
+          <ul className="citation-list">{result.citations.map((citation) => <li key={citation.citation_id}><button className="action-link" onClick={() => openSource(citation.document_id, citation.source_segment_id)}><strong>{citation.source}</strong> - {citation.locator.type} {citation.locator.value}</button><br /><span className="meta">{citation.excerpt}</span></li>)}</ul>
+          <div className="meta">Chế độ: {result.mode} | Provider: {result.provider} | Model: {result.model} | Latency: {result.latency_ms} ms</div>
+          {sourceView && <div className="source-view" role="dialog" aria-label="Nội dung nguồn"><div><strong>{sourceView.title}</strong><button className="action-link" onClick={() => setSourceView(null)}>Đóng</button></div><pre>{sourceView.content}</pre></div>}
         </>
       )}
     </div>

@@ -63,6 +63,12 @@ class Settings(BaseSettings):
     retrieval_top_k: int = Field(default=5, ge=1, le=20)
     hnsw_ef_search: int = Field(default=100, ge=20, le=1000)
     max_upload_bytes: int = Field(default=10 * 1024 * 1024, ge=1, le=50 * 1024 * 1024)
+    max_extracted_chars: int = Field(default=200_000, ge=1, le=2_000_000)
+    max_pdf_pages: int = Field(default=100, ge=1, le=500)
+    ingestion_timeout_seconds: float = Field(default=120, gt=0, le=300)
+    chat_timeout_seconds: float = Field(default=60, gt=0, le=180)
+    idempotency_ttl_hours: int = Field(default=24, ge=1, le=168)
+    migration_path: str = "/app/migrations"
 
     @model_validator(mode="after")
     def validate_configuration(self):

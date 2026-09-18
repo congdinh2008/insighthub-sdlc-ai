@@ -25,8 +25,11 @@ export async function POST(req: Request) {
   try {
     const options: RequestInit & { duplex: "half" } = {
       method: "POST", body: boundedBody, duplex: "half",
-      headers: { "Content-Type": req.headers.get("content-type") || "application/json" },
-      signal: AbortSignal.timeout(90000), cache: "no-store",
+      headers: {
+        "Content-Type": req.headers.get("content-type") || "application/json",
+        "Idempotency-Key": req.headers.get("idempotency-key") || crypto.randomUUID(),
+      },
+      signal: AbortSignal.timeout(target === "upload" ? 125000 : 65000), cache: "no-store",
     };
     const res = await fetch(`${API_URL}/${target === "upload" ? "documents" : "chat"}`, options);
     return Response.json(await res.json(), { status: res.status });

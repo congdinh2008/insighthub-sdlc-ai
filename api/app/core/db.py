@@ -42,11 +42,36 @@ def get_conn():
 
 def initialize_database():
     from app.core.index import check_schema, ensure_index_identity
+    from app.core.migrations import run_migrations
 
     get_pool().wait(timeout=15)
     with get_conn() as conn:
+        run_migrations(conn)
         check_schema(conn)
+        recover_interrupted_operations(conn)
         ensure_index_identity(conn, claim=False)
+
+
+def recover_interrupted_operations(conn):
+    """Startup fencing: no processing row can survive a process restart."""
+    from psycopg.types.json import Jsonb
+
+    with conn.transaction():
+        interrupted_attempts = conn.execute(
+            "UPDATE ingestion_attempts SET status='failed',error_code='interrupted',finished_at=now() "
+            "WHERE status='processing' RETURNING document_id"
+        ).fetchall()
+        if interrupted_attempts:
+            conn.execute(
+                "UPDATE documents SET status='failed',chunk_count=0,embedding_identity_id=NULL,"
+                "error_code='interrupted',updated_at=now() WHERE id=ANY(%s) AND status='pending'",
+                ([row[0] for row in interrupted_attempts],),
+            )
+        conn.execute(
+            "UPDATE operation_records SET status='failed',http_status=500,error_code='interrupted',"
+            "response_body=%s,updated_at=now() WHERE status='processing'",
+            (Jsonb({"detail": "Operation bị gián đoạn khi tiến trình khởi động lại.", "code": "interrupted"}),),
+        )
 
 
 def healthcheck() -> bool:

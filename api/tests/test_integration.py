@@ -15,10 +15,12 @@ from unittest.mock import patch
 from support import configured, real_config
 import psycopg
 from psycopg import sql
+from psycopg.types.json import Jsonb
 from psycopg_pool import ConnectionPool
 from fastapi.testclient import TestClient
 
 from app.core import db
+from app.core.db import recover_interrupted_operations
 from app.core.config import get_settings
 from app.core.errors import (
     DocumentConflict,
@@ -27,6 +29,7 @@ from app.core.errors import (
     SchemaMismatch,
 )
 from app.core.index import check_schema
+from app.core.migrations import run_migrations
 from app.main import app
 from app.services.embeddings import _local_embed
 from app.services.ingestion import process_document
@@ -90,9 +93,14 @@ class IntegrationTests(unittest.TestCase):
         self.addCleanup(self.config.__exit__, None, None, None)
         with db.get_conn() as conn:
             conn.execute(
-                "TRUNCATE chunks, documents, embedding_index RESTART IDENTITY CASCADE"
+                "TRUNCATE operation_records, chunks, documents, embedding_index RESTART IDENTITY CASCADE"
             )
         self.client = TestClient(app)
+        self.key_index = 0
+
+    def headers(self):
+        self.key_index += 1
+        return {"Idempotency-Key": f"test-{self._testMethodName}-{self.key_index}"}
 
     def create_document(self, filename="test.txt"):
         with db.get_conn() as conn:
@@ -113,10 +121,10 @@ class IntegrationTests(unittest.TestCase):
     def test_fixture_upload_retrieve_chat_metrics_delete_end_to_end(self):
         self.assertEqual(self.client.get("/readyz").status_code, 200)
         self.assertEqual(
-            self.client.post("/chat", json={"question": "RAG?"}).status_code, 404
+            self.client.post("/chat", headers=self.headers(), json={"question": "RAG?"}).status_code, 422
         )
         response = self.client.post(
-            "/documents", files={"file": ("rag.txt", b"RAG uses retrieved documents.")}
+            "/documents", headers=self.headers(), files={"file": ("rag.txt", b"RAG uses retrieved documents.")}
         )
         self.assertEqual(response.status_code, 201, response.text)
         document = response.json()
@@ -124,7 +132,7 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(document["chunk_count"], 1)
         self.assertEqual(self.client.get("/documents").json()[0]["status"], "ready")
         chat = self.client.post(
-            "/chat", json={"question": "RAG uses retrieved documents."}
+            "/chat", headers=self.headers(), json={"question": "RAG uses retrieved documents."}
         )
         self.assertEqual(chat.status_code, 200, chat.text)
         self.assertIn("FIXTURE", chat.json()["answer"])
@@ -261,7 +269,7 @@ class IntegrationTests(unittest.TestCase):
 
     def test_empty_extracted_text_is_failed_and_422(self):
         response = self.client.post(
-            "/documents", files={"file": ("empty.txt", b" \n ")}
+            "/documents", headers=self.headers(), files={"file": ("empty.txt", b" \n ")}
         )
         self.assertEqual(response.status_code, 422, response.text)
         document = self.client.get("/documents").json()[0]
@@ -269,7 +277,7 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(document["chunk_count"], 0)
 
     def test_index_identity_change_rejects_query_upload_and_readiness(self):
-        self.client.post("/documents", files={"file": ("test.txt", b"content")})
+        self.client.post("/documents", headers=self.headers(), files={"file": ("test.txt", b"content")})
         with (
             configured(embedding_revision="2"),
             patch("app.services.retrieval.embed") as provider,
@@ -278,7 +286,7 @@ class IntegrationTests(unittest.TestCase):
                 retrieve("question")
             provider.assert_not_called()
             response = self.client.post(
-                "/documents", files={"file": ("new.txt", b"new content")}
+                "/documents", headers=self.headers(), files={"file": ("new.txt", b"new content")}
             )
             self.assertEqual(response.status_code, 409, response.text)
             self.assertEqual(self.client.get("/readyz").status_code, 503)
@@ -288,7 +296,7 @@ class IntegrationTests(unittest.TestCase):
             )
 
     def test_same_dimension_real_provider_cannot_query_fixture_index(self):
-        self.client.post("/documents", files={"file": ("test.txt", b"content")})
+        self.client.post("/documents", headers=self.headers(), files={"file": ("test.txt", b"content")})
         with real_config(), patch("app.services.retrieval.embed") as provider:
             with self.assertRaises(IndexIdentityConflict):
                 retrieve("question")
@@ -319,17 +327,17 @@ class IntegrationTests(unittest.TestCase):
                 "app.services.llm.post_json",
                 return_value={
                     "choices": [
-                        {"message": {"content": "Supported answer [nguồn: real.txt]"}}
+                        {"message": {"content": '{"status":"Answered","answer":"Supported answer","citation_ids":["chunk:1"]}'}}
                     ],
                     "usage": {"prompt_tokens": 12, "completion_tokens": 8},
                 },
             ),
         ):
             upload = self.client.post(
-                "/documents", files={"file": ("real.txt", b"content")}
+                "/documents", headers=self.headers(), files={"file": ("real.txt", b"content")}
             )
             self.assertEqual(upload.status_code, 201, upload.text)
-            chat = self.client.post("/chat", json={"question": "question"})
+            chat = self.client.post("/chat", headers=self.headers(), json={"question": "question"})
             self.assertEqual(chat.status_code, 200, chat.text)
             self.assertEqual(chat.json()["mode"], "real")
             self.assertEqual(chat.json()["usage"]["input_tokens"], 12)
@@ -341,7 +349,7 @@ class IntegrationTests(unittest.TestCase):
             patch("app.services.embeddings.post_json", side_effect=ProviderError()),
         ):
             response = self.client.post(
-                "/documents", files={"file": ("real.txt", b"content")}
+                "/documents", headers=self.headers(), files={"file": ("real.txt", b"content")}
             )
         self.assertEqual(response.status_code, 502, response.text)
         document = self.client.get("/documents").json()[0]
@@ -349,3 +357,102 @@ class IntegrationTests(unittest.TestCase):
             (document["status"], document["chunk_count"], document["error_code"]),
             ("failed", 0, "provider_error"),
         )
+
+    def test_upload_idempotency_conflict_and_content_deduplication(self):
+        headers = {"Idempotency-Key": "same-upload-key"}
+        first = self.client.post("/documents", headers=headers, files={"file": ("same.txt", b"same bytes")})
+        replay = self.client.post("/documents", headers=headers, files={"file": ("same.txt", b"same bytes")})
+        conflict = self.client.post("/documents", headers=headers, files={"file": ("same.txt", b"different")})
+        duplicate = self.client.post(
+            "/documents", headers={"Idempotency-Key": "different-key"},
+            files={"file": ("renamed.txt", b"same bytes")},
+        )
+        self.assertEqual((first.status_code, replay.status_code, conflict.status_code, duplicate.status_code), (201, 201, 409, 201))
+        self.assertEqual(first.json()["id"], replay.json()["id"])
+        self.assertEqual(first.json()["id"], duplicate.json()["id"])
+        self.assertTrue(duplicate.json()["deduplicated"])
+        self.assertEqual(len(self.client.get("/documents").json()), 1)
+
+    def test_startup_recovery_fences_interrupted_attempt_and_operation(self):
+        document_id = self.create_document()
+        with db.get_conn() as conn:
+            conn.execute(
+                "INSERT INTO ingestion_attempts(document_id,operation_key,request_fingerprint,status,deadline_at) "
+                "VALUES (%s,'crashed','fingerprint','processing',now() + interval '1 minute')",
+                (document_id,),
+            )
+            conn.execute(
+                "INSERT INTO operation_records(operation_type,operation_key,request_fingerprint,status) "
+                "VALUES ('upload','crashed','fingerprint','processing')"
+            )
+            recover_interrupted_operations(conn)
+        with db.get_conn() as conn:
+            self.assertEqual(conn.execute("SELECT status,error_code FROM documents WHERE id=%s", (document_id,)).fetchone(), ("failed", "interrupted"))
+            self.assertEqual(conn.execute("SELECT status,error_code FROM ingestion_attempts").fetchone(), ("failed", "interrupted"))
+            self.assertEqual(conn.execute("SELECT status,error_code,http_status FROM operation_records").fetchone(), ("failed", "interrupted", 500))
+
+    def test_forward_migration_preserves_legacy_document_and_chunk(self):
+        schema = "migration_" + uuid.uuid4().hex
+        legacy = (Path(__file__).with_name("legacy_schema.sql")).read_text()
+        with psycopg.connect(self.dsn, autocommit=True) as admin:
+            admin.execute(sql.SQL("CREATE SCHEMA {}").format(sql.Identifier(schema)))
+        try:
+            with psycopg.connect(self.dsn, options=f"-csearch_path={schema},public") as conn:
+                conn.execute(legacy)
+                identity = get_settings().embedding_identity_id
+                conn.execute(
+                    "INSERT INTO embedding_index(singleton,identity_id,identity,dimension) VALUES(TRUE,%s,%s,1024)",
+                    (identity, Jsonb(get_settings().embedding_identity)),
+                )
+                document_id = conn.execute(
+                    "INSERT INTO documents(filename,status,chunk_count,content_sha256,pipeline_id,embedding_identity_id) "
+                    "VALUES('legacy.txt','ready',1,'sha','pipeline',%s) RETURNING id", (identity,),
+                ).fetchone()[0]
+                vector = "[" + ",".join(["1"] + ["0"] * 1023) + "]"
+                conn.execute(
+                    "INSERT INTO chunks(document_id,chunk_index,chunk_text,embedding,embedding_identity_id) "
+                    "VALUES(%s,0,'legacy content',%s::vector,%s)", (document_id, vector, identity),
+                )
+                run_migrations(conn)
+                self.assertEqual(conn.execute("SELECT filename,status,chunk_count FROM documents").fetchone(), ("legacy.txt", "ready", 1))
+                self.assertEqual(conn.execute("SELECT chunk_text FROM chunks").fetchone()[0], "legacy content")
+                self.assertIsNotNone(conn.execute("SELECT to_regclass('document_sources')").fetchone()[0])
+        finally:
+            with psycopg.connect(self.dsn, autocommit=True) as admin:
+                admin.execute(sql.SQL("DROP SCHEMA {} CASCADE").format(sql.Identifier(schema)))
+
+    def test_failed_document_retry_preserves_attempt_history_and_source(self):
+        with patch("app.services.ingestion.embed", side_effect=ProviderError()):
+            failed = self.client.post(
+                "/documents", headers={"Idempotency-Key": "failed-upload"},
+                files={"file": ("retry.md", b"# Heading\n\nRetry content")},
+            )
+        self.assertEqual(failed.status_code, 502, failed.text)
+        document_id = failed.json()["document_id"]
+        retried = self.client.post(
+            f"/documents/{document_id}/retry", headers={"Idempotency-Key": "retry-once"},
+            files={"file": ("retry.md", b"# Heading\n\nRetry content")},
+        )
+        self.assertEqual(retried.status_code, 200, retried.text)
+        detail = self.client.get(f"/documents/{document_id}").json()
+        self.assertEqual(detail["status"], "ready")
+        self.assertEqual([item["status"] for item in detail["attempts"]], ["succeeded", "failed"])
+        self.assertEqual(detail["attempts"][0]["previous_attempt_id"], detail["attempts"][1]["id"])
+        with db.get_conn() as conn:
+            segment_id = conn.execute("SELECT id FROM source_segments WHERE document_id=%s", (document_id,)).fetchone()[0]
+        source = self.client.get(f"/documents/{document_id}/source?segment_id={segment_id}")
+        self.assertEqual(source.status_code, 200)
+        self.assertIn("Retry content", source.json()["content"])
+
+    def test_chat_source_scope_and_idempotent_replay(self):
+        first = self.client.post("/documents", headers=self.headers(), files={"file": ("one.txt", b"alpha source")}).json()
+        second = self.client.post("/documents", headers=self.headers(), files={"file": ("two.txt", b"beta source")}).json()
+        headers = {"Idempotency-Key": "chat-replay"}
+        payload = {"question": "alpha source", "document_ids": [first["id"]]}
+        answer = self.client.post("/chat", headers=headers, json=payload)
+        replay = self.client.post("/chat", headers=headers, json=payload)
+        conflict = self.client.post("/chat", headers=headers, json={"question": "other", "document_ids": [second["id"]]})
+        self.assertEqual((answer.status_code, replay.status_code, conflict.status_code), (200, 200, 409))
+        self.assertEqual(answer.json(), replay.json())
+        self.assertEqual({item["document_id"] for item in answer.json()["contexts"]}, {first["id"]})
+        self.assertEqual(answer.json()["citations"][0]["document_id"], first["id"])
