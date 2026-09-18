@@ -74,6 +74,12 @@ class OperationInProgress(ServiceError):
     message = "Operation đang được xử lý."
 
 
+class OperationNotFound(ServiceError):
+    status_code = 404
+    code = "operation_not_found"
+    message = "Không tìm thấy operation còn hiệu lực."
+
+
 class DeadlineExceeded(ServiceError):
     status_code = 504
     code = "deadline_exceeded"

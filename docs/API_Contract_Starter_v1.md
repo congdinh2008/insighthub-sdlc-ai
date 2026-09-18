@@ -18,6 +18,7 @@
 | `POST` | `/documents/{id}/retry` | Multipart đúng file của document failed; tạo attempt mới |
 | `DELETE` | `/documents/{id}` | HTTP 204; xóa source, segments và chunks theo cascade |
 | `POST` | `/chat` | `question`, `document_ids` tùy chọn, `top_k` tùy chọn |
+| `GET` | `/operations/{type}/{key}` | Đối soát trạng thái/kết quả sau khi client mất response |
 | `GET` | `/healthz`, `/readyz`, `/metrics` | Liveness, readiness và metrics |
 
 ## Chat response

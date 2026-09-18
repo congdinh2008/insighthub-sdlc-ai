@@ -16,7 +16,7 @@ from app.core.db import close_pool, get_conn, initialize_database
 from app.core.errors import ServiceError
 from app.core.metrics import documents_total, http_requests_total
 from app.core.upload_limit import UploadLimitMiddleware
-from app.routers import chat, documents, health
+from app.routers import chat, documents, health, operations
 
 settings = get_settings()
 logging.basicConfig(level=settings.log_level)
@@ -121,6 +121,7 @@ def metrics():
 app.include_router(health.router)
 app.include_router(documents.router)
 app.include_router(chat.router)
+app.include_router(operations.router)
 
 
 @app.get("/")

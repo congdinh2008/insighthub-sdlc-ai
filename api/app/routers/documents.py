@@ -2,13 +2,13 @@
 
 import hashlib
 
-from fastapi import APIRouter, Header, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Header, HTTPException, Query, Response, UploadFile
 from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
 from app.core.db import get_conn
 from app.core.deadline import operation_deadline
-from app.core.errors import DocumentNotFound, InvalidDocument, ServiceError
+from app.core.errors import DocumentConflict, DocumentNotFound, InvalidDocument, ServiceError
 from app.core.operations import complete_operation, fingerprint, serialized_operation, validate_key
 from app.services.ingestion import ingest_document_sync
 
@@ -94,12 +94,17 @@ def upload_document(file: UploadFile, idempotency_key: str | None = Header(defau
 
 
 @router.get("")
-def list_documents():
+def list_documents(response: Response, limit: int = Query(default=100, ge=1, le=100), after_id: int | None = Query(default=None, ge=1)):
     with get_conn() as conn:
         rows = conn.execute(
             "SELECT id,filename,mime_type,size_bytes,status,chunk_count,created_at,updated_at,"
-            "embedding_identity_id,error_code FROM documents ORDER BY created_at DESC"
+            "embedding_identity_id,error_code FROM documents WHERE (%s::bigint IS NULL OR id < %s) "
+            "ORDER BY id DESC LIMIT %s",
+            (after_id, after_id, limit + 1),
         ).fetchall()
+    if len(rows) > limit:
+        response.headers["X-Next-Cursor"] = str(rows[limit - 1][0])
+        rows = rows[:limit]
     return [{
         "id": r[0], "filename": r[1], "mime_type": r[2], "size_bytes": r[3],
         "status": r[4], "chunk_count": r[5], "created_at": r[6].isoformat(),
@@ -165,6 +170,12 @@ def _retry_document(document_id: int, file: UploadFile, idempotency_key: str | N
         if operation["replay"]:
             return JSONResponse(operation["body"], status_code=operation["status"])
         try:
+            with get_conn() as conn:
+                state = conn.execute("SELECT status FROM documents WHERE id=%s", (document_id,)).fetchone()
+            if state is None:
+                raise DocumentNotFound()
+            if state[0] != "failed":
+                raise DocumentConflict("Chỉ có thể thử lại tài liệu ở trạng thái Failed.")
             ingest_document_sync(
                 document_id, filename, content,
                 operation_key=key, request_fingerprint=request_fingerprint,

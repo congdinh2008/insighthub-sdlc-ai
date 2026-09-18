@@ -372,6 +372,29 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(first.json()["id"], duplicate.json()["id"])
         self.assertTrue(duplicate.json()["deduplicated"])
         self.assertEqual(len(self.client.get("/documents").json()), 1)
+        operation = self.client.get("/operations/upload/same-upload-key")
+        self.assertEqual(operation.status_code, 200)
+        self.assertEqual(operation.json()["response"]["id"], first.json()["id"])
+        retry_ready = self.client.post(
+            f"/documents/{first.json()['id']}/retry",
+            headers={"Idempotency-Key": "retry-ready"},
+            files={"file": ("same.txt", b"same bytes")},
+        )
+        self.assertEqual(retry_ready.status_code, 409)
+
+    def test_document_list_has_stable_cursor_pagination(self):
+        for index in range(3):
+            self.client.post(
+                "/documents", headers=self.headers(),
+                files={"file": (f"page-{index}.txt", f"content-{index}".encode())},
+            )
+        first = self.client.get("/documents?limit=2")
+        self.assertEqual(len(first.json()), 2)
+        cursor = first.headers.get("X-Next-Cursor")
+        self.assertIsNotNone(cursor)
+        second = self.client.get(f"/documents?limit=2&after_id={cursor}")
+        self.assertEqual(len(second.json()), 1)
+        self.assertTrue(set(item["id"] for item in first.json()).isdisjoint(item["id"] for item in second.json()))
 
     def test_startup_recovery_fences_interrupted_attempt_and_operation(self):
         document_id = self.create_document()
