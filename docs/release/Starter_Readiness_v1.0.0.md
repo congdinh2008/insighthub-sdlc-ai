@@ -9,7 +9,7 @@ Trạng thái: Candidate
 | G1 Data/ingestion | Pass | Forward migration; original/extracted/segment/chunk; limits; retry/dedup tests |
 | G2 Operation/RAG | Pass local/mock | Idempotency, deadline, source scope, citation validator, delete locks, operation reconciliation, cursor pagination, 59 backend tests |
 | G3 UX/real RAG | Pending real AEV | UI journey, desktop 1440 x 900, mobile 390 x 844 và web tests pass; semantic AEV với provider thật chưa chạy |
-| G4 Clean-room/package | Pass | Archive từ commit sạch; verifier pass; fresh volume; 58 backend tests, 3 web tests và smoke MD/PDF/source locator pass trên namespace riêng. Bản code cuối tăng thêm contract test pagination/operation và đã pass 59 backend tests. |
+| G4 Clean-room/package | Pass | Archive từ commit sạch; verifier pass; fresh volume; 59 backend tests, 3 web tests và smoke health/web/MD/PDF/source locator/chat/validation/origin pass trên namespace riêng. |
 
 ## Điều kiện chuyển Ready
 

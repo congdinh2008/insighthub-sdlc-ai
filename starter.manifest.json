@@ -4,7 +4,7 @@
   "program": "B2B_C07_SDLC_with_AI",
   "requirements_baseline": "SRS_InsightHub_v2.4.md",
   "default_mode": "fixture",
-  "release_gate": "G3-real-rag-and-G4-clean-room-pending",
+  "release_gate": "G3-real-rag-pending-G4-clean-room-passed",
   "student_scope": [
     "auth-profile",
     "notebook-ownership",
