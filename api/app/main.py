@@ -1,6 +1,8 @@
 """InsightHub synchronous starter API."""
 
 import logging
+import json
+import time
 import uuid
 from contextlib import asynccontextmanager
 
@@ -16,10 +18,11 @@ from app.core.db import close_pool, get_conn, initialize_database
 from app.core.errors import ServiceError
 from app.core.metrics import documents_total, http_requests_total
 from app.core.upload_limit import UploadLimitMiddleware
-from app.routers import chat, documents, health, operations
+from app.routers import chat, documents, health, operations, system
 
 settings = get_settings()
 logging.basicConfig(level=settings.log_level)
+request_logger = logging.getLogger("insighthub.requests")
 # SDK/transport debugging can expose URLs and headers. Keep it out of lab logs.
 for name in ("httpx", "httpcore", "pypdf", "psycopg.pool"):
     logging.getLogger(name).setLevel(logging.CRITICAL)
@@ -34,7 +37,7 @@ async def lifespan(app: FastAPI):
         await run_in_threadpool(close_pool)
 
 
-app = FastAPI(title=settings.app_name, version="1.0.0-rc.1", lifespan=lifespan)
+app = FastAPI(title=settings.app_name, version="1.0.0-rc.2", lifespan=lifespan)
 app.add_middleware(UploadLimitMiddleware)
 app.add_middleware(
     CORSMiddleware,
@@ -63,6 +66,7 @@ async def validation_error_handler(request: Request, exc: RequestValidationError
 @app.middleware("http")
 async def metrics_middleware(request: Request, call_next):
     request.state.request_id = request.headers.get("X-Request-ID") or str(uuid.uuid4())
+    started = time.perf_counter()
     status = 500
     try:
         origin = request.headers.get("origin")
@@ -70,7 +74,9 @@ async def metrics_middleware(request: Request, call_next):
                 and origin is not None and origin not in settings.cors_origins):
             status = 403
             return JSONResponse(
-                {"detail": "Origin không được phép.", "code": "origin_not_allowed"}, 403
+                {"detail": "Origin không được phép.", "code": "origin_not_allowed", "request_id": request.state.request_id},
+                403,
+                headers={"X-Request-ID": request.state.request_id},
             )
         response = await call_next(request)
         status = response.status_code
@@ -103,6 +109,20 @@ async def metrics_middleware(request: Request, call_next):
             else "OTHER"
         )
         http_requests_total.labels(method, endpoint, str(status)).inc()
+        request_logger.info(json.dumps({
+            "event": "http_request",
+            "request_id": request.state.request_id,
+            "method": method,
+            "endpoint": endpoint,
+            "status": status,
+            "duration_ms": int((time.perf_counter() - started) * 1000),
+            "rag_mode": settings.rag_mode,
+            "llm_provider": settings.llm_provider,
+            "llm_model": settings.resolved_chat_model,
+            "embedding_provider": settings.embedding_provider,
+            "embedding_model": settings.resolved_embedding_model,
+            "reranker_provider": settings.reranker_provider,
+        }, ensure_ascii=True, separators=(",", ":")))
 
 
 @app.get("/metrics")
@@ -122,13 +142,14 @@ app.include_router(health.router)
 app.include_router(documents.router)
 app.include_router(chat.router)
 app.include_router(operations.router)
+app.include_router(system.router)
 
 
 @app.get("/")
 def root():
     return {
         "service": settings.app_name,
-        "version": "1.0.0-rc.1",
+        "version": "1.0.0-rc.2",
         "docs": "/docs",
         "mode": settings.rag_mode,
     }

@@ -28,11 +28,12 @@ export async function POST(req: Request) {
       headers: {
         "Content-Type": req.headers.get("content-type") || "application/json",
         "Idempotency-Key": req.headers.get("idempotency-key") || crypto.randomUUID(),
+        "X-Request-ID": req.headers.get("x-request-id") || crypto.randomUUID(),
       },
       signal: AbortSignal.timeout(target === "upload" ? 125000 : 65000), cache: "no-store",
     };
     const res = await fetch(`${API_URL}/${target === "upload" ? "documents" : "chat"}`, options);
-    return Response.json(await res.json(), { status: res.status });
+    return Response.json(await res.json(), { status: res.status, headers: { "X-Request-ID": res.headers.get("X-Request-ID") || "" } });
   } catch {
     return Response.json({ detail: received > maxBytes ? "Yêu cầu vượt giới hạn kích thước." : "API không sẵn sàng hoặc đã hết thời gian chờ." }, { status: received > maxBytes ? 413 : 502 });
   }

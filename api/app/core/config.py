@@ -28,12 +28,14 @@ class Settings(BaseSettings):
         repr=False,
     )
     rag_mode: Literal["fixture", "real"] = "real"
+    rag_profile: str = Field(default="custom", min_length=1, max_length=64)
     llm_provider: Literal["gemini", "anthropic", "ollama", "openai", "fixture"] = (
         "gemini"
     )
     embedding_provider: Literal["gemini", "voyage", "openai", "ollama", "fixture"] = (
         "gemini"
     )
+    reranker_provider: Literal["none", "local", "cohere"] = "none"
     gemini_api_key: str = Field(default="", repr=False)
     gemini_chat_model: str = ""
     gemini_embedding_model: str = "gemini-embedding-2"
@@ -41,6 +43,10 @@ class Settings(BaseSettings):
     anthropic_chat_model: str = ""
     voyage_api_key: str = Field(default="", repr=False)
     voyage_embedding_model: str = "voyage-3.5"
+    cohere_api_key: str = Field(default="", repr=False)
+    cohere_reranker_model: str = "rerank-v4.0-fast"
+    local_reranker_url: str = ""
+    local_reranker_model: str = "Alibaba-NLP/gte-multilingual-reranker-base"
     openai_api_key: str = Field(default="", repr=False)
     # Required explicitly for OpenAI, including OpenAI-compatible gateways.
     openai_base_url: str = ""
@@ -57,10 +63,19 @@ class Settings(BaseSettings):
     provider_timeout_seconds: float = Field(
         default=60, gt=0, le=300, allow_inf_nan=False
     )
+    provider_retry_attempts: int = Field(default=3, ge=1, le=5)
+    reranker_timeout_seconds: float = Field(
+        default=20, gt=0, le=120, allow_inf_nan=False
+    )
     embedding_batch_size: int = Field(default=32, ge=1, le=100)
     chunk_size: int = Field(default=800, ge=2, le=8000)
     chunk_overlap: int = Field(default=100, ge=0)
     retrieval_top_k: int = Field(default=5, ge=1, le=20)
+    retrieval_candidate_k: int = Field(default=20, ge=1, le=100)
+    retrieval_min_similarity: float = Field(default=-1.0, ge=-1, le=1)
+    retrieval_max_chunks_per_document: int = Field(default=3, ge=1, le=20)
+    context_max_tokens: int = Field(default=4000, ge=128, le=100000)
+    reranker_top_n: int = Field(default=5, ge=1, le=20)
     hnsw_ef_search: int = Field(default=100, ge=20, le=1000)
     max_upload_bytes: int = Field(default=10 * 1024 * 1024, ge=1, le=50 * 1024 * 1024)
     max_extracted_chars: int = Field(default=200_000, ge=1, le=2_000_000)
@@ -68,15 +83,26 @@ class Settings(BaseSettings):
     ingestion_timeout_seconds: float = Field(default=120, gt=0, le=300)
     chat_timeout_seconds: float = Field(default=60, gt=0, le=180)
     idempotency_ttl_hours: int = Field(default=24, ge=1, le=168)
+    expose_debug_contexts: bool = False
+    ai_data_policy_url: str = ""
+    ai_data_usage_notice: str = (
+        "Nội dung câu hỏi và trích đoạn tài liệu có thể được gửi tới provider đã cấu hình."
+    )
     migration_path: str = "/app/migrations"
 
     @model_validator(mode="after")
     def validate_configuration(self):
         if self.chunk_overlap >= self.chunk_size:
             raise ValueError("CHUNK_OVERLAP must be smaller than CHUNK_SIZE")
+        if self.retrieval_candidate_k < self.retrieval_top_k:
+            raise ValueError("RETRIEVAL_CANDIDATE_K must be >= RETRIEVAL_TOP_K")
+        if self.reranker_top_n > self.retrieval_candidate_k:
+            raise ValueError("RERANKER_TOP_N must be <= RETRIEVAL_CANDIDATE_K")
         if self.rag_mode == "fixture":
             if self.llm_provider != "fixture" or self.embedding_provider != "fixture":
                 raise ValueError("RAG_MODE=fixture requires both providers=fixture")
+            if self.reranker_provider != "none":
+                raise ValueError("RAG_MODE=fixture requires RERANKER_PROVIDER=none")
             if self.llm_model or self.embedding_model:
                 raise ValueError("Fixture model overrides are not supported")
         elif "fixture" in (self.llm_provider, self.embedding_provider):
@@ -105,6 +131,26 @@ class Settings(BaseSettings):
                     raise ValueError(
                         f"{provider.upper()}_BASE_URL has an invalid port"
                     ) from None
+        if self.reranker_provider == "cohere" and not self.cohere_api_key:
+            raise ValueError("COHERE_API_KEY is required for Cohere reranking")
+        if self.reranker_provider == "local":
+            parsed = urlsplit(self.local_reranker_url)
+            if (
+                parsed.scheme not in {"http", "https"}
+                or not parsed.hostname
+                or parsed.hostname not in {"localhost", "127.0.0.1", "host.docker.internal", "reranker"}
+                or parsed.username
+                or parsed.password
+                or parsed.query
+                or parsed.fragment
+            ):
+                raise ValueError(
+                    "LOCAL_RERANKER_URL must target localhost, host.docker.internal or reranker"
+                )
+            try:
+                parsed.port
+            except ValueError:
+                raise ValueError("LOCAL_RERANKER_URL has an invalid port") from None
         if not self.resolved_chat_model or not self.resolved_embedding_model:
             raise ValueError("Selected providers require nonempty model names")
         if (
@@ -138,6 +184,12 @@ class Settings(BaseSettings):
         return self.embedding_model or getattr(
             self, f"{self.embedding_provider}_embedding_model"
         )
+
+    @property
+    def resolved_reranker_model(self) -> str | None:
+        if self.reranker_provider == "none":
+            return None
+        return getattr(self, f"{self.reranker_provider}_reranker_model")
 
     @property
     def embedding_identity(self) -> dict:

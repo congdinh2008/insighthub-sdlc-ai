@@ -13,7 +13,7 @@ from psycopg.types.json import Jsonb
 
 from app.core.config import get_settings
 from app.core.db import get_conn
-from app.core.deadline import check_deadline
+from app.core.deadline import apply_statement_timeout, check_deadline
 from app.core.errors import DocumentConflict, DocumentNotFound, InvalidDocument, ServiceError
 from app.core.index import check_schema, ensure_index_identity
 from app.core.metrics import ingestion_errors_total
@@ -154,6 +154,7 @@ def process_document(
     attempt_id = None
     with get_conn() as conn:
         with conn.transaction():
+            apply_statement_timeout(conn)
             check_schema(conn)
             row = conn.execute(
                 "SELECT filename,status,chunk_count,content_sha256,pipeline_id FROM documents WHERE id=%s FOR UPDATE",
@@ -195,6 +196,7 @@ def process_document(
                     chunk_rows = []
                     chunk_index = 0
                     for segment_index, segment in enumerate(source.segments):
+                        check_deadline()
                         segment_id = conn.execute(
                             "INSERT INTO source_segments(document_id,segment_index,locator_type,locator_value,heading,segment_text) "
                             "VALUES (%s,%s,%s,%s,%s,%s) RETURNING id",
@@ -217,12 +219,14 @@ def process_document(
                         (settings.embedding_identity_id, document_id),
                     )
                     for item, vector in zip(chunk_rows, vectors, strict=True):
+                        check_deadline()
                         conn.execute(
                             "INSERT INTO chunks(document_id,source_segment_id,chunk_index,chunk_text,locator_type,locator_value,embedding,embedding_identity_id) "
                             "VALUES (%s,%s,%s,%s,%s,%s,%s::vector,%s)",
                             (document_id, item[2], item[0], item[1], item[3], item[4], vector, settings.embedding_identity_id),
                         )
                     chunk_count = len(chunk_rows)
+                    check_deadline()
                     conn.execute(
                         "UPDATE documents SET status='ready',chunk_count=%s,error_code=NULL,updated_at=now() WHERE id=%s",
                         (chunk_count, document_id),

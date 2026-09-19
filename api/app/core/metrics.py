@@ -22,6 +22,17 @@ llm_tokens_total = Counter(
     "Provider-reported LLM tokens, not billing totals",
     ["provider", "direction"],
 )
+reranker_call_latency = Histogram(
+    "insighthub_reranker_latency_seconds",
+    "Reranker latency including failures",
+    ["provider"],
+    buckets=(0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10, 20),
+)
+retrieval_candidates_total = Counter(
+    "insighthub_retrieval_candidates_total",
+    "Candidate chunks before and after evidence filtering",
+    ["stage"],
+)
 embedding_tokens_total = Counter(
     "insighthub_embedding_tokens_total",
     "Provider-reported embedding tokens",

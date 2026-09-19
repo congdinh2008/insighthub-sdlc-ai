@@ -13,6 +13,7 @@ from app.core.metrics import (
 )
 from app.services.embeddings import embed, validate_vectors
 from app.services.llm import _parse_result, generate
+from app.services.reranking import rerank
 
 
 class EmbeddingTests(unittest.TestCase):
@@ -246,13 +247,30 @@ class GenerationTests(unittest.TestCase):
         self.assertIsNone(result["usage"]["input_tokens"])
 
     def test_unknown_citation_is_rejected_before_publication(self):
-        raw = '{"status":"Answered","answer":"invented","citation_ids":["chunk:999"]}'
+        raw = '{"status":"Answered","claims":[{"text":"invented","citation_ids":["chunk:999"]}]}'
         with self.assertRaises(CitationValidationError):
             _parse_result(raw, self.contexts)
 
     def test_no_evidence_contract_has_no_answer_or_citation(self):
-        result = _parse_result('{"status":"NoEvidence","answer":null,"citation_ids":[]}', self.contexts)
-        self.assertEqual(result, {"status": "NoEvidence", "answer": None, "citation_ids": []})
+        result = _parse_result('{"status":"NoEvidence","claims":[]}', self.contexts)
+        self.assertEqual(result, {"status": "NoEvidence", "answer": None, "claims": [], "citation_ids": []})
+
+    def test_every_claim_requires_a_valid_citation(self):
+        for raw in (
+            '{"status":"Answered","claims":[{"text":"claim","citation_ids":[]}]}',
+            '{"status":"Answered","claims":[{"text":" ","citation_ids":["chunk:1"]}]}',
+            '{"status":"Answered","claims":[]}',
+        ):
+            with self.subTest(raw=raw), self.assertRaises(CitationValidationError):
+                _parse_result(raw, self.contexts)
+
+    def test_non_json_and_legacy_contract_are_rejected(self):
+        for raw in (
+            "answer [nguồn: test.txt]",
+            '{"status":"Answered","answer":"answer","citation_ids":["chunk:1"]}',
+        ):
+            with self.subTest(raw=raw), self.assertRaises(ProviderError):
+                _parse_result(raw, self.contexts)
 
     def test_openai_gateway_explicit_endpoint_and_usage(self):
         with (
@@ -260,7 +278,7 @@ class GenerationTests(unittest.TestCase):
             patch(
                 "app.services.llm.post_json",
                 return_value={
-                    "choices": [{"message": {"content": '{"status":"Answered","answer":"answer","citation_ids":["chunk:1"]}'}}],
+                    "choices": [{"message": {"content": '{"status":"Answered","claims":[{"text":"answer","citation_ids":["chunk:1"]}]}'}}],
                     "usage": {"prompt_tokens": 10, "completion_tokens": 4},
                 },
             ) as transport,
@@ -283,7 +301,7 @@ class GenerationTests(unittest.TestCase):
                         "content": {
                             "parts": [
                                 {"text": "hidden", "thought": True},
-                                {"text": '{"status":"Answered","answer":"answer","citation_ids":["chunk:1"]}'},
+                                {"text": '{"status":"Answered","claims":[{"text":"answer","citation_ids":["chunk:1"]}]}'},
                             ]
                         }
                     }
@@ -291,11 +309,11 @@ class GenerationTests(unittest.TestCase):
                 "usageMetadata": {"promptTokenCount": 2, "candidatesTokenCount": 3},
             },
             "anthropic": {
-                "content": [{"type": "text", "text": '{"status":"Answered","answer":"answer","citation_ids":["chunk:1"]}'}],
+                "content": [{"type": "text", "text": '{"status":"Answered","claims":[{"text":"answer","citation_ids":["chunk:1"]}]}'}],
                 "usage": {"input_tokens": 2, "output_tokens": 3},
             },
             "ollama": {
-                "message": {"content": '{"status":"Answered","answer":"answer","citation_ids":["chunk:1"]}'},
+                "message": {"content": '{"status":"Answered","claims":[{"text":"answer","citation_ids":["chunk:1"]}]}'},
                 "prompt_eval_count": 2,
                 "eval_count": 3,
             },
@@ -333,7 +351,7 @@ class GenerationTests(unittest.TestCase):
             patch(
                 "app.services.llm.post_json",
                 return_value={
-                    "choices": [{"message": {"content": '{"status":"Answered","answer":"answer","citation_ids":["chunk:1"]}'}}],
+                    "choices": [{"message": {"content": '{"status":"Answered","claims":[{"text":"answer","citation_ids":["chunk:1"]}]}'}}],
                 },
             ),
         ):
@@ -380,3 +398,54 @@ class GenerationTests(unittest.TestCase):
                 httpx.ReadTimeout("test-secret")
             )
             post_json("https://provider.example", headers={}, payload={})
+
+
+class RerankerTests(unittest.TestCase):
+    candidates = [
+        {"id": 1, "chunk_text": "first", "similarity": 0.8},
+        {"id": 2, "chunk_text": "second", "similarity": 0.7},
+    ]
+
+    def test_none_keeps_dense_order_without_transport(self):
+        with configured(), patch("app.services.reranking.post_json") as transport:
+            result = rerank("question", list(reversed(self.candidates)))
+        transport.assert_not_called()
+        self.assertEqual([item["id"] for item in result], [1, 2])
+        self.assertIsNone(result[0]["rerank_score"])
+
+    def test_local_tei_and_cohere_contracts(self):
+        profiles = (
+            ({"reranker_provider": "local", "local_reranker_url": "http://reranker:80"}, "http://reranker:80/rerank", "score"),
+            ({"reranker_provider": "cohere", "cohere_api_key": "test"}, "https://api.cohere.com/v2/rerank", "relevance_score"),
+        )
+        for values, expected_url, score_key in profiles:
+            response = [
+                {"index": 1, score_key: 0.95},
+                {"index": 0, score_key: 0.2},
+            ]
+            if values["reranker_provider"] == "cohere":
+                response = {"results": response}
+            with (
+                self.subTest(provider=values["reranker_provider"]),
+                real_config(**values),
+                patch("app.services.reranking.post_json", return_value=response) as transport,
+            ):
+                result = rerank("question", self.candidates)
+                self.assertEqual([item["id"] for item in result], [2, 1])
+                self.assertEqual(result[0]["rerank_score"], 0.95)
+                self.assertEqual(transport.call_args.args[0], expected_url)
+                if values["reranker_provider"] == "local":
+                    self.assertIs(transport.call_args.kwargs["response_type"], list)
+
+    def test_invalid_reranker_indices_are_rejected(self):
+        with (
+            real_config(reranker_provider="cohere", cohere_api_key="test"),
+            patch("app.services.reranking.post_json", return_value={
+                "results": [
+                    {"index": 0, "relevance_score": 1},
+                    {"index": 0, "relevance_score": 0.5},
+                ]
+            }),
+            self.assertRaises(ProviderError),
+        ):
+            rerank("question", self.candidates)

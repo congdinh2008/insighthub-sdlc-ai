@@ -143,7 +143,7 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(metrics.status_code, 200)
         self.assertIn('insighthub_documents_total{status="ready"} 1.0', metrics.text)
         self.assertEqual(
-            self.client.delete(f"/documents/{document['id']}").status_code, 204
+            self.client.delete(f"/documents/{document['id']}", headers={"Idempotency-Key": "delete-e2e"}).status_code, 204
         )
         with db.get_conn() as conn:
             self.assertEqual(
@@ -327,7 +327,7 @@ class IntegrationTests(unittest.TestCase):
                 "app.services.llm.post_json",
                 return_value={
                     "choices": [
-                        {"message": {"content": '{"status":"Answered","answer":"Supported answer","citation_ids":["chunk:1"]}'}}
+                        {"message": {"content": '{"status":"Answered","claims":[{"text":"Supported answer","citation_ids":["chunk:1"]}]}'}}
                     ],
                     "usage": {"prompt_tokens": 12, "completion_tokens": 8},
                 },
@@ -381,6 +381,106 @@ class IntegrationTests(unittest.TestCase):
             files={"file": ("same.txt", b"same bytes")},
         )
         self.assertEqual(retry_ready.status_code, 409)
+
+    def test_evidence_gate_returns_no_evidence_without_llm_call(self):
+        document = self.client.post(
+            "/documents",
+            headers=self.headers(),
+            files={"file": ("evidence.txt", b"Only release procedures are documented.")},
+        ).json()
+        with (
+            configured(retrieval_min_similarity=1.0),
+            patch("app.routers.chat.generate") as generate,
+        ):
+            response = self.client.post(
+                "/chat",
+                headers=self.headers(),
+                json={
+                    "question": "What is the weather tomorrow?",
+                    "document_ids": [document["id"]],
+                },
+            )
+        self.assertEqual(response.status_code, 200, response.text)
+        self.assertEqual(response.json()["status"], "NoEvidence")
+        self.assertEqual(response.json()["retrieval"]["context_count"], 0)
+        generate.assert_not_called()
+
+    def test_delete_is_idempotent_and_reconciled(self):
+        first = self.client.post(
+            "/documents", headers=self.headers(), files={"file": ("one.txt", b"one")}
+        ).json()
+        second = self.client.post(
+            "/documents", headers=self.headers(), files={"file": ("two.txt", b"two")}
+        ).json()
+        headers = {"Idempotency-Key": "delete-replay"}
+        original = self.client.delete(f"/documents/{first['id']}", headers=headers)
+        replay = self.client.delete(f"/documents/{first['id']}", headers=headers)
+        conflict = self.client.delete(f"/documents/{second['id']}", headers=headers)
+        self.assertEqual((original.status_code, replay.status_code, conflict.status_code), (204, 204, 409))
+        operation = self.client.get("/operations/delete/delete-replay").json()
+        self.assertEqual(operation["status"], "succeeded")
+        self.assertEqual(operation["response"]["document_id"], first["id"])
+
+    def test_delete_waits_until_chat_result_is_committed(self):
+        document = self.client.post(
+            "/documents", headers=self.headers(), files={"file": ("lock.txt", b"lock evidence")}
+        ).json()
+        started, release = threading.Event(), threading.Event()
+
+        def blocked_generate(_question, contexts):
+            started.set()
+            release.wait(timeout=5)
+            return {
+                "status": "Answered",
+                "answer": "supported",
+                "claims": [{"text": "supported", "citation_ids": [contexts[0]["context_id"]]}],
+                "citation_ids": [contexts[0]["context_id"]],
+                "sources": [contexts[0]["source"]],
+                "mode": "fixture",
+                "provider": "fixture",
+                "model": "extractive-fixture-v1",
+                "prompt_version": "test",
+                "usage": {"input_tokens": None, "output_tokens": None, "source": "unavailable"},
+            }
+
+        with patch("app.routers.chat.generate", side_effect=blocked_generate):
+            with concurrent.futures.ThreadPoolExecutor(2) as executor:
+                chat = executor.submit(
+                    self.client.post,
+                    "/chat",
+                    headers={"Idempotency-Key": "chat-lock"},
+                    json={"question": "lock", "document_ids": [document["id"]]},
+                )
+                self.assertTrue(started.wait(timeout=3))
+                delete = executor.submit(
+                    self.client.delete,
+                    f"/documents/{document['id']}",
+                    headers={"Idempotency-Key": "delete-lock"},
+                )
+                self.assertFalse(delete.done())
+                release.set()
+                self.assertEqual(chat.result(timeout=5).status_code, 200)
+                self.assertEqual(delete.result(timeout=5).status_code, 204)
+
+    def test_expired_operation_key_can_be_reused(self):
+        with db.get_conn() as conn:
+            conn.execute(
+                "INSERT INTO operation_records(operation_type,operation_key,request_fingerprint,status,expires_at) "
+                "VALUES ('upload','expired-key','old','failed',now() - interval '1 minute')"
+            )
+        response = self.client.post(
+            "/documents",
+            headers={"Idempotency-Key": "expired-key"},
+            files={"file": ("fresh.txt", b"fresh")},
+        )
+        self.assertEqual(response.status_code, 201, response.text)
+        with db.get_conn() as conn:
+            self.assertEqual(
+                conn.execute(
+                    "SELECT count(*) FROM operation_records WHERE operation_type='upload' AND operation_key='expired-key'"
+                ).fetchone()[0],
+                1,
+            )
 
     def test_document_list_has_stable_cursor_pagination(self):
         for index in range(3):

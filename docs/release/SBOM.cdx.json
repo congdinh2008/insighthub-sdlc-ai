@@ -1,0 +1,667 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "serialNumber": "urn:uuid:f16184a0-aaf5-5279-90d2-f9a28da133d7",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-09-19T00:00:00Z",
+    "component": {
+      "type": "application",
+      "name": "InsightHub Starter",
+      "version": "1.0.0-rc.2"
+    }
+  },
+  "components": [
+    {
+      "type": "container",
+      "name": "${TEI_IMAGE:-ghcr.io/huggingface/text-embeddings-inference:cpu-1.9}",
+      "version": "configured-at-runtime",
+      "scope": "required",
+      "bom-ref": "container:${TEI_IMAGE:-ghcr.io/huggingface/text-embeddings-inference:cpu-1.9}@configured-at-runtime"
+    },
+    {
+      "type": "container",
+      "name": "ollama/ollama:0.33.3",
+      "version": "sha256:32931b46719f673c05fdbaa81ccb26da18ea4a1c57590a754874ab28ba269eb2",
+      "scope": "required",
+      "bom-ref": "container:ollama/ollama:0.33.3@sha256:32931b46719f673c05fdbaa81ccb26da18ea4a1c57590a754874ab28ba269eb2"
+    },
+    {
+      "type": "container",
+      "name": "pgvector/pgvector:0.8.2-pg16",
+      "version": "sha256:00ba258a66dac104fd5171074a0084462a64a1369d8513f3d0a634e2f24d15bc",
+      "scope": "required",
+      "bom-ref": "container:pgvector/pgvector:0.8.2-pg16@sha256:00ba258a66dac104fd5171074a0084462a64a1369d8513f3d0a634e2f24d15bc"
+    },
+    {
+      "type": "library",
+      "name": "@emnapi/runtime",
+      "version": "1.11.3",
+      "scope": "optional",
+      "bom-ref": "library:@emnapi/runtime@1.11.3"
+    },
+    {
+      "type": "library",
+      "name": "@img/colour",
+      "version": "1.1.0",
+      "scope": "optional",
+      "bom-ref": "library:@img/colour@1.1.0"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-darwin-arm64",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-darwin-arm64@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-darwin-x64",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-darwin-x64@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-freebsd-wasm32",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-freebsd-wasm32@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-libvips-darwin-arm64",
+      "version": "1.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-libvips-darwin-arm64@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-libvips-darwin-x64",
+      "version": "1.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-libvips-darwin-x64@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-libvips-linux-arm64",
+      "version": "1.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-libvips-linux-arm64@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-libvips-linux-arm",
+      "version": "1.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-libvips-linux-arm@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-libvips-linux-ppc64",
+      "version": "1.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-libvips-linux-ppc64@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-libvips-linux-riscv64",
+      "version": "1.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-libvips-linux-riscv64@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-libvips-linux-s390x",
+      "version": "1.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-libvips-linux-s390x@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-libvips-linux-x64",
+      "version": "1.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-libvips-linux-x64@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-libvips-linuxmusl-arm64",
+      "version": "1.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-libvips-linuxmusl-arm64@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-libvips-linuxmusl-x64",
+      "version": "1.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-libvips-linuxmusl-x64@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-linux-arm64",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-linux-arm64@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-linux-arm",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-linux-arm@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-linux-ppc64",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-linux-ppc64@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-linux-riscv64",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-linux-riscv64@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-linux-s390x",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-linux-s390x@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-linux-x64",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-linux-x64@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-linuxmusl-arm64",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-linuxmusl-arm64@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-linuxmusl-x64",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-linuxmusl-x64@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-wasm32",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-wasm32@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-webcontainers-wasm32",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-webcontainers-wasm32@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-win32-arm64",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-win32-arm64@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-win32-ia32",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-win32-ia32@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@img/sharp-win32-x64",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:@img/sharp-win32-x64@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "@next/env",
+      "version": "16.3.4",
+      "scope": "required",
+      "bom-ref": "library:@next/env@16.3.4"
+    },
+    {
+      "type": "library",
+      "name": "@next/swc-darwin-arm64",
+      "version": "16.3.4",
+      "scope": "optional",
+      "bom-ref": "library:@next/swc-darwin-arm64@16.3.4"
+    },
+    {
+      "type": "library",
+      "name": "@next/swc-darwin-x64",
+      "version": "16.3.4",
+      "scope": "optional",
+      "bom-ref": "library:@next/swc-darwin-x64@16.3.4"
+    },
+    {
+      "type": "library",
+      "name": "@next/swc-linux-arm64-gnu",
+      "version": "16.3.4",
+      "scope": "optional",
+      "bom-ref": "library:@next/swc-linux-arm64-gnu@16.3.4"
+    },
+    {
+      "type": "library",
+      "name": "@next/swc-linux-arm64-musl",
+      "version": "16.3.4",
+      "scope": "optional",
+      "bom-ref": "library:@next/swc-linux-arm64-musl@16.3.4"
+    },
+    {
+      "type": "library",
+      "name": "@next/swc-linux-x64-gnu",
+      "version": "16.3.4",
+      "scope": "optional",
+      "bom-ref": "library:@next/swc-linux-x64-gnu@16.3.4"
+    },
+    {
+      "type": "library",
+      "name": "@next/swc-linux-x64-musl",
+      "version": "16.3.4",
+      "scope": "optional",
+      "bom-ref": "library:@next/swc-linux-x64-musl@16.3.4"
+    },
+    {
+      "type": "library",
+      "name": "@next/swc-win32-arm64-msvc",
+      "version": "16.3.4",
+      "scope": "optional",
+      "bom-ref": "library:@next/swc-win32-arm64-msvc@16.3.4"
+    },
+    {
+      "type": "library",
+      "name": "@next/swc-win32-x64-msvc",
+      "version": "16.3.4",
+      "scope": "optional",
+      "bom-ref": "library:@next/swc-win32-x64-msvc@16.3.4"
+    },
+    {
+      "type": "library",
+      "name": "@swc/helpers",
+      "version": "0.5.23",
+      "scope": "required",
+      "bom-ref": "library:@swc/helpers@0.5.23"
+    },
+    {
+      "type": "library",
+      "name": "@types/node",
+      "version": "24.10.1",
+      "scope": "required",
+      "bom-ref": "library:@types/node@24.10.1"
+    },
+    {
+      "type": "library",
+      "name": "@types/react",
+      "version": "19.2.18",
+      "scope": "required",
+      "bom-ref": "library:@types/react@19.2.18"
+    },
+    {
+      "type": "library",
+      "name": "annotated-doc",
+      "version": "0.0.5",
+      "scope": "required",
+      "bom-ref": "library:annotated-doc@0.0.5"
+    },
+    {
+      "type": "library",
+      "name": "annotated-types",
+      "version": "0.8.0",
+      "scope": "required",
+      "bom-ref": "library:annotated-types@0.8.0"
+    },
+    {
+      "type": "library",
+      "name": "anyio",
+      "version": "4.15.1",
+      "scope": "required",
+      "bom-ref": "library:anyio@4.15.1"
+    },
+    {
+      "type": "library",
+      "name": "baseline-browser-mapping",
+      "version": "2.11.21",
+      "scope": "required",
+      "bom-ref": "library:baseline-browser-mapping@2.11.21"
+    },
+    {
+      "type": "library",
+      "name": "caniuse-lite",
+      "version": "1.0.30001793",
+      "scope": "required",
+      "bom-ref": "library:caniuse-lite@1.0.30001793"
+    },
+    {
+      "type": "library",
+      "name": "certifi",
+      "version": "2026.7.22",
+      "scope": "required",
+      "bom-ref": "library:certifi@2026.7.22"
+    },
+    {
+      "type": "library",
+      "name": "click",
+      "version": "8.5.0",
+      "scope": "required",
+      "bom-ref": "library:click@8.5.0"
+    },
+    {
+      "type": "library",
+      "name": "client-only",
+      "version": "0.0.1",
+      "scope": "required",
+      "bom-ref": "library:client-only@0.0.1"
+    },
+    {
+      "type": "library",
+      "name": "csstype",
+      "version": "3.2.3",
+      "scope": "required",
+      "bom-ref": "library:csstype@3.2.3"
+    },
+    {
+      "type": "library",
+      "name": "detect-libc",
+      "version": "2.1.2",
+      "scope": "optional",
+      "bom-ref": "library:detect-libc@2.1.2"
+    },
+    {
+      "type": "library",
+      "name": "fastapi",
+      "version": "0.141.1",
+      "scope": "required",
+      "bom-ref": "library:fastapi@0.141.1"
+    },
+    {
+      "type": "library",
+      "name": "h11",
+      "version": "0.16.0",
+      "scope": "required",
+      "bom-ref": "library:h11@0.16.0"
+    },
+    {
+      "type": "library",
+      "name": "httpcore",
+      "version": "1.0.9",
+      "scope": "required",
+      "bom-ref": "library:httpcore@1.0.9"
+    },
+    {
+      "type": "library",
+      "name": "httptools",
+      "version": "0.8.0",
+      "scope": "required",
+      "bom-ref": "library:httptools@0.8.0"
+    },
+    {
+      "type": "library",
+      "name": "httpx",
+      "version": "0.28.1",
+      "scope": "required",
+      "bom-ref": "library:httpx@0.28.1"
+    },
+    {
+      "type": "library",
+      "name": "idna",
+      "version": "3.19",
+      "scope": "required",
+      "bom-ref": "library:idna@3.19"
+    },
+    {
+      "type": "library",
+      "name": "nanoid",
+      "version": "3.3.18",
+      "scope": "required",
+      "bom-ref": "library:nanoid@3.3.18"
+    },
+    {
+      "type": "library",
+      "name": "next",
+      "version": "16.3.4",
+      "scope": "required",
+      "bom-ref": "library:next@16.3.4"
+    },
+    {
+      "type": "library",
+      "name": "pgvector",
+      "version": "0.5.0",
+      "scope": "required",
+      "bom-ref": "library:pgvector@0.5.0"
+    },
+    {
+      "type": "library",
+      "name": "picocolors",
+      "version": "1.1.1",
+      "scope": "required",
+      "bom-ref": "library:picocolors@1.1.1"
+    },
+    {
+      "type": "library",
+      "name": "postcss",
+      "version": "8.5.23",
+      "scope": "required",
+      "bom-ref": "library:postcss@8.5.23"
+    },
+    {
+      "type": "library",
+      "name": "prometheus-client",
+      "version": "0.26.0",
+      "scope": "required",
+      "bom-ref": "library:prometheus-client@0.26.0"
+    },
+    {
+      "type": "library",
+      "name": "psycopg-binary",
+      "version": "3.3.5",
+      "scope": "required",
+      "bom-ref": "library:psycopg-binary@3.3.5"
+    },
+    {
+      "type": "library",
+      "name": "psycopg-pool",
+      "version": "3.3.1",
+      "scope": "required",
+      "bom-ref": "library:psycopg-pool@3.3.1"
+    },
+    {
+      "type": "library",
+      "name": "psycopg",
+      "version": "3.3.5",
+      "scope": "required",
+      "bom-ref": "library:psycopg@3.3.5"
+    },
+    {
+      "type": "library",
+      "name": "pydantic-core",
+      "version": "2.46.5",
+      "scope": "required",
+      "bom-ref": "library:pydantic-core@2.46.5"
+    },
+    {
+      "type": "library",
+      "name": "pydantic-settings",
+      "version": "2.15.0",
+      "scope": "required",
+      "bom-ref": "library:pydantic-settings@2.15.0"
+    },
+    {
+      "type": "library",
+      "name": "pydantic",
+      "version": "2.13.5",
+      "scope": "required",
+      "bom-ref": "library:pydantic@2.13.5"
+    },
+    {
+      "type": "library",
+      "name": "pypdf",
+      "version": "6.18.0",
+      "scope": "required",
+      "bom-ref": "library:pypdf@6.18.0"
+    },
+    {
+      "type": "library",
+      "name": "python-dotenv",
+      "version": "1.2.3",
+      "scope": "required",
+      "bom-ref": "library:python-dotenv@1.2.3"
+    },
+    {
+      "type": "library",
+      "name": "python-multipart",
+      "version": "0.0.32",
+      "scope": "required",
+      "bom-ref": "library:python-multipart@0.0.32"
+    },
+    {
+      "type": "library",
+      "name": "pyyaml",
+      "version": "6.0.3",
+      "scope": "required",
+      "bom-ref": "library:pyyaml@6.0.3"
+    },
+    {
+      "type": "library",
+      "name": "react-dom",
+      "version": "19.2.8",
+      "scope": "required",
+      "bom-ref": "library:react-dom@19.2.8"
+    },
+    {
+      "type": "library",
+      "name": "react",
+      "version": "19.2.8",
+      "scope": "required",
+      "bom-ref": "library:react@19.2.8"
+    },
+    {
+      "type": "library",
+      "name": "scheduler",
+      "version": "0.27.0",
+      "scope": "required",
+      "bom-ref": "library:scheduler@0.27.0"
+    },
+    {
+      "type": "library",
+      "name": "semver",
+      "version": "7.8.5",
+      "scope": "optional",
+      "bom-ref": "library:semver@7.8.5"
+    },
+    {
+      "type": "library",
+      "name": "sharp",
+      "version": "0.35.4",
+      "scope": "optional",
+      "bom-ref": "library:sharp@0.35.4"
+    },
+    {
+      "type": "library",
+      "name": "source-map-js",
+      "version": "1.2.1",
+      "scope": "required",
+      "bom-ref": "library:source-map-js@1.2.1"
+    },
+    {
+      "type": "library",
+      "name": "starlette",
+      "version": "1.6.0",
+      "scope": "required",
+      "bom-ref": "library:starlette@1.6.0"
+    },
+    {
+      "type": "library",
+      "name": "styled-jsx",
+      "version": "5.1.6",
+      "scope": "required",
+      "bom-ref": "library:styled-jsx@5.1.6"
+    },
+    {
+      "type": "library",
+      "name": "tslib",
+      "version": "2.8.1",
+      "scope": "required",
+      "bom-ref": "library:tslib@2.8.1"
+    },
+    {
+      "type": "library",
+      "name": "typescript",
+      "version": "5.9.3",
+      "scope": "required",
+      "bom-ref": "library:typescript@5.9.3"
+    },
+    {
+      "type": "library",
+      "name": "typing-extensions",
+      "version": "4.16.0",
+      "scope": "required",
+      "bom-ref": "library:typing-extensions@4.16.0"
+    },
+    {
+      "type": "library",
+      "name": "typing-inspection",
+      "version": "0.4.4",
+      "scope": "required",
+      "bom-ref": "library:typing-inspection@0.4.4"
+    },
+    {
+      "type": "library",
+      "name": "tzdata",
+      "version": "2026.3",
+      "scope": "required",
+      "bom-ref": "library:tzdata@2026.3"
+    },
+    {
+      "type": "library",
+      "name": "undici-types",
+      "version": "7.16.0",
+      "scope": "required",
+      "bom-ref": "library:undici-types@7.16.0"
+    },
+    {
+      "type": "library",
+      "name": "uvicorn",
+      "version": "0.52.4",
+      "scope": "required",
+      "bom-ref": "library:uvicorn@0.52.4"
+    },
+    {
+      "type": "library",
+      "name": "uvloop",
+      "version": "0.22.1",
+      "scope": "required",
+      "bom-ref": "library:uvloop@0.22.1"
+    },
+    {
+      "type": "library",
+      "name": "watchfiles",
+      "version": "1.2.0",
+      "scope": "required",
+      "bom-ref": "library:watchfiles@1.2.0"
+    },
+    {
+      "type": "library",
+      "name": "websockets",
+      "version": "17.1",
+      "scope": "required",
+      "bom-ref": "library:websockets@17.1"
+    }
+  ]
+}

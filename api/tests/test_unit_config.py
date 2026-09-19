@@ -53,6 +53,9 @@ class ConfigTests(unittest.TestCase):
             ("embedding_dim", 0),
             ("embedding_dim", 2001),
             ("retrieval_top_k", 21),
+            ("retrieval_candidate_k", 0),
+            ("retrieval_min_similarity", 2),
+            ("context_max_tokens", 1),
             ("hnsw_ef_search", 0),
             ("provider_timeout_seconds", "nan"),
             ("embedding_batch_size", 0),
@@ -60,6 +63,22 @@ class ConfigTests(unittest.TestCase):
         ):
             with self.subTest(key=key), self.assertRaises(ValidationError):
                 with configured(**{key: value}):
+                    pass
+
+    def test_reranker_profiles_are_explicit_and_safe(self):
+        with real_config(reranker_provider="cohere", cohere_api_key="test") as settings:
+            self.assertEqual(settings.resolved_reranker_model, "rerank-v4.0-fast")
+        with real_config(reranker_provider="local", local_reranker_url="http://reranker:80") as settings:
+            self.assertIn("multilingual", settings.resolved_reranker_model)
+        for values in (
+            {"reranker_provider": "cohere", "cohere_api_key": ""},
+            {"reranker_provider": "local", "local_reranker_url": "https://remote.example"},
+            {"reranker_provider": "local", "local_reranker_url": "http://user:secret@localhost"},
+            {"retrieval_candidate_k": 4, "retrieval_top_k": 5},
+            {"reranker_top_n": 20, "retrieval_candidate_k": 10},
+        ):
+            with self.subTest(values=values), self.assertRaises(ValidationError):
+                with real_config(**values):
                     pass
 
     def test_ollama_uses_dedicated_native_dimension(self):

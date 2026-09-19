@@ -24,6 +24,12 @@ class ProviderTimeout(ProviderError):
     message = "Dịch vụ AI không phản hồi trong thời gian cho phép."
 
 
+class ProviderRateLimited(ProviderError):
+    status_code = 503
+    code = "provider_rate_limited"
+    message = "Dịch vụ AI đang giới hạn lưu lượng. Hãy thử lại sau."
+
+
 class InvalidDocument(ServiceError):
     status_code = 422
     code = "invalid_document"

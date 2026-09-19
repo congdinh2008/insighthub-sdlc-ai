@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import type { Document } from "@/lib/api";
 import { errorMessage } from "@/lib/errors";
+import { reconcileOperation } from "@/lib/operations";
 
 export default function UploadPanel({ initial, initialError = "" }: { initial: Document[]; initialError?: string }) {
   const [docs, setDocs] = useState<Document[]>(initial);
@@ -61,24 +62,33 @@ export default function UploadPanel({ initial, initialError = "" }: { initial: D
     }
     setBusy(true);
     setError("");
+    const operationKey = crypto.randomUUID();
     try {
       const fd = new FormData();
       fd.append("file", file);
       const res = await fetch("/api/proxy?target=upload", {
         method: "POST",
         body: fd,
-        headers: { "Idempotency-Key": crypto.randomUUID() },
+        headers: { "Idempotency-Key": operationKey },
         signal: AbortSignal.timeout(125000),
       });
       if (!res.ok) {
+        if ([502, 504].includes(res.status)) {
+          const operation = await reconcileOperation("upload", operationKey);
+          if (operation?.status === "succeeded") {
+            await refresh();
+            return;
+          }
+        }
         const d = await res.json().catch(() => ({}));
         throw new Error(errorMessage(d, `Upload lỗi: ${res.status}`));
       }
       await refresh();
     } catch (err) {
       // Processing can persist a failed document before returning an HTTP error.
+      const operation = await reconcileOperation("upload", operationKey).catch(() => null);
       await refresh().catch(() => {});
-      setError(err instanceof Error ? err.message : "Lỗi không xác định");
+      if (operation?.status !== "succeeded") setError(err instanceof Error ? err.message : "Lỗi không xác định");
     } finally {
       setBusy(false);
       e.target.value = "";
@@ -88,23 +98,51 @@ export default function UploadPanel({ initial, initialError = "" }: { initial: D
   async function removeDocument(id: number) {
     if (!window.confirm("Xóa tài liệu và toàn bộ nguồn/chỉ mục liên quan?")) return;
     setBusy(true); setError("");
+    const operationKey = crypto.randomUUID();
     try {
-      const res = await fetch(`/api/documents/${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error("Không xóa được tài liệu.");
+      const res = await fetch(`/api/documents/${id}`, {
+        method: "DELETE",
+        headers: { "Idempotency-Key": operationKey },
+        signal: AbortSignal.timeout(65000),
+      });
+      if (!res.ok) {
+        if ([502, 504].includes(res.status)) {
+          const operation = await reconcileOperation("delete", operationKey);
+          if (operation?.status === "succeeded") { await refresh(); return; }
+        }
+        throw new Error("Không xóa được tài liệu.");
+      }
       await refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Không xóa được tài liệu.");
+      const operation = await reconcileOperation("delete", operationKey).catch(() => null);
+      await refresh().catch(() => {});
+      if (operation?.status !== "succeeded") setError(err instanceof Error ? err.message : "Không xóa được tài liệu.");
     } finally { setBusy(false); }
   }
 
   async function retryDocument(id: number, file: File) {
     setBusy(true); setError("");
+    const operationKey = crypto.randomUUID();
     try {
       const fd = new FormData(); fd.append("file", file);
-      const res = await fetch(`/api/documents/${id}/retry`, { method: "POST", body: fd, headers: { "Idempotency-Key": crypto.randomUUID() } });
-      if (!res.ok) { const data = await res.json().catch(() => ({})); throw new Error(errorMessage(data, "Retry thất bại.")); }
+      const res = await fetch(`/api/documents/${id}/retry`, {
+        method: "POST", body: fd,
+        headers: { "Idempotency-Key": operationKey },
+        signal: AbortSignal.timeout(125000),
+      });
+      if (!res.ok) {
+        if ([502, 504].includes(res.status)) {
+          const operation = await reconcileOperation("retry", operationKey);
+          if (operation?.status === "succeeded") { await refresh(); return; }
+        }
+        const data = await res.json().catch(() => ({})); throw new Error(errorMessage(data, "Retry thất bại."));
+      }
       await refresh();
-    } catch (err) { setError(err instanceof Error ? err.message : "Retry thất bại."); }
+    } catch (err) {
+      const operation = await reconcileOperation("retry", operationKey).catch(() => null);
+      await refresh().catch(() => {});
+      if (operation?.status !== "succeeded") setError(err instanceof Error ? err.message : "Retry thất bại.");
+    }
     finally { setBusy(false); }
   }
 

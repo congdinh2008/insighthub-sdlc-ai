@@ -53,6 +53,10 @@ def serialized_operation(operation_type: str, key: str, request_fingerprint: str
                             (get_settings().idempotency_ttl_hours, created),
                         )
                 else:
+                    lock_conn.execute(
+                        "DELETE FROM operation_records WHERE operation_type=%s AND operation_key=%s AND expires_at<=now()",
+                        (operation_type, key),
+                    )
                     created = lock_conn.execute(
                         "INSERT INTO operation_records(operation_type, operation_key, request_fingerprint, status, expires_at) "
                         "VALUES (%s,%s,%s,'processing',now() + (%s * interval '1 hour')) RETURNING id",

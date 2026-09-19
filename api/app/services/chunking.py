@@ -1,4 +1,4 @@
-"""Word-approximate chunking for the starter; token sizes are estimates."""
+"""Structure-preserving chunks with bounded word-based token estimates."""
 
 from app.core.config import get_settings
 
@@ -11,6 +11,9 @@ def chunk_text(text: str) -> list[str]:
     if not words:
         return []
     chunk_words = max(int(settings.chunk_size * WORDS_PER_TOKEN), 1)
+    # Preserve paragraphs, Markdown tables and code blocks when a source segment fits.
+    if len(words) <= chunk_words:
+        return [text.strip()]
     overlap_words = int(settings.chunk_overlap * WORDS_PER_TOKEN)
     step = max(chunk_words - overlap_words, 1)
     chunks = []

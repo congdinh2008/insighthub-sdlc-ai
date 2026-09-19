@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { ChatResult, Document } from "@/lib/api";
+import { reconcileOperation } from "@/lib/operations";
 
 export default function ChatPanel() {
   const [question, setQuestion] = useState("");
@@ -34,19 +35,29 @@ export default function ChatPanel() {
     setBusy(true);
     setError("");
     setResult(null);
+    const operationKey = crypto.randomUUID();
     try {
       const res = await fetch("/api/proxy?target=chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() },
+        headers: { "Content-Type": "application/json", "Idempotency-Key": operationKey },
         body: JSON.stringify({ question, document_ids: selected }),
       });
       if (!res.ok) {
+        if ([502, 504].includes(res.status)) {
+          const operation = await reconcileOperation("chat", operationKey);
+          if (operation?.status === "succeeded" && operation.response) {
+            setResult(operation.response);
+            return;
+          }
+        }
         const d = await res.json().catch(() => ({}));
         throw new Error(typeof d.detail === "string" ? d.detail : `Câu hỏi không hợp lệ hoặc API trả lỗi (${res.status}).`);
       }
       setResult(await res.json());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Lỗi không xác định");
+      const operation = await reconcileOperation("chat", operationKey).catch(() => null);
+      if (operation?.status === "succeeded" && operation.response) setResult(operation.response);
+      else setError(err instanceof Error ? err.message : "Lỗi không xác định");
     } finally {
       setBusy(false);
     }
@@ -78,7 +89,7 @@ export default function ChatPanel() {
             Nguồn: {result.sources.join(", ") || "(không có)"}
           </div>
           <ul className="citation-list">{result.citations.map((citation) => <li key={citation.citation_id}><button className="action-link" onClick={() => openSource(citation.document_id, citation.source_segment_id)}><strong>{citation.source}</strong> - {citation.locator.type} {citation.locator.value}</button><br /><span className="meta">{citation.excerpt}</span></li>)}</ul>
-          <div className="meta">Chế độ: {result.mode} | Provider: {result.provider} | Model: {result.model} | Latency: {result.latency_ms} ms</div>
+          <div className="meta">Profile: {result.profile} | Provider: {result.provider} | Model: {result.model} | Reranker: {result.retrieval?.reranker_provider || "none"} | Latency: {result.latency_ms} ms</div>
           {sourceView && <div className="source-view" role="dialog" aria-label="Nội dung nguồn"><div><strong>{sourceView.title}</strong><button className="action-link" onClick={() => setSourceView(null)}>Đóng</button></div><pre>{sourceView.content}</pre></div>}
         </>
       )}

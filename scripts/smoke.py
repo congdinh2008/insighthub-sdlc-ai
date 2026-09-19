@@ -62,5 +62,5 @@ try:
     print("PASS: health, web, MD/PDF upload, source locator, chat, validation and origin guards")
 finally:
     for document_id in created:
-        status, _ = call(args.api_url, f"/documents/{document_id}", "DELETE")
+        status, _ = call(args.api_url, f"/documents/{document_id}", "DELETE", headers={"Idempotency-Key": "smoke-delete-" + uuid.uuid4().hex})
         assert status == 204, "Smoke cleanup failed"

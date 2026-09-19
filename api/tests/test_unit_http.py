@@ -10,6 +10,7 @@ from fastapi import HTTPException, UploadFile
 from fastapi.testclient import TestClient
 from pypdf import PdfWriter
 from support import configured
+from app.core.config import get_settings
 from app.core.errors import InvalidDocument, ProviderError
 from app.core.metrics import http_requests_total
 from app.core.upload_limit import UploadLimitMiddleware
@@ -139,6 +140,15 @@ class HttpTests(unittest.TestCase):
         )
         self.assertFalse(any(label["method"].startswith("UNKNOWN") for label in labels))
 
+    def test_runtime_profile_discloses_models_without_credentials(self):
+        response = TestClient(app).get("/system/profile")
+        self.assertEqual(response.status_code, 200)
+        body = response.json()
+        self.assertEqual(body["profile"], get_settings().rag_profile)
+        self.assertEqual(body["reranker"]["provider"], "none")
+        self.assertNotIn("api_key", response.text.casefold())
+        self.assertNotIn("database_url", response.text.casefold())
+
 
 class AsyncHttpTests(unittest.IsolatedAsyncioTestCase):
     async def test_health_remains_responsive_during_blocking_chat(self):
@@ -190,11 +200,20 @@ class AsyncHttpTests(unittest.IsolatedAsyncioTestCase):
         async def send(message):
             sent.append(message)
 
-        with configured(max_upload_bytes=4):
-            await UploadLimitMiddleware(inner)(
-                {"type": "http", "method": "POST", "path": "/documents", "headers": []},
-                receive,
-                send,
+        for path in ("/documents", "/documents/42/retry"):
+            called.clear()
+            sent.clear()
+            messages = iter(
+                [
+                    {"type": "http.request", "body": b"a" * 40000, "more_body": True},
+                    {"type": "http.request", "body": b"b" * 40000, "more_body": True},
+                ]
             )
-        self.assertEqual(called, [])
-        self.assertEqual(sent[0]["status"], 413)
+            with configured(max_upload_bytes=4):
+                await UploadLimitMiddleware(inner)(
+                    {"type": "http", "method": "POST", "path": path, "headers": []},
+                    receive,
+                    send,
+                )
+            self.assertEqual(called, [])
+            self.assertEqual(sent[0]["status"], 413)

@@ -190,10 +190,37 @@ def _retry_document(document_id: int, file: UploadFile, idempotency_key: str | N
 
 
 @router.delete("/{document_id}", status_code=204)
-def delete_document(document_id: int):
-    with get_conn() as conn:
-        with conn.transaction():
-            conn.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s,0))", (f"document:{document_id}",))
-            result = conn.execute("DELETE FROM documents WHERE id=%s RETURNING id", (document_id,)).fetchone()
-    if result is None:
-        raise DocumentNotFound()
+def delete_document(
+    document_id: int,
+    idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+):
+    key = validate_key(idempotency_key)
+    with serialized_operation(
+        "delete", key, fingerprint({"document_id": document_id})
+    ) as operation:
+        if operation["replay"]:
+            return Response(status_code=operation["status"])
+        try:
+            with get_conn() as conn:
+                with conn.transaction():
+                    conn.execute(
+                        "SELECT pg_advisory_xact_lock(hashtextextended(%s,0))",
+                        (f"document:{document_id}",),
+                    )
+                    result = conn.execute(
+                        "DELETE FROM documents WHERE id=%s RETURNING id", (document_id,)
+                    ).fetchone()
+            if result is None:
+                raise DocumentNotFound()
+            complete_operation(
+                operation["id"], 204, {"document_id": document_id, "deleted": True}
+            )
+            return Response(status_code=204)
+        except ServiceError as exc:
+            complete_operation(
+                operation["id"],
+                exc.status_code,
+                {"detail": exc.message, "code": exc.code},
+                error_code=exc.code,
+            )
+            raise

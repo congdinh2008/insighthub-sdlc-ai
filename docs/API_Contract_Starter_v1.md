@@ -2,7 +2,7 @@
 
 ## Quy ước chung
 
-- Mutation upload, retry và chat yêu cầu header `Idempotency-Key`, dài 1-128 ký tự.
+- Mutation upload, retry, delete và chat yêu cầu header `Idempotency-Key`, dài 1-128 ký tự.
 - Cùng key/cùng payload trả lại response đã lưu. Cùng key/khác payload trả `409 idempotency_conflict`.
 - Response lỗi có `detail`, `code`; header có `X-Request-ID`.
 - UI/API local chưa có Auth. Học viên phải thêm ownership server-side trước khi dùng đa người dùng.
@@ -16,9 +16,10 @@
 | `GET` | `/documents/{id}` | Metadata và ingestion attempt history |
 | `GET` | `/documents/{id}/source` | Toàn văn hoặc `segment_id` cụ thể |
 | `POST` | `/documents/{id}/retry` | Multipart đúng file của document failed; tạo attempt mới |
-| `DELETE` | `/documents/{id}` | HTTP 204; xóa source, segments và chunks theo cascade |
+| `DELETE` | `/documents/{id}` | HTTP 204; idempotent; xóa source, segments và chunks theo cascade |
 | `POST` | `/chat` | `question`, `document_ids` tùy chọn, `top_k` tùy chọn |
 | `GET` | `/operations/{type}/{key}` | Đối soát trạng thái/kết quả sau khi client mất response |
+| `GET` | `/system/profile` | Profile/model/retrieval/disclosure hiện hành, không có credential |
 | `GET` | `/healthz`, `/readyz`, `/metrics` | Liveness, readiness và metrics |
 
 ## Chat response
@@ -27,6 +28,9 @@
 {
   "status": "Answered",
   "answer": "...",
+  "claims": [
+    {"text": "...", "citation_ids": ["chunk:42"]}
+  ],
   "citations": [
     {
       "citation_id": "chunk:42",
@@ -38,13 +42,20 @@
     }
   ],
   "sources": ["example.pdf"],
-  "contexts": [],
+  "contexts": [
+    {"context_id": "chunk:42", "source": "example.pdf", "similarity": 0.81, "rerank_score": 0.94}
+  ],
   "mode": "real",
   "provider": "openai",
   "model": "...",
+  "prompt_version": "rag-claims-v2",
+  "profile": "classroom-gemini-local-reranker",
+  "retrieval": {"reranker_provider": "local", "reranker_model": "...", "context_count": 1},
   "usage": {"input_tokens": 10, "output_tokens": 8, "source": "provider"},
   "latency_ms": 1234
 }
 ```
 
-`NoEvidence` trả HTTP 200, `answer: null`, `citations: []`. Provider error, deadline hoặc citation invalid là lỗi kỹ thuật, không chuyển thành `NoEvidence`.
+`NoEvidence` trả HTTP 200, `answer: null`, `claims: []`, `citations: []`. Evidence gate có thể trả kết quả này mà không gọi LLM. Provider error, deadline hoặc citation invalid là lỗi kỹ thuật, không chuyển thành `NoEvidence`.
+
+Mặc định `contexts` chỉ chứa provenance và score, không trả raw chunk text. Chỉ bật `EXPOSE_DEBUG_CONTEXTS=true` trong môi trường debug được kiểm soát.

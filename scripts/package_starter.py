@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
-VERSION = "1.0.0-candidate"
+VERSION = "1.0.0-rc.2"
 ARCHIVE = DIST / f"insighthub-starter-v{VERSION}.zip"
 SRS_SOURCE = ROOT.parent / "04_Requirements" / "SRS_InsightHub_v2.4.md"
 PREFIX = f"insighthub-starter-v{VERSION}"

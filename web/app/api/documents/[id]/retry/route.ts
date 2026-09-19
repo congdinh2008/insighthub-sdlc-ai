@@ -6,8 +6,8 @@ export async function POST(req: Request, context: { params: Promise<{ id: string
   const { id } = await context.params;
   const res = await fetch(`${API_URL}/documents/${encodeURIComponent(id)}/retry`, {
     method: "POST", body: await req.arrayBuffer(),
-    headers: { "Content-Type": req.headers.get("content-type") || "application/octet-stream", "Idempotency-Key": req.headers.get("idempotency-key") || crypto.randomUUID() },
+    headers: { "Content-Type": req.headers.get("content-type") || "application/octet-stream", "Idempotency-Key": req.headers.get("idempotency-key") || crypto.randomUUID(), "X-Request-ID": req.headers.get("x-request-id") || crypto.randomUUID() },
     signal: AbortSignal.timeout(125000),
   });
-  return Response.json(await res.json(), { status: res.status });
+  return Response.json(await res.json(), { status: res.status, headers: { "X-Request-ID": res.headers.get("X-Request-ID") || "" } });
 }

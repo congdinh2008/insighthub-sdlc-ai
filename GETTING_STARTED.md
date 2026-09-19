@@ -41,7 +41,38 @@ Không xóa volume để xử lý schema mismatch. Sao lưu trước khi thay em
 
 ## Provider thật
 
-Đặt `RAG_MODE=real`, chọn rõ provider/model cho chat và embedding, sau đó dùng index riêng. Không commit `.env` hoặc khóa API. Provider lỗi không được fallback sang fixture.
+Chọn một profile mẫu:
+
+```sh
+# Setup ít nhất, không reranker
+cp .env.classroom-gemini.example .env
+
+# Hoặc Gemini + local reranker
+make reranker-local-up
+cp .env.classroom-gemini-local-reranker.example .env
+
+# Hoặc Gemini + Cohere reranker
+cp .env.classroom-gemini-cohere.example .env
+```
+
+Điền khóa vào `.env`, không sửa file `.example` và không commit credential. Sau khi start, kiểm profile:
+
+```sh
+curl -fsS http://127.0.0.1:8107/system/profile
+python3 scripts/run_aev.py --api-url http://127.0.0.1:8107
+```
+
+Provider lỗi không fallback sang fixture. Dùng index riêng khi đổi embedding identity. Bật hoặc tắt reranker không đổi embedding identity nhưng vẫn phải chạy lại AEV. Chi tiết tại [Model Profiles và Reranking](docs/Model_Profiles_And_Reranking.md).
+
+## Backup và package
+
+```sh
+COMPOSE_PROJECT_NAME=insighthub-c07-starter ENV_FILE=.env make backup-restore-check
+make package
+make verify-package
+```
+
+Đọc [Runbook](docs/Runbook_Starter_v1.md) trước khi giữ dữ liệu lớp học.
 
 ## Dừng
 

@@ -33,3 +33,11 @@ def remaining_timeout(maximum: float | None = None) -> float:
 def check_deadline():
     if _deadline.get() is not None:
         remaining_timeout()
+
+
+def apply_statement_timeout(conn):
+    """Fence PostgreSQL work to the remaining application deadline."""
+    if _deadline.get() is None:
+        return
+    milliseconds = max(1, int(remaining_timeout() * 1000))
+    conn.execute("SELECT set_config('statement_timeout', %s, true)", (f"{milliseconds}ms",))

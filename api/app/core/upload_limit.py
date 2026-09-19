@@ -1,5 +1,7 @@
 """Bound the entire multipart body before parsing, including chunked HTTP requests."""
 
+import re
+
 from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
@@ -13,7 +15,10 @@ class UploadLimitMiddleware:
         if (
             scope["type"] != "http"
             or scope["method"] != "POST"
-            or scope["path"].rstrip("/") != "/documents"
+            or not (
+                scope["path"].rstrip("/") == "/documents"
+                or re.fullmatch(r"/documents/[1-9][0-9]*/retry/?", scope["path"])
+            )
         ):
             return await self.app(scope, receive, send)
         # Allow multipart headers/boundaries in addition to the actual file limit.
@@ -24,11 +29,11 @@ class UploadLimitMiddleware:
             if length < 0:
                 raise ValueError
         except ValueError:
-            return await JSONResponse({"detail": "Invalid Content-Length"}, 400)(
+            return await JSONResponse({"detail": "Content-Length không hợp lệ.", "code": "invalid_content_length"}, 400)(
                 scope, receive, send
             )
         if length > limit:
-            return await JSONResponse({"detail": "Upload quá lớn."}, 413)(
+            return await JSONResponse({"detail": "Upload quá lớn.", "code": "upload_too_large"}, 413)(
                 scope, receive, send
             )
         body = bytearray()
@@ -38,7 +43,7 @@ class UploadLimitMiddleware:
                 return
             data = message.get("body", b"")
             if len(body) + len(data) > limit:
-                return await JSONResponse({"detail": "Upload quá lớn."}, 413)(
+                return await JSONResponse({"detail": "Upload quá lớn.", "code": "upload_too_large"}, 413)(
                     scope, receive, send
                 )
             body.extend(data)
