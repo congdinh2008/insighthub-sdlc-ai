@@ -63,7 +63,7 @@ def main():
         "version": 1,
         "metadata": {
             "timestamp": "2026-09-19T00:00:00Z",
-            "component": {"type": "application", "name": "InsightHub Starter", "version": "1.0.0-rc.2"},
+            "component": {"type": "application", "name": "InsightHub Starter", "version": json.loads((ROOT / "starter.manifest.json").read_text())["version"]},
         },
         "components": components,
     }

@@ -1,21 +1,25 @@
 # Starter Readiness v1.0.0
 
-Ngày đánh giá: 19/09/2026  
-Trạng thái: Release candidate `v1.0.0-rc.2`
+Ngày đánh giá: 19/09/2026. Technical candidate `v1.0.0-rc.3`. Phạm vi: nền RAG được cấp cho C07; chưa phải sản phẩm hoàn chỉnh hoặc quyết định phát hành lớp.
 
-| Gate | Trạng thái | Bằng chứng |
+| Gate | Kết quả | Bằng chứng và giới hạn |
 | --- | --- | --- |
-| G0 Baseline/contract | Pass | Architecture, API contract, 3 ADR và SRS 2.4 hash trong package manifest |
-| G1 Data/ingestion | Pass | Forward migration; original/extracted/segment/chunk; limits; retry/dedup tests |
-| G2 Operation/RAG | Pass local/mock | Evidence gate, optional local/Cohere reranker, claim citation, idempotency/reconciliation, deadlines, source scope, delete locks và 70 backend tests |
-| G3 UX/real RAG | Pending real AEV | UI disclosure và 3 web tests pass; AEV-01 v2 có grounded, multi-document, NoEvidence, injection và repeated case; provider thật chưa chạy vì package không chứa API key |
-| G4 Data/recovery/package | Pass local | Backup-restore drill pass; clean-volume smoke pass; npm audit có 0 vulnerability; CycloneDX SBOM và secret-aware package verifier có trong release candidate |
+| Baseline/contract | Đạt kiểm kỹ thuật | SRS 2.4 đóng gói nội bộ; 72 yêu cầu/163 AC được mapping; validator kiểm version/hash/link. SRS và học liệu vẫn Draft chờ review nội dung. |
+| Backend/data | Đạt | 86 backend tests: lỗi terminal, deadline cả SQL/lock, replay nguồn đã xóa, Markdown heading/table/code, failed/pending dedup; forward migration 002. |
+| Web/recovery | Đạt | Build/typecheck, 6 unit tests; Chrome và Edge mỗi trình duyệt 14 kiểm tra tại 1440x900 và 390x844, gồm reload/lost response/keyboard/source invalidation. |
+| Real RAG | Đạt trên corpus synthetic | DeepSeek flash + Gemini embedding 2, 1024D, reranker none; 8/8 lượt, 13 claim có nguồn, hai NoEvidence, injection và PDF. Reviewer: Codex, chưa phải review độc lập của instructor. |
+| Recovery | Đạt trên fixture có dữ liệu | Hash 8 bảng khớp sau restore; bytes/segments/locator/chat/retrieval qua API đạt, không orphan. Không dùng kết quả này làm đánh giá chất lượng AI. |
+| Packaging | Công cụ và hướng dẫn đầy đủ | SRS nằm trong repo, Git init từ ZIP, pinned CI, SBOM, sạch working tree, kiểm manifest/hash/secret và hướng dẫn tự đóng gói. Biên nhận exact-package clean-room được lưu cùng hồ sơ bàn giao bên ngoài ZIP. |
+| Học liệu đầu khóa | Đã biên soạn Draft | Learning Contract, PRE B1-B2, B1-B10/milestones, mapping, rubric/evidence, desk spike Auth/email. |
+| Vận hành lớp | Chưa xác nhận | Pilot với Developer đại diện, Google OAuth bằng client/tài khoản lớp, lựa chọn email sandbox/hai tool và rubric calibration. Không thể thay bằng unit test hoặc agent timing. |
 
-## Điều kiện chuyển Ready
+## Bằng chứng kèm package
 
-1. Chạy AEV-01 trên provider/model được lớp sử dụng, ghi cấu hình không chứa secret, corpus hash và kết quả `Answered`/`NoEvidence`/injection.
-2. Ghi Chrome hoặc Edge version chính thức của lớp và hoàn tất keyboard walkthrough nếu khác môi trường kiểm hiện tại.
-3. Xác nhận archive SHA-256 từ working tree sạch khi phát hành bản gửi học viên.
-4. Khi các gate trên pass, đổi version từ `rc.2` sang `1.0.0` và đóng baseline lớp.
+- [AEV thật và review từng claim](evidence/AEV-01_20260919.json).
+- [Chrome](evidence/chrome_20260919.json), [Edge](evidence/msedge_20260919.json).
+- [Restore có dữ liệu](evidence/Restore_20260919.json).
+- [Learning Contract](../learner/00_START_LEARNING.md), [Auth/email feasibility](../learner/04_Auth_Email_Feasibility.md).
 
-Không dùng fixture hoặc mock HTTP làm bằng chứng semantic của AI thật.
+Lệnh tái lập: `make test`, `make smoke`, `npm run test:e2e` trong web, `python3 scripts/check_project.py`, `make aev` trên runtime real riêng và restore drill theo Runbook. CI đã có các bước fixture, browser, restore, audit và package; chỉ coi GitHub CI của lớp đạt khi workflow chạy ở repository lớp.
+
+Giữ nhãn rc.3 cho tới khi instructor quyết định baseline lớp. Không tự đổi thành 1.0.0, không gửi tài liệu/publish LMS. Các model và dịch vụ có thể đổi theo thời gian; chạy lại AEV khi thay model/prompt/retrieval/corpus. Không dùng working tree hoặc báo cáo lịch sử thay manifest của ZIP thực tế.

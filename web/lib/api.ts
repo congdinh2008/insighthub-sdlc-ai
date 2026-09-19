@@ -17,11 +17,12 @@ export interface Document {
 }
 
 export interface ChatResult {
+  historical_sources_unavailable?: boolean;
   status: "Answered" | "NoEvidence";
   answer: string | null;
   claims: { text: string; citation_ids: string[] }[];
   sources: string[];
-  citations: { citation_id: string; document_id: number; source_segment_id?: number; source: string; locator: { type: string; value: string }; excerpt: string }[];
+  citations: { citation_id: string; document_id: number; source_segment_id?: number; source: string; locator: { type: string; value: string }; excerpt: string | null; available?: boolean }[];
   contexts: { source: string; similarity: number; rerank_score?: number | null }[];
   latency_ms: number;
   mode?: "fixture" | "real";
@@ -44,20 +45,6 @@ export interface RuntimeProfile {
 export async function listDocuments(): Promise<Document[]> {
   const res = await fetch(`${API_URL}/documents`, { cache: "no-store", signal: AbortSignal.timeout(10000) });
   if (!res.ok) throw new Error(`API error: ${res.status}`);
-  return res.json();
-}
-
-export async function askQuestion(question: string, documentIds?: number[]): Promise<ChatResult> {
-  const res = await fetch(`${API_URL}/chat`, {
-    signal: AbortSignal.timeout(60000),
-    method: "POST",
-    headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() },
-    body: JSON.stringify({ question, document_ids: documentIds }),
-  });
-  if (!res.ok) {
-    const detail = await res.json().catch(() => ({}));
-    throw new Error(detail.detail || `API error: ${res.status}`);
-  }
   return res.json();
 }
 

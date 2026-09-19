@@ -47,104 +47,88 @@ def normalized(value: str) -> str:
     return unicodedata.normalize("NFC", value).casefold()
 
 
+def check_response(case, response, status, documents, read_source):
+    """Structural/source oracle. Semantic support still requires claim review."""
+    answer=response.get("answer") or ""
+    claims=response.get("claims") or []
+    citations=response.get("citations") or []
+    allowed={documents[name] for name in case["sources"]}
+    citation_ids={item.get("citation_id") for item in citations}
+    answered=case["expected_status"]=="Answered"
+    source_checks=[]
+    for citation in citations:
+        code,source=read_source(citation)
+        excerpt=citation.get("excerpt") or ""
+        content=source.get("content") or ""
+        source_checks.append({
+            "citation_id":citation.get("citation_id"),"source":citation.get("source"),"http_status":code,
+            "locator":source.get("locator"),"locator_matches":source.get("locator")==citation.get("locator"),
+            "excerpt_matches":bool(excerpt) and " ".join(excerpt.split()) in " ".join(content.split()),
+            "source_sha256":hashlib.sha256(content.encode()).hexdigest(),
+            "expected_facts_present":{fact:normalized(fact) in normalized(content) for oracle in case.get("expected_evidence",[]) if oracle["source"]==citation.get("source") for fact in oracle["required_facts"]},
+        })
+    checks={
+        "http_200":status==200,"status":response.get("status")==case["expected_status"],
+        "concepts":all(normalized(term) in normalized(answer) for term in case.get("must_include_concepts",[])),
+        "forbidden":all(normalized(term) not in normalized(answer) for term in case.get("forbidden",[])),
+        "citation_scope":all(c.get("document_id") in allowed for c in citations),
+        "citation_presence":bool(citations) if answered else not citations,
+        "claim_references":bool(claims) and all(isinstance(c,dict) and c.get("text") and c.get("citation_ids") and set(c["citation_ids"])<=citation_ids for c in claims) if answered else not claims and not answer,
+        "source_links":all(c["http_status"]==200 and c["locator_matches"] and c["excerpt_matches"] for c in source_checks),
+        "expected_sources":all(any(c["source"]==oracle["source"] and c["locator"]==oracle["locator"] and all(c["expected_facts_present"].get(fact,False) for fact in oracle["required_facts"]) for c in source_checks) for oracle in case.get("expected_evidence",[])),
+        "deadline":response.get("latency_ms",float('inf')) <= 60000,
+    }
+    return checks,source_checks
+
+
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--api-url", default="http://127.0.0.1:8107")
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--api-url",default="http://127.0.0.1:8107")
     parser.add_argument("--output")
-    args = parser.parse_args()
-    base = args.api_url.rstrip("/")
-    status, raw_profile, _ = call(base, "/system/profile")
-    if status != 200:
-        raise SystemExit("Runtime profile is unavailable")
-    profile = json.loads(raw_profile)
-    if profile["mode"] != "real":
-        raise SystemExit("AEV requires RAG_MODE=real; fixture results are invalid")
-
-    spec = json.loads((ROOT / "evaluation" / "AEV-01.json").read_text())
-    source_names = sorted({name for case in spec["cases"] for name in case["sources"]})
-    documents, created, corpus_hashes = {}, [], {}
+    args=parser.parse_args(); base=args.api_url.rstrip("/")
+    output=Path(args.output) if args.output else ROOT/"reports/evaluation"/f"AEV-01-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
+    output.parent.mkdir(parents=True,exist_ok=True)
+    status,raw,_=call(base,"/system/profile")
+    if status != 200: raise SystemExit("Runtime profile unavailable")
+    profile=json.loads(raw)
+    if profile["mode"] != "real": raise SystemExit("AEV requires RAG_MODE=real")
+    spec=json.loads((ROOT/"evaluation/AEV-01.json").read_text())
+    documents,created,results,uploads,hashes={ },[],[],[],{}
+    cleanup=[]
+    artifact={"schema_version":2,"created_at":datetime.now(timezone.utc).isoformat(),"profile":profile,"spec_version":spec["version"],"corpus_sha256":hashes,"uploads":uploads,"results":results,"cleanup":cleanup,"semantic_review":"pending"}
     try:
-        for name in source_names:
-            path = CORPUS / name
-            corpus_hashes[name] = hashlib.sha256(path.read_bytes()).hexdigest()
-            status, body, _ = upload(base, path)
-            if status != 201:
-                raise SystemExit(f"Upload failed for {name}: HTTP {status}")
-            document = json.loads(body)
-            documents[name] = document["id"]
-            if not document.get("deduplicated", False):
-                created.append(document["id"])
-
-        results = []
-        passed = 0
+        for name in sorted({name for case in spec["cases"] for name in case["sources"]}):
+            path=CORPUS/name; hashes[name]=hashlib.sha256(path.read_bytes()).hexdigest()
+            start=time.perf_counter(); status,raw,_=upload(base,path); response=json.loads(raw)
+            uploads.append({"source":name,"http_status":status,"latency_ms":int((time.perf_counter()-start)*1000),"document":response})
+            identifier=response.get("id") or response.get("document_id")
+            if identifier and not response.get("deduplicated",False): created.append(identifier)
+            if status!=201 or response.get("status")!="ready": raise RuntimeError(f"Upload failed: {name}, HTTP {status}")
+            documents[name]=identifier
+        def read_source(citation):
+            code,raw,_=call(base,f"/documents/{citation['document_id']}/source?segment_id={citation['source_segment_id']}")
+            return code,json.loads(raw)
         for case in spec["cases"]:
-            for run in range(1, case.get("repeat", 1) + 1):
-                payload = json.dumps({
-                    "question": case["question"],
-                    "document_ids": [documents[name] for name in case["sources"]],
-                }, ensure_ascii=False).encode()
-                started = time.perf_counter()
-                status, body, headers = call(
-                    base,
-                    "/chat",
-                    "POST",
-                    payload,
-                    {"Content-Type": "application/json", "Idempotency-Key": "aev-chat-" + uuid.uuid4().hex},
-                )
-                latency_ms = int((time.perf_counter() - started) * 1000)
-                response = json.loads(body)
-                answer = response.get("answer") or ""
-                allowed_ids = {documents[name] for name in case["sources"]}
-                citations = response.get("citations") or []
-                checks = {
-                    "http_200": status == 200,
-                    "status": response.get("status") == case["expected_status"],
-                    "concepts": all(normalized(term) in normalized(answer) for term in case.get("must_include_concepts", [])),
-                    "forbidden": all(normalized(term) not in normalized(answer) for term in case.get("forbidden", [])),
-                    "citation_scope": all(item.get("document_id") in allowed_ids for item in citations),
-                    "citation_presence": bool(citations) if case["expected_status"] == "Answered" else not citations,
-                    "claim_grounding": all(claim.get("citation_ids") for claim in response.get("claims", [])) if case["expected_status"] == "Answered" else not response.get("claims"),
-                }
-                verdict = all(checks.values())
-                passed += int(verdict)
-                results.append({
-                    "case_id": case["id"],
-                    "run": run,
-                    "passed": verdict,
-                    "checks": checks,
-                    "http_status": status,
-                    "response_status": response.get("status"),
-                    "answer": answer,
-                    "citations": citations,
-                    "latency_ms": latency_ms,
-                    "request_id": headers.get("X-Request-ID"),
-                    "usage": response.get("usage"),
-                    "retrieval": response.get("retrieval"),
-                })
-        artifact = {
-            "schema_version": 1,
-            "created_at": datetime.now(timezone.utc).isoformat(),
-            "api_url": base,
-            "profile": profile,
-            "corpus_sha256": corpus_hashes,
-            "summary": {"passed": passed, "total": len(results), "success": passed == len(results)},
-            "results": results,
-        }
-        output = Path(args.output) if args.output else ROOT / "reports" / "evaluation" / f"AEV-01-{datetime.now().strftime('%Y%m%d-%H%M%S')}.json"
-        output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(json.dumps(artifact, ensure_ascii=False, indent=2) + "\n")
-        print(output)
-        print(f"PASS={passed}/{len(results)}")
-        if passed != len(results):
-            raise SystemExit(1)
+            for run in range(1,case.get("repeat",1)+1):
+                payload=json.dumps({"question":case["question"],"document_ids":[documents[name] for name in case["sources"]]},ensure_ascii=False).encode()
+                start=time.perf_counter()
+                status,raw,headers=call(base,"/chat","POST",payload,{"Content-Type":"application/json","Idempotency-Key":"aev-chat-"+uuid.uuid4().hex})
+                elapsed=int((time.perf_counter()-start)*1000); response=json.loads(raw)
+                checks,source_checks=check_response(case,response,status,documents,read_source)
+                results.append({"case_id":case["id"],"run":run,"supplement":case.get("supplement",False),"passed":all(checks.values()),"checks":checks,"source_checks":source_checks,"http_status":status,"latency_ms":elapsed,"request_id":next((v for k,v in headers.items() if k.lower()=="x-request-id"),None),"response":response,"expected_evidence":case["expected_evidence"],"semantic_review":{"verdict":"pending","claims":[{"text":c["text"],"citation_ids":c["citation_ids"],"supported":None,"reason":""} for c in response.get("claims",[])]}})
+                print(f"{case['id']} run={run} HTTP={status} checks={'PASS' if all(checks.values()) else 'FAIL'}",flush=True)
+    except Exception as exc:
+        artifact['run_error']=str(exc) if isinstance(exc,RuntimeError) else type(exc).__name__
     finally:
-        for document_id in created:
-            call(
-                base,
-                f"/documents/{document_id}",
-                "DELETE",
-                headers={"Idempotency-Key": "aev-delete-" + uuid.uuid4().hex},
-            )
+        for identifier in created:
+            status,_,_=call(base,f"/documents/{identifier}","DELETE",headers={"Idempotency-Key":"aev-delete-"+uuid.uuid4().hex})
+            cleanup.append({"document_id":identifier,"http_status":status})
+        expected=sum(case.get('repeat',1) for case in spec['cases'])
+        passed=sum(r['passed'] for r in results)
+        artifact['summary']={"passed":passed,"total":len(results),"expected":expected,"success":passed==expected and all(c['http_status']==204 for c in cleanup)}
+        output.write_text(json.dumps(artifact,ensure_ascii=False,indent=2)+"\n")
+        print(output); print(f"PASS={passed}/{expected}; semantic review pending")
+    if not artifact['summary']['success']: raise SystemExit(1)
 
 
 if __name__ == "__main__":

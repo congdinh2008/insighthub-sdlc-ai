@@ -13,3 +13,15 @@ export function allowsMutation(
   const origin = request.headers.get("origin");
   return origin === null || allowedOrigins.includes(origin);
 }
+
+export function documentError(code?: string | null): string {
+  const messages: Record<string, string> = {
+    invalid_document: "Tài liệu không có văn bản hợp lệ. Kiểm tra nội dung và định dạng.",
+    provider_error: "Dịch vụ AI chưa xử lý được tài liệu. Thử lại với đúng tệp sau khi kiểm cấu hình.",
+    provider_rate_limited: "Dịch vụ AI đang giới hạn lưu lượng. Thử lại sau.",
+    provider_timeout: "Dịch vụ AI phản hồi chậm. Có thể thử lại với đúng tệp.",
+    deadline_exceeded: "Xử lý quá thời hạn. Có thể thử lại với đúng tệp.",
+    interrupted: "Xử lý bị gián đoạn. Có thể thử lại với đúng tệp.",
+  };
+  return code ? messages[code] || "Xử lý không thành công. Kiểm tra cấu hình hoặc liên hệ instructor." : "";
+}

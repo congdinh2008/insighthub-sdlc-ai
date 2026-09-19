@@ -66,8 +66,12 @@ def retrieve(question: str, top_k: int | None = None, document_ids: list[int] | 
         check_schema(conn)
         if not ensure_index_identity(conn, claim=False):
             return []
-        check_deadline()
-        query_vec = embed([question], input_type="query")[0]
+    query_vec = embed([question], input_type="query")[0]
+    check_deadline()
+    with get_conn() as conn:
+        check_schema(conn)
+        if not ensure_index_identity(conn, claim=False):
+            return []
         check_deadline()
         conn.execute("SELECT set_config('hnsw.ef_search', %s, true)", (str(settings.hnsw_ef_search),))
         candidate_k = max(k, settings.retrieval_candidate_k)

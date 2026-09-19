@@ -54,6 +54,14 @@ def main():
             "docs/release/SBOM.cdx.json",
             "evaluation/AEV-01.json",
             "scripts/run_aev.py",
+            "scripts/check_project.py",
+            "scripts/backup_restore_check.py",
+            "docs/learner/00_START_LEARNING.md",
+            "docs/learner/01_PRE_Milestones.md",
+            "docs/learner/02_SRS_Assignment_Map.md",
+            "docs/learner/03_Rubric_Evidence.md",
+            "docs/learner/04_Auth_Email_Feasibility.md",
+            "api/migrations/002_operation_deadlines.sql",
             "requirements/SRS_InsightHub_v2.4.md",
         )
         for required in required_files:
@@ -77,6 +85,11 @@ def main():
         sbom = json.loads(archive.read(prefix + "docs/release/SBOM.cdx.json"))
         if sbom.get("bomFormat") != "CycloneDX" or not sbom.get("components"):
             raise SystemExit("CycloneDX SBOM is missing or empty")
+        versions = [manifest['version'], sbom['metadata']['component']['version']]
+        for item in ('starter.manifest.json', 'web/package.json', 'web/package-lock.json'):
+            versions.append(json.loads(archive.read(prefix + item))['version'])
+        if len(set(versions)) != 1:
+            raise SystemExit('Archive version mismatch')
     checksum_file = archive_path.with_suffix(archive_path.suffix + ".sha256")
     if not checksum_file.is_file() or not checksum_file.read_text().startswith(sha256(archive_path.read_bytes())):
         raise SystemExit("Archive checksum file is missing or invalid")

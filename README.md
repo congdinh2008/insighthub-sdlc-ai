@@ -1,6 +1,6 @@
 # InsightHub Starter
 
-19/09/2026 | B2B C07 - SDLC with AI | Starter v1.0.0-rc.2 | Owner: Đinh Xuân Công.
+19/09/2026 | B2B C07 - SDLC with AI | Starter v1.0.0-rc.3 | Owner: Đinh Xuân Công.
 
 Codebase nền cho Running Project InsightHub theo SRS 2.4. Starter giữ kiến trúc đồng bộ ba dịch vụ và để học viên phát triển Auth, Notebook, hội thoại, ghi chú và AI Tools trong khóa học.
 
@@ -10,7 +10,7 @@ Codebase nền cho Running Project InsightHub theo SRS 2.4. Starter giữ kiến
 - Upload TXT/MD/PDF đồng bộ, HTTP 201 chỉ sau khi ingestion thành công.
 - Giới hạn 10 MiB, 100 trang PDF, 200.000 ký tự trích xuất; Unicode NFC.
 - Lưu tệp gốc, toàn văn, segment/page locator, chunks và embedding identity.
-- Idempotency 24 giờ cho upload, retry và chat; dedup theo SHA-256.
+- Idempotency 24 giờ cho upload, retry, delete và chat; dedup theo SHA-256.
 - Trạng thái tài liệu, attempt history, retry cùng document, xem nguồn và xóa.
 - RAG theo tập `document_ids`, evidence threshold, candidate pool, diversity và context token budget.
 - Reranker là option: tắt, TEI local hoặc Cohere. Không silent fallback khi provider lỗi.
@@ -28,9 +28,13 @@ Codebase nền cho Running Project InsightHub theo SRS 2.4. Starter giữ kiến
 - AI Tools: mindmap, summary, slide, quiz và report.
 - Policy/rate limit theo owner/Notebook, audit nghiệp vụ và mở rộng evaluation theo product use case.
 
+Bài tập chọn tối thiểu hai trong năm AI Tool; xem [Learning Contract và PRE](docs/learner/00_START_LEARNING.md). SRS đầy đủ sản phẩm vẫn yêu cầu cả năm.
+
 Các điểm tích hợp được mô tả tại [Integration Guide](docs/Integration_Guide_Auth_Notebook.md). Không gắn dữ liệu starter cho tài khoản đầu tiên và không tin `owner_id` do client gửi.
 
 ## Bắt đầu
+
+Chỉ dùng một file `.env`, tạo từ `.env.example`. Mặc định chạy fixture offline. Để kiểm chứng AI thật, đổi `RAG_MODE=real`, điền `DEEPSEEK_API_KEY` cho hỏi đáp và `GEMINI_API_KEY` cho embedding. Model, provider, timeout và retrieval có giá trị mặc định trong code; reranker tắt.
 
 Đọc [START_HERE.md](START_HERE.md), [GETTING_STARTED.md](GETTING_STARTED.md), [Model Profiles](docs/Model_Profiles_And_Reranking.md), [API contract](docs/API_Contract_Starter_v1.md), [Architecture](docs/Architecture_Starter_v1.md) và [Release checklist](docs/release/Starter_Readiness_v1.0.0.md).
 

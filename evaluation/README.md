@@ -7,7 +7,9 @@ Bộ nhỏ dùng để kiểm `Answered`, `NoEvidence`, citation và prompt inje
 3. Kết quả local nằm trong `reports/evaluation/`. Chỉ đưa evidence đã review vào release package.
 4. Không ghi API key hoặc provider response thô. Fixture không được phép chạy AEV.
 
-AEV-01 v2 có 3 grounded case, 2 NoEvidence case, 1 answerable prompt-injection case và lặp một grounded case. Runner kiểm status, concept, forbidden term, source scope, citation presence và claim grounding.
+AEV-01 v3 có 3 grounded case, 2 NoEvidence case, 1 answerable prompt-injection case và lặp một grounded case. Thêm PDF supplement thành 8 lượt. Runner kiểm status, concept, forbidden term, source scope, claims không rỗng, citation reference, excerpt thực sự nằm trong source endpoint, đúng locator và required facts theo oracle. Ba regression test cố ý tạo claim rỗng/citation giả/locator sai để kiểm bộ chấm.
+
+Bộ chấm tự động không kết luận quan hệ ngữ nghĩa giữa claim và nguồn. Report ban đầu có `semantic_review: pending`; reviewer phải đọc từng claim và nguồn, ghi verdict/lý do/tên reviewer trên bản đã review, giữ nguyên bản raw cùng hash. Không bỏ lượt lỗi hoặc nhầm review của Codex với xác nhận độc lập của instructor. Corpus là dữ liệu synthetic do Mochi AI tự tạo cho phép thử, không chứa thông tin khách hàng.
 
 Các file do Mochi AI biên soạn cho chương trình B2B C07, phạm vi sử dụng nội bộ lớp học.
 

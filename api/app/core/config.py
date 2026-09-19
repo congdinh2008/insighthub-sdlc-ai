@@ -13,6 +13,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         env_file=".env",
+        env_ignore_empty=True,
         extra="ignore",
         frozen=True,
         hide_input_in_errors=True,
@@ -27,17 +28,20 @@ class Settings(BaseSettings):
         default="postgresql://insighthub:insighthub@postgres:5432/insighthub",
         repr=False,
     )
-    rag_mode: Literal["fixture", "real"] = "real"
+    rag_mode: Literal["fixture", "real"] = "fixture"
     rag_profile: str = Field(default="custom", min_length=1, max_length=64)
-    llm_provider: Literal["gemini", "anthropic", "ollama", "openai", "fixture"] = (
-        "gemini"
+    llm_provider: Literal["deepseek", "gemini", "anthropic", "ollama", "openai", "fixture"] = (
+        "fixture"
     )
     embedding_provider: Literal["gemini", "voyage", "openai", "ollama", "fixture"] = (
-        "gemini"
+        "fixture"
     )
     reranker_provider: Literal["none", "local", "cohere"] = "none"
+    deepseek_api_key: str = Field(default="", repr=False)
+    deepseek_base_url: str = "https://api.deepseek.com"
+    deepseek_chat_model: str = "deepseek-flash"
     gemini_api_key: str = Field(default="", repr=False)
-    gemini_chat_model: str = ""
+    gemini_chat_model: str = "gemini-3.1-flash-lite"
     gemini_embedding_model: str = "gemini-embedding-2"
     anthropic_api_key: str = Field(default="", repr=False)
     anthropic_chat_model: str = ""
@@ -90,6 +94,34 @@ class Settings(BaseSettings):
     )
     migration_path: str = "/app/migrations"
 
+    @model_validator(mode="before")
+    @classmethod
+    def apply_mode_defaults(cls, values):
+        """One mode switch for onboarding; explicit advanced overrides still validate."""
+        values = dict(values)
+        mode = str(values.get("rag_mode", "fixture")).strip()
+        values.setdefault("llm_provider", "deepseek" if mode == "real" else "fixture")
+        values.setdefault("embedding_provider", "gemini" if mode == "real" else "fixture")
+        classroom = values["embedding_provider"] == "gemini" and values["llm_provider"] in {"gemini", "deepseek"}
+        reranker = str(values.get("reranker_provider", "none")).strip()
+        profile = "fixture-offline" if mode == "fixture" else "custom"
+        if mode == "real" and classroom:
+            profile = "classroom-deepseek-gemini" if values["llm_provider"] == "deepseek" else "classroom-gemini"
+            profile += {"none": "", "local": "-local-reranker", "cohere": "-cohere"}.get(reranker, "")
+        values.setdefault("rag_profile", profile)
+        values.setdefault("retrieval_min_similarity", 0.20 if mode == "real" and values["embedding_provider"] == "gemini" else -1.0)
+        if mode == "fixture":
+            values.setdefault("ai_data_usage_notice", "Fixture offline không gửi dữ liệu tới provider bên ngoài.")
+        elif classroom:
+            generation = "DeepSeek" if values["llm_provider"] == "deepseek" else "Gemini"
+            notice = f"Nội dung tài liệu và câu hỏi dùng tạo embedding được gửi tới Gemini; câu hỏi và các đoạn nguồn được chọn được gửi tới {generation} để trả lời."
+            if reranker == "cohere":
+                notice += " Câu hỏi và candidate chunks còn được gửi tới Cohere để rerank."
+            if generation == "Gemini":
+                values.setdefault("ai_data_policy_url", "https://ai.google.dev/gemini-api/terms")
+            values.setdefault("ai_data_usage_notice", notice + " Chỉ dùng bộ dữ liệu thực hành được phép; kiểm chính sách dữ liệu của từng provider trước khi sử dụng.")
+        return values
+
     @model_validator(mode="after")
     def validate_configuration(self):
         if self.chunk_overlap >= self.chunk_size:
@@ -108,10 +140,10 @@ class Settings(BaseSettings):
         elif "fixture" in (self.llm_provider, self.embedding_provider):
             raise ValueError("Fixture providers require RAG_MODE=fixture")
         for provider in {self.llm_provider, self.embedding_provider}:
-            if provider in {"gemini", "anthropic", "voyage", "openai"}:
+            if provider in {"deepseek", "gemini", "anthropic", "voyage", "openai"}:
                 if not getattr(self, f"{provider}_api_key"):
                     raise ValueError(f"{provider.upper()}_API_KEY is required")
-            if provider in {"ollama", "openai"}:
+            if provider in {"deepseek", "ollama", "openai"}:
                 value = getattr(self, f"{provider}_base_url")
                 parsed = urlsplit(value)
                 if (

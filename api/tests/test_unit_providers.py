@@ -328,6 +328,45 @@ class GenerationTests(unittest.TestCase):
                 self.assertEqual(result["answer"], "answer")
                 self.assertEqual(result["usage"]["input_tokens"], 2)
 
+    def test_deepseek_json_contract_uses_its_own_key_and_token_parameter(self):
+        response = {
+            "choices": [{"finish_reason": "stop", "message": {
+                "content": '{"status":"Answered","claims":[{"text":"answer","citation_ids":["chunk:1"]}]}',
+                "reasoning_content": "must not be published",
+            }}],
+            "usage": {"prompt_tokens": 12, "completion_tokens": 7},
+        }
+        with (
+            real_config("deepseek", deepseek_api_key="test-deepseek-key", llm_model="deepseek-flash"),
+            patch("app.services.llm.post_json", return_value=response) as transport,
+        ):
+            result = generate("question", self.contexts)
+        self.assertEqual(transport.call_args.args[0], "https://api.deepseek.com/chat/completions")
+        self.assertEqual(transport.call_args.kwargs["headers"], {"Authorization": "Bearer test-deepseek-key"})
+        payload = transport.call_args.kwargs["payload"]
+        self.assertIn("max_tokens", payload)
+        self.assertNotIn("max_completion_tokens", payload)
+        self.assertEqual(payload["response_format"], {"type": "json_object"})
+        self.assertEqual(payload["thinking"], {"type": "disabled"})
+        self.assertEqual(result["provider"], "deepseek")
+        self.assertEqual(result["answer"], "answer")
+        self.assertEqual(result["usage"], {"input_tokens": 12, "output_tokens": 7, "source": "provider"})
+        self.assertNotIn("reasoning_content", result)
+
+    def test_deepseek_rejects_incomplete_empty_or_invalid_outputs(self):
+        valid = '{"status":"Answered","claims":[{"text":"answer","citation_ids":["chunk:1"]}]}'
+        for finish, content in (("length", valid), ("content_filter", valid), ("aborted", valid),
+                                ("stop", ""), ("stop", "not json")):
+            with (
+                self.subTest(finish=finish, content=content),
+                real_config("deepseek", deepseek_api_key="test-deepseek-key"),
+                patch("app.services.llm.post_json", return_value={
+                    "choices": [{"finish_reason": finish, "message": {"content": content}}],
+                }),
+                self.assertRaises(ProviderError),
+            ):
+                generate("question", self.contexts)
+
     def test_failure_or_empty_real_answer_is_not_fixture(self):
         for response in (
             {},

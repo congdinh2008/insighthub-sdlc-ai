@@ -24,7 +24,13 @@ test-web:
 	$(COMPOSE) build web-check
 	$(COMPOSE) --profile checks run --rm --no-deps web-check
 
-test: test-backend test-web
+test-tools:
+	$(PYTHON) -m unittest discover -s scripts/tests -v
+
+test-e2e:
+	cd web && npm run test:e2e
+
+test: test-backend test-web test-tools
 
 smoke:
 	$(PYTHON) scripts/smoke.py --api-url "$(API_URL)" --web-url "$(WEB_URL)"

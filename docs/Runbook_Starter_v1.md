@@ -44,7 +44,18 @@ Runner upload corpus riêng, chạy `evaluation/AEV-01.json`, kiểm Answered/No
 COMPOSE_PROJECT_NAME=insighthub-c07-starter ENV_FILE=.env make backup-restore-check
 ```
 
-Script tạo PostgreSQL custom dump, restore vào database tạm trong cùng container, so sánh row count của các bảng nền và ghi SHA-256 vào `reports/backup-restore/`. Database tạm luôn được drop khi kết thúc.
+Script từ chối database rỗng. Nó hash mọi giá trị của tám bảng, gồm bytes gốc, segments, vectors, attempts và operations; so sánh trước/restore/sau để phát hiện thay đổi đồng thời. API trên database restore phải đọc đúng toàn văn/locator, đối soát chat và retrieve đúng phạm vi. Database tạm và dump tự xóa sau drill; report hash được giữ trong `reports/backup-restore/`.
+
+Tạo corpus fixture cho drill trong namespace test riêng:
+
+```sh
+API_PORT=8127 WEB_PORT=3127 docker compose --env-file .env.example -p insighthub-c07-recovery up --build -d --wait
+python3 scripts/seed_recovery_fixture.py --api-url http://127.0.0.1:8127
+python3 scripts/backup_restore_check.py --project insighthub-c07-recovery --env-file .env.example
+docker compose --env-file .env.example -p insighthub-c07-recovery down
+```
+
+Dừng mutation trong khi kiểm hash. Seed gồm TXT/MD/PDF, một failed attempt và chat, không dùng dữ liệu người thật. Cần giữ dump để diễn tập thủ công thì thêm `--keep-backup`: quyền file 600, thư mục riêng 700, chỉ instructor truy cập, không commit/gửi cùng starter. Đề xuất giữ tối đa 7 ngày trong sandbox rồi xóa sau khi đã kiểm restore; dữ liệu lớp thật áp dụng policy lớp đã xác nhận. Không dùng backup fixture làm bằng chứng semantic của real embedding.
 
 Backup production cần thêm retention, encryption, off-host storage, quyền truy cập và restore drill định kỳ. Starter chỉ cung cấp baseline có thể kiểm chứng tại local.
 

@@ -6,6 +6,10 @@
 - Cùng key/cùng payload trả lại response đã lưu. Cùng key/khác payload trả `409 idempotency_conflict`.
 - Response lỗi có `detail`, `code`; header có `X-Request-ID`.
 - UI/API local chưa có Auth. Học viên phải thêm ownership server-side trước khi dùng đa người dùng.
+- Dedup theo bytes chỉ trả 201 khi tài liệu đã `ready`. Tài liệu trùng đang pending trả 409 `operation_in_progress`; failed trả 409 `document_conflict`, kèm `document_id` để retry đúng tài liệu.
+- Operation lưu `deadline_at`; truy vấn reconciliation phục hồi operation quá hạn thành failed ngay khi tiến trình còn chạy. SQL/lock/pool wait và commit đều chịu ngân sách còn lại.
+- Replay chat sau khi nguồn bị xóa giữ câu trả lời lịch sử, nhưng citation có `available: false`, `excerpt: null`, contexts không còn nội dung nguồn và response có `historical_sources_unavailable: true`.
+- Browser giữ metadata operation key trong sessionStorage trước POST, tiếp tục poll qua reload và không POST lại khi chưa biết kết quả. Không lưu prompt/file/credential vào kho này.
 
 ## Endpoints
 
@@ -46,10 +50,10 @@
     {"context_id": "chunk:42", "source": "example.pdf", "similarity": 0.81, "rerank_score": 0.94}
   ],
   "mode": "real",
-  "provider": "openai",
-  "model": "...",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
   "prompt_version": "rag-claims-v2",
-  "profile": "classroom-gemini-local-reranker",
+  "profile": "classroom-deepseek-gemini-local-reranker",
   "retrieval": {"reranker_provider": "local", "reranker_model": "...", "context_count": 1},
   "usage": {"input_tokens": 10, "output_tokens": 8, "source": "provider"},
   "latency_ms": 1234

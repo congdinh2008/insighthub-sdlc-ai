@@ -46,6 +46,22 @@ def _real_generate(question, contexts, settings):
         usage = data.get("usage") or {}
         return answer, usage.get("input_tokens"), usage.get("output_tokens")
     messages = [{"role": "system", "content": SYSTEM_PROMPT}, {"role": "user", "content": message}]
+    if provider == "deepseek":
+        data = post_json(
+            settings.deepseek_base_url.rstrip("/") + "/chat/completions",
+            headers={"Authorization": f"Bearer {settings.deepseek_api_key}"},
+            payload={
+                "model": model, "messages": messages, "stream": False,
+                "max_tokens": settings.llm_max_tokens,
+                "response_format": {"type": "json_object"},
+                "thinking": {"type": "disabled"}, "temperature": 0,
+            },
+        )
+        choice = data["choices"][0]
+        if choice.get("finish_reason") != "stop":
+            raise ProviderError()
+        usage = data.get("usage") or {}
+        return choice["message"]["content"], usage.get("prompt_tokens"), usage.get("completion_tokens")
     if provider == "ollama":
         data = post_json(settings.ollama_base_url.rstrip("/") + "/api/chat", headers={}, payload={"model": model, "messages": messages, "stream": False, "format": "json", "options": {"num_predict": settings.llm_max_tokens, "temperature": 0}})
         return data["message"]["content"], data.get("prompt_eval_count"), data.get("eval_count")

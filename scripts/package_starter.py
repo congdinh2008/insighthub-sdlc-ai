@@ -9,9 +9,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 DIST = ROOT / "dist"
-VERSION = "1.0.0-rc.2"
+VERSION = json.loads((ROOT / "starter.manifest.json").read_text())["version"]
 ARCHIVE = DIST / f"insighthub-starter-v{VERSION}.zip"
-SRS_SOURCE = ROOT.parent / "04_Requirements" / "SRS_InsightHub_v2.4.md"
+SRS_SOURCE = ROOT / "requirements" / "SRS_InsightHub_v2.4.md"
 PREFIX = f"insighthub-starter-v{VERSION}"
 
 
@@ -27,13 +27,15 @@ def git_output(*args: str) -> str:
 
 def source_files() -> list[Path]:
     names = git_output("ls-files", "--cached", "--others", "--exclude-standard").splitlines()
-    excluded = ("dist/", "docs/archive/")
-    return [ROOT / name for name in sorted(names) if name and not name.startswith(excluded)]
+    excluded = ("dist/", "docs/archive/", "reports/")
+    return [ROOT / name for name in sorted(names) if name and name != "PACKAGE_MANIFEST.json" and not name.startswith(excluded)]
 
 
 def main():
     if not SRS_SOURCE.is_file():
         raise SystemExit(f"Missing SRS baseline: {SRS_SOURCE}")
+    if git_output("status", "--porcelain"):
+        raise SystemExit("Commit the reviewed changes before creating a release archive.")
     DIST.mkdir(exist_ok=True)
     entries: dict[str, bytes] = {}
     for path in source_files():

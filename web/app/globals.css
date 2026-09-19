@@ -208,3 +208,14 @@ footer {
   font-size: 0.78rem;
   color: var(--text-dim);
 }
+
+/* Source text must remain readable on the dark application surface. */
+.source-view { background: var(--surface-2); color: var(--text); border-color: var(--border); overflow-wrap: anywhere; }
+.doc-item { flex-wrap: wrap; gap: .4rem; }
+.document-actions { display: flex; flex-wrap: wrap; gap: .25rem; }
+.retry-file { display: grid; gap: .35rem; width: 100%; }
+.source-picker label { overflow-wrap: anywhere; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.action-link { color: #82b8ff; }
+.action-link:disabled { color: var(--text-dim); background: transparent; }
+@media (max-width: 420px) { .container { padding: 1rem .75rem; } .panel { padding: .85rem; } }

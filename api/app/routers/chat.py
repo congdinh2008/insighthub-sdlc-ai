@@ -69,12 +69,12 @@ def chat(req: ChatRequest, idempotency_key: str | None = Header(default=None, al
 
 
 def _chat(req: ChatRequest, idempotency_key: str | None):
+    start = time.perf_counter()
     key = validate_key(idempotency_key)
     request_fingerprint = fingerprint(req.model_dump())
     with serialized_operation("chat", key, request_fingerprint) as operation:
         if operation["replay"]:
             return JSONResponse(operation["body"], status_code=operation["status"])
-        start = time.perf_counter()
         try:
             selected = ready_document_ids(req.document_ids)
             if not selected:
@@ -141,7 +141,7 @@ def _chat(req: ChatRequest, idempotency_key: str | None):
                     },
                     latency_ms=int((time.perf_counter() - start) * 1000),
                 ).model_dump()
-                complete_operation(operation["id"], 200, body)
+                complete_operation(operation["id"], 200, body, started=start)
                 return body
         except ServiceError as exc:
             complete_operation(operation["id"], exc.status_code, {"detail": exc.message, "code": exc.code}, error_code=exc.code)

@@ -4,7 +4,11 @@ import logging
 import threading
 from contextlib import contextmanager
 
-from psycopg_pool import ConnectionPool
+from psycopg_pool import ConnectionPool, PoolTimeout
+from psycopg.errors import QueryCanceled
+
+from app.core.deadline import check_deadline, remaining_timeout
+from app.core.errors import DeadlineExceeded
 from pgvector.psycopg import register_vector
 
 from app.core.config import get_settings
@@ -34,10 +38,45 @@ def get_pool() -> ConnectionPool:
     return _pool
 
 
+class DeadlineConnection:
+    """Refresh the SQL budget before every statement, including advisory locks."""
+    def __init__(self, connection):
+        self.connection = connection
+
+    def __getattr__(self, name):
+        return getattr(self.connection, name)
+
+    def execute(self, query, params=None, **kwargs):
+        budget = remaining_timeout(10)
+        self.connection.execute("SELECT set_config('statement_timeout', %s, true)", (f"{max(1, int(budget * 1000))}ms",))
+        try:
+            result = self.connection.execute(query, params, **kwargs)
+        except QueryCanceled:
+            raise DeadlineExceeded() from None
+        check_deadline()
+        return result
+
+    @contextmanager
+    def transaction(self, **kwargs):
+        with self.connection.transaction(**kwargs):
+            yield
+            check_deadline()
+
+
 @contextmanager
-def get_conn():
-    with get_pool().connection() as conn:
-        yield conn
+def get_conn(*, read_only=False):
+    try:
+        with get_pool().connection(timeout=remaining_timeout(10)) as conn:
+            bounded = DeadlineConnection(conn)
+            if read_only:
+                bounded.execute('SET TRANSACTION READ ONLY')
+            yield bounded
+            # Lock-only transactions cannot publish data. Releasing their locks
+            # after error cleanup must not replace the persisted error response.
+            if not read_only:
+                check_deadline()  # Expired writes must roll back, never commit success.
+    except PoolTimeout:
+        raise DeadlineExceeded() from None
 
 
 def initialize_database():

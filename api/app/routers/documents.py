@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from app.core.config import get_settings
 from app.core.db import get_conn
 from app.core.deadline import operation_deadline
-from app.core.errors import DocumentConflict, DocumentNotFound, InvalidDocument, ServiceError
+from app.core.errors import DocumentConflict, DocumentNotFound, InvalidDocument, ServiceError, OperationInProgress
 from app.core.operations import complete_operation, fingerprint, serialized_operation, validate_key
 from app.services.ingestion import ingest_document_sync
 
@@ -57,6 +57,7 @@ def _upload_document(file: UploadFile, idempotency_key: str | None):
     with serialized_operation("upload", key, request_fingerprint) as operation:
         if operation["replay"]:
             return JSONResponse(operation["body"], status_code=operation["status"])
+        document_id = None
         try:
             with get_conn() as conn:
                 with conn.transaction():
@@ -77,6 +78,11 @@ def _upload_document(file: UploadFile, idempotency_key: str | None):
                     operation_key=key, request_fingerprint=request_fingerprint,
                 )
             body = _document_body(document_id)
+            if body["status"] != "ready":
+                error = OperationInProgress() if body["status"] == "pending" else DocumentConflict("Tài liệu đã có nhưng xử lý thất bại. Dùng thao tác Thử lại trên tài liệu này.")
+                failure = {"detail": error.message, "code": error.code, "document_id": document_id, "status": body["status"], "deduplicated": True}
+                complete_operation(operation["id"], error.status_code, failure, error_code=error.code)
+                return JSONResponse(failure, status_code=error.status_code)
             body["mode"] = get_settings().rag_mode
             body["deduplicated"] = existing is not None
             complete_operation(operation["id"], 201, body)

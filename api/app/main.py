@@ -37,7 +37,7 @@ async def lifespan(app: FastAPI):
         await run_in_threadpool(close_pool)
 
 
-app = FastAPI(title=settings.app_name, version="1.0.0-rc.2", lifespan=lifespan)
+app = FastAPI(title=settings.app_name, version="1.0.0-rc.3", lifespan=lifespan)
 app.add_middleware(UploadLimitMiddleware)
 app.add_middleware(
     CORSMiddleware,
@@ -149,7 +149,7 @@ app.include_router(system.router)
 def root():
     return {
         "service": settings.app_name,
-        "version": "1.0.0-rc.2",
+        "version": "1.0.0-rc.3",
         "docs": "/docs",
         "mode": settings.rag_mode,
     }

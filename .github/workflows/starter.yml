@@ -12,9 +12,19 @@ jobs:
       EMBEDDING_PROVIDER: fixture
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.20.0'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: python3 scripts/check_project.py
       - run: make up
       - run: make test
       - run: make smoke
+      - run: npm ci --prefix web
+      - run: cd web && npx playwright install --with-deps chromium && npm run test:e2e
+      - run: python3 scripts/seed_recovery_fixture.py --api-url http://127.0.0.1:8107
+      - run: make backup-restore-check
       - run: npm audit --omit=dev --audit-level=high --prefix web
       - run: make sbom
       - run: make package

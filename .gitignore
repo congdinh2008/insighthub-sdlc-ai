@@ -37,3 +37,6 @@ tmp/
 reports/
 dist/
 *.tsbuildinfo
+
+# Archive receipt is provenance, not source for a rebuilt archive.
+PACKAGE_MANIFEST.json

@@ -8,7 +8,60 @@ from app.services.chunking import chunk_text
 
 
 class ConfigTests(unittest.TestCase):
-    def test_fixture_requires_both_explicit_providers(self):
+    def test_minimal_fixture_stays_offline_even_when_key_is_present(self):
+        with patch.dict("os.environ", {}, clear=True):
+            settings = Settings(_env_file=None, gemini_api_key="test-not-real", deepseek_api_key="test-not-real")
+        self.assertEqual((settings.rag_mode, settings.llm_provider, settings.embedding_provider),
+                         ("fixture", "fixture", "fixture"))
+        self.assertEqual(settings.reranker_provider, "none")
+        self.assertEqual(settings.rag_profile, "fixture-offline")
+        self.assertEqual(settings.retrieval_min_similarity, -1)
+
+    def test_minimal_real_configuration_requires_both_keys(self):
+        with patch.dict("os.environ", {}, clear=True):
+            with self.assertRaises(ValidationError):
+                Settings(_env_file=None, rag_mode="real")
+            for key in ("gemini_api_key", "deepseek_api_key"):
+                with self.subTest(missing_other_key=key), self.assertRaises(ValidationError):
+                    Settings(_env_file=None, rag_mode="real", **{key: "test-not-real"})
+            settings = Settings(_env_file=None, rag_mode="real", gemini_api_key="test-not-real", deepseek_api_key="test-not-real")
+        self.assertEqual((settings.llm_provider, settings.embedding_provider), ("deepseek", "gemini"))
+        self.assertEqual(settings.rag_profile, "classroom-deepseek-gemini")
+        self.assertEqual(settings.resolved_chat_model, "deepseek-flash")
+        self.assertEqual(settings.resolved_embedding_model, "gemini-embedding-2")
+        self.assertEqual(settings.retrieval_min_similarity, 0.20)
+        self.assertEqual(settings.reranker_provider, "none")
+        self.assertIn("Gemini", settings.ai_data_usage_notice)
+        self.assertNotIn("test-not-real", repr(settings))
+
+    def test_empty_compose_passthrough_does_not_override_mode_defaults(self):
+        with patch.dict("os.environ", {
+            "RAG_MODE": "real", "GEMINI_API_KEY": "test-not-real", "DEEPSEEK_API_KEY": "test-not-real",
+            "LLM_PROVIDER": "", "EMBEDDING_PROVIDER": "", "RAG_PROFILE": "",
+            "DEEPSEEK_CHAT_MODEL": "", "RETRIEVAL_MIN_SIMILARITY": "",
+            "PROVIDER_TIMEOUT_SECONDS": "", "AI_DATA_USAGE_NOTICE": "",
+        }, clear=True):
+            settings = Settings(_env_file=None)
+        self.assertEqual(settings.llm_provider, "deepseek")
+        self.assertEqual(settings.retrieval_min_similarity, 0.20)
+        self.assertEqual(settings.provider_timeout_seconds, 60)
+        self.assertIn("Gemini", settings.ai_data_usage_notice)
+
+    def test_explicit_overrides_preserve_identity_and_validate_conflicts(self):
+        with patch.dict("os.environ", {}, clear=True):
+            settings = Settings(_env_file=None, rag_mode="real", gemini_api_key="test-not-real", deepseek_api_key="test-not-real",
+                                retrieval_min_similarity=0.35, llm_model="classroom-override",
+                                reranker_provider="cohere", cohere_api_key="test-not-real")
+            baseline = Settings(_env_file=None, rag_mode="real", gemini_api_key="test-not-real", deepseek_api_key="test-not-real")
+            with self.assertRaises(ValidationError):
+                Settings(_env_file=None, rag_mode="fixture", llm_provider="gemini",
+                         embedding_provider="gemini", gemini_api_key="test-not-real")
+        self.assertEqual(settings.retrieval_min_similarity, 0.35)
+        self.assertEqual(settings.resolved_chat_model, "classroom-override")
+        self.assertEqual(settings.rag_profile, "classroom-deepseek-gemini-cohere")
+        self.assertEqual(settings.embedding_identity_id, baseline.embedding_identity_id)
+
+    def test_explicit_provider_conflicts_are_rejected(self):
         for values in (
             {"rag_mode": "fixture", "llm_provider": "gemini"},
             {"rag_mode": "real"},

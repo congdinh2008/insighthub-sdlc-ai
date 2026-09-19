@@ -8,7 +8,7 @@
     "component": {
       "type": "application",
       "name": "InsightHub Starter",
-      "version": "1.0.0-rc.2"
+      "version": "1.0.0-rc.3"
     }
   },
   "components": [
@@ -392,6 +392,13 @@
     },
     {
       "type": "library",
+      "name": "fsevents",
+      "version": "2.3.2",
+      "scope": "optional",
+      "bom-ref": "library:fsevents@2.3.2"
+    },
+    {
+      "type": "library",
       "name": "h11",
       "version": "0.16.0",
       "scope": "required",
@@ -452,6 +459,20 @@
       "version": "1.1.1",
       "scope": "required",
       "bom-ref": "library:picocolors@1.1.1"
+    },
+    {
+      "type": "library",
+      "name": "playwright-core",
+      "version": "1.62.1",
+      "scope": "required",
+      "bom-ref": "library:playwright-core@1.62.1"
+    },
+    {
+      "type": "library",
+      "name": "playwright",
+      "version": "1.62.1",
+      "scope": "required",
+      "bom-ref": "library:playwright@1.62.1"
     },
     {
       "type": "library",

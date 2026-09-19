@@ -27,6 +27,8 @@ def configured(**values):
         "EMBEDDING_MODEL": "",
         "EMBEDDING_DIM": "1024",
         "GEMINI_API_KEY": "",
+        "DEEPSEEK_API_KEY": "",
+        "DEEPSEEK_CHAT_MODEL": "",
         "ANTHROPIC_API_KEY": "",
         "VOYAGE_API_KEY": "",
         "OPENAI_API_KEY": "",

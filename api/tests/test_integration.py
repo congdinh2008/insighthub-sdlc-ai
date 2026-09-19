@@ -8,6 +8,7 @@ import concurrent.futures
 import os
 from pathlib import Path
 import threading
+import time
 import unittest
 import uuid
 from unittest.mock import patch
@@ -67,6 +68,7 @@ class IntegrationTests(unittest.TestCase):
             cls.dsn, options=f"-csearch_path={cls.schema},public"
         ) as conn:
             conn.execute(cls.schema_sql)
+            run_migrations(conn)
         db._pool = ConnectionPool(
             conninfo=cls.dsn,
             min_size=2,
@@ -579,3 +581,127 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(answer.json(), replay.json())
         self.assertEqual({item["document_id"] for item in answer.json()["contexts"]}, {first["id"]})
         self.assertEqual(answer.json()["citations"][0]["document_id"], first["id"])
+
+
+    def test_internal_chat_error_is_terminal_without_restart(self):
+        doc = self.client.post('/documents',headers=self.headers(),files={'file':('internal.txt',b'valid source')}).json()
+        headers={'Idempotency-Key':'internal-chat'}
+        with patch('app.routers.chat.retrieve',side_effect=RuntimeError('private implementation detail')):
+            response=TestClient(app,raise_server_exceptions=False).post('/chat',headers=headers,json={'question':'test','document_ids':[doc['id']]})
+        self.assertEqual(response.status_code,500)
+        operation=self.client.get('/operations/chat/internal-chat').json()
+        self.assertEqual((operation['status'],operation['http_status'],operation['error_code']),('failed',500,'internal_error'))
+        self.assertNotIn('private implementation',str(operation))
+
+    def test_success_write_cannot_outlive_deadline(self):
+        doc=self.client.post('/documents',headers=self.headers(),files={'file':('deadline.txt',b'valid deadline source')}).json()
+        with db.get_conn() as conn:
+            conn.execute("CREATE FUNCTION delay_success() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.status='succeeded' AND NEW.operation_type='chat' THEN PERFORM pg_sleep(0.6); END IF; RETURN NEW; END $$")
+            conn.execute('CREATE TRIGGER slow_success BEFORE UPDATE ON operation_records FOR EACH ROW EXECUTE FUNCTION delay_success()')
+        try:
+            with configured(chat_timeout_seconds=0.2):
+                started=time.perf_counter()
+                response=self.client.post('/chat',headers={'Idempotency-Key':'slow-commit'},json={'question':'test','document_ids':[doc['id']]})
+                elapsed=time.perf_counter()-started
+            self.assertEqual(response.status_code,504,response.text)
+            self.assertLess(elapsed,0.55)
+            operation=self.client.get('/operations/chat/slow-commit').json()
+            self.assertEqual((operation['status'],operation['error_code']),('failed','deadline_exceeded'))
+        finally:
+            with db.get_conn() as conn:
+                conn.execute('DROP TRIGGER slow_success ON operation_records')
+                conn.execute('DROP FUNCTION delay_success()')
+
+    def test_document_lock_wait_respects_chat_deadline(self):
+        doc=self.client.post('/documents',headers=self.headers(),files={'file':('locked.txt',b'locked source')}).json()
+        with configured(chat_timeout_seconds=0.15), db.get_conn() as conn:
+            conn.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s,0))",(f"document:{doc['id']}",))
+            with concurrent.futures.ThreadPoolExecutor(1) as executor:
+                future=executor.submit(self.client.post,'/chat',headers={'Idempotency-Key':'locked-chat'},json={'question':'test','document_ids':[doc['id']]})
+                response=future.result(timeout=2)
+        self.assertEqual(response.status_code,504,response.text)
+        self.assertEqual(self.client.get('/operations/chat/locked-chat').json()['status'],'failed')
+
+    def test_expired_processing_is_recovered_by_poll(self):
+        with db.get_conn() as conn:
+            conn.execute("INSERT INTO operation_records(operation_type,operation_key,request_fingerprint,status,deadline_at) VALUES ('chat','expired-live','fp','processing',now()-interval '1 second')")
+        operation=self.client.get('/operations/chat/expired-live').json()
+        self.assertEqual((operation['status'],operation['http_status']),('failed',504))
+
+    def test_deleted_source_replay_redacts_excerpt_and_debug_context(self):
+        doc=self.client.post('/documents',headers=self.headers(),files={'file':('historical.txt',b'historical source content')}).json()
+        payload={'question':'test','document_ids':[doc['id']]}; headers={'Idempotency-Key':'historical-chat'}
+        with configured(expose_debug_contexts=True):
+            first=self.client.post('/chat',headers=headers,json=payload).json()
+            self.client.delete(f"/documents/{doc['id']}",headers=self.headers())
+            replay=self.client.post('/chat',headers=headers,json=payload).json()
+            polled=self.client.get('/operations/chat/historical-chat').json()['response']
+        for result in (replay,polled):
+            self.assertEqual(result['answer'],first['answer'])
+            self.assertTrue(result['historical_sources_unavailable'])
+            self.assertIsNone(result['citations'][0]['excerpt'])
+            self.assertFalse(result['citations'][0]['available'])
+            self.assertNotIn('chunk_text',result['contexts'][0])
+
+    def test_duplicate_failed_and_pending_are_not_created_success(self):
+        first=self.client.post('/documents',headers=self.headers(),files={'file':('blank.txt',b'   ')})
+        duplicate=self.client.post('/documents',headers=self.headers(),files={'file':('blank.txt',b'   ')})
+        self.assertEqual((first.status_code,duplicate.status_code),(422,409))
+        self.assertEqual(duplicate.json()['document_id'],first.json()['document_id'])
+        import hashlib
+        with db.get_conn() as conn:
+            conn.execute("INSERT INTO documents(filename,content_sha256,status) VALUES ('pending.txt',%s,'pending')",(hashlib.sha256(b'pending bytes').hexdigest(),))
+        pending=self.client.post('/documents',headers=self.headers(),files={'file':('pending.txt',b'pending bytes')})
+        self.assertEqual(pending.status_code,409)
+        self.assertEqual(pending.json()['code'],'operation_in_progress')
+
+    def test_markdown_heading_path_tables_and_code_remain_indexed(self):
+        content=b'# Release BLUE-17\n## Limits 42\n| item | count |\n| a | 3 |\n```python\n# code comment\nx = 5\n```\n## Only HEADING-99\n'
+        doc=self.client.post('/documents',headers=self.headers(),files={'file':('headings.md',content)}).json()
+        with db.get_conn() as conn:
+            rows=conn.execute('SELECT chunk_text FROM chunks WHERE document_id=%s ORDER BY chunk_index',(doc['id'],)).fetchall()
+        indexed='\n'.join(r[0] for r in rows)
+        for token in ('BLUE-17','Limits 42','| a | 3 |','# code comment','x = 5','HEADING-99'):
+            self.assertIn(token,indexed)
+        with db.get_conn() as conn:
+            segments=conn.execute('SELECT heading FROM source_segments WHERE document_id=%s ORDER BY segment_index',(doc['id'],)).fetchall()
+        self.assertIn('Release BLUE-17 / Limits 42',[r[0] for r in segments])
+
+    def test_late_embedding_never_publishes_chunks_and_can_retry(self):
+        from app.services.embeddings import embed as actual_embed
+        def late_embed(texts, **kwargs):
+            vectors = actual_embed(texts, **kwargs)
+            time.sleep(0.25)
+            return vectors
+        content = b'late embedding source'
+        with configured(ingestion_timeout_seconds=0.12), patch('app.services.ingestion.embed', side_effect=late_embed):
+            response = self.client.post('/documents', headers={'Idempotency-Key':'late-upload'}, files={'file':('late.txt', content)})
+        self.assertEqual(response.status_code, 504, response.text)
+        identifier = response.json()['document_id']
+        with db.get_conn() as conn:
+            self.assertEqual(conn.execute('SELECT status,chunk_count FROM documents WHERE id=%s',(identifier,)).fetchone(), ('failed',0))
+            self.assertEqual(conn.execute('SELECT count(*) FROM chunks WHERE document_id=%s',(identifier,)).fetchone()[0],0)
+            self.assertEqual(bytes(conn.execute('SELECT original_bytes FROM document_sources WHERE document_id=%s',(identifier,)).fetchone()[0]),content)
+        self.assertEqual(self.client.get('/operations/upload/late-upload').json()['status'],'failed')
+        retried=self.client.post(f'/documents/{identifier}/retry',headers=self.headers(),files={'file':('late.txt',content)})
+        self.assertEqual((retried.status_code,retried.json()['status']),(200,'ready'))
+
+    def test_unexpected_ingestion_error_leaves_terminal_attempt(self):
+        with patch('app.services.ingestion.embed',side_effect=RuntimeError('private provider diagnostic')):
+            response=self.client.post('/documents',headers={'Idempotency-Key':'unexpected-upload'},files={'file':('unexpected.txt',b'valid source')})
+        self.assertEqual(response.status_code,500)
+        identifier=response.json()['document_id']
+        detail=self.client.get(f'/documents/{identifier}').json()
+        self.assertEqual((detail['status'],detail['attempts'][0]['status']),('failed','failed'))
+        operation=self.client.get('/operations/upload/unexpected-upload').json()
+        self.assertEqual(operation['status'],'failed')
+        self.assertNotIn('private provider',str(operation))
+
+    def test_poll_recovers_expired_ingestion_attempt_without_restart(self):
+        with db.get_conn() as conn:
+            identifier=conn.execute("INSERT INTO documents(filename,status) VALUES('expired.txt','pending') RETURNING id").fetchone()[0]
+            conn.execute("INSERT INTO ingestion_attempts(document_id,operation_key,request_fingerprint,status,deadline_at) VALUES(%s,'expired-upload','fp','processing',now()-interval '1 second')",(identifier,))
+            conn.execute("INSERT INTO operation_records(operation_type,operation_key,request_fingerprint,status,deadline_at) VALUES('upload','expired-upload','fp','processing',now()-interval '1 second')")
+        self.assertEqual(self.client.get('/operations/upload/expired-upload').json()['status'],'failed')
+        detail=self.client.get(f'/documents/{identifier}').json()
+        self.assertEqual((detail['status'],detail['attempts'][0]['status']),('failed','failed'))
