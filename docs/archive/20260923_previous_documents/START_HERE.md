@@ -25,8 +25,8 @@ python3 scripts/smoke.py --api-url http://127.0.0.1:8107 --web-url http://127.0.
 - API docs: http://localhost:8107/docs
 - Runtime profile: http://localhost:8107/system/profile
 
-Nếu nhận ZIP, khởi tạo Git theo [GETTING_STARTED.md](GETTING_STARTED.md) trước. Đọc [Learning Contract/PRE](docs/learner/00_START_LEARNING.md), [Model Profiles and Reranking](docs/Model_Profiles_And_Reranking.md) và [Runbook](docs/Runbook_Starter_v1.md).
+Trước khi làm bài, fork và clone starter theo [GETTING_STARTED.md](../../../GETTING_STARTED.md). ZIP chỉ dùng đối chiếu hoặc kiểm cài đặt sạch. Đọc [Bắt đầu dự án và yêu cầu bài tập](../../learner_v1.0_20260923/01_Requirements_InsightHub.md), [Model Profiles and Reranking](../../Model_Profiles_And_Reranking.md) và [Runbook](../../Runbook_Starter_v1.md).
 
 ## Ranh giới starter
 
-Starter đã có luồng RAG từ upload tới câu trả lời có nguồn. Fixture kiểm chứng luồng kỹ thuật; chất lượng AI thật cần AEV. Auth, Notebook, ownership, lưu hội thoại, AI Tools và product quota là phần học viên triển khai theo SRS 2.4. Dùng bộ tài liệu thực hành được phép gửi tới provider.
+Starter đã có luồng RAG từ upload tới câu trả lời có nguồn. Fixture kiểm chứng luồng kỹ thuật; chất lượng AI thật cần AEV. Auth, Notebook, ownership, lưu hội thoại, AI Tools và product quota là phần học viên triển khai theo [SRS InsightHub v1.0](../../learner_v1.0_20260923/02_SRS_InsightHub_v1.0.md) và bảng phạm vi bài tập. Dùng bộ tài liệu thực hành được phép gửi tới provider.

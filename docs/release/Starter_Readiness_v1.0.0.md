@@ -18,7 +18,7 @@ Ngày đánh giá: 19/09/2026. Technical candidate `v1.0.0-rc.3`. Phạm vi: n�
 - [AEV thật và review từng claim](evidence/AEV-01_20260919.json).
 - [Chrome](evidence/chrome_20260919.json), [Edge](evidence/msedge_20260919.json).
 - [Restore có dữ liệu](evidence/Restore_20260919.json).
-- [Learning Contract](../learner/00_START_LEARNING.md), [Auth/email feasibility](../learner/04_Auth_Email_Feasibility.md).
+- Học liệu hiện hành: [Requirements](../learner_v1.0_20260923/01_Requirements_InsightHub.md), [Auth/email](../learner_v1.0_20260923/01_Requirements_InsightHub.md#auth-email). Các liên kết này phục vụ phát triển tiếp; bảng đánh giá trên chỉ ghi nhận candidate ngày 19/09/2026.
 
 Lệnh tái lập: `make test`, `make smoke`, `npm run test:e2e` trong web, `python3 scripts/check_project.py`, `make aev` trên runtime real riêng và restore drill theo Runbook. CI đã có các bước fixture, browser, restore, audit và package; chỉ coi GitHub CI của lớp đạt khi workflow chạy ở repository lớp.
 

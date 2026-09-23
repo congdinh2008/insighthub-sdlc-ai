@@ -7,19 +7,28 @@
 - Cổng 8107 và 3107 trống, hoặc đặt `API_PORT`/`WEB_PORT` khác.
 - Git, Python 3.11+ và Make để dùng công cụ kiểm/đóng gói. Browser E2E cần Node 24.20.0 và Playwright trong lockfile; chạy ứng dụng chỉ cần Docker.
 
-## Nếu nhận ZIP
+## Fork starter và khởi tạo bài làm
 
-Giải nén vào một thư mục riêng, kiểm SHA-256 bên cạnh ZIP trước khi chạy. Gói có SRS tại `requirements/`, không cần kho học liệu của instructor.
+Học viên C07 bắt buộc fork repository starter theo URL và phiên bản giảng viên công bố. Trên dịch vụ Git, tạo fork cá nhân hoặc trong không gian lớp được cấp, sau đó thay các giá trị ví dụ dưới đây bằng URL thực:
 
 ```sh
-git init -b main
-git add .
-git commit -m "Initialize InsightHub starter"
+git clone 'URL_FORK_CA_NHAN' insighthub
+cd insighthub
+git remote add upstream 'URL_REPOSITORY_STARTER'
+git remote -v
+git rev-parse HEAD
+git switch -c milestone/m0.1
 ```
 
-Git cần `user.name` và `user.email` của chính học viên. Lưu `PACKAGE_MANIFEST.json` làm biên nhận nguồn; file này được ignore và không đưa vào nguồn của gói xây lại. `.env` cũng được ignore. Đọc [Learning Contract](docs/learner/00_START_LEARNING.md) và PRE B1-B2 trước khi phát triển.
+`origin` phải trỏ tới fork cá nhân, `upstream` trỏ tới starter. Ghi commit nền và nguồn starter vào hồ sơ dự án; giữ nguyên lịch sử Git. Thiết lập `user.name` và `user.email` của học viên. Cách commit, tạo PR trong repository cá nhân, gửi bài cho giảng viên và thời hạn tại [Requirements](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md).
 
-Đẩy repository riêng lên dịch vụ Git của lớp và bật workflow `.github/workflows/starter.yml` nếu dùng GitHub Actions. Workflow mặc định chạy fixture và không cần secret AI. Kết quả CI trên nền tảng của lớp chỉ được xác nhận sau khi workflow thực sự chạy ở đó.
+Bật workflow `.github/workflows/starter.yml` trên fork nếu dùng GitHub Actions. Workflow mặc định dùng fixture, không cần khóa AI. Xác nhận kết quả khi workflow thực chạy; không giả định quyền Actions hoặc secret của repository gốc được chuyển sang fork.
+
+## Khi nhận thêm gói ZIP
+
+ZIP dùng để đối chiếu hoặc kiểm cài đặt sạch, không thay repository fork nộp bài. Giải nén vào thư mục riêng và kiểm SHA-256 trước khi chạy; không ghi đè bản fork đang phát triển. Nếu chưa có quyền fork, báo giảng viên cấp quyền và tiếp tục kiểm setup trên ZIP, ghi rõ phụ thuộc chưa hoàn tất. Không tạo lịch sử Git mới để giả lập nguồn starter.
+
+[SRS của bài tập](docs/learner_v1.0_20260923/02_SRS_InsightHub_v1.0.md) và hợp đồng tham khảo nằm trong bộ tài liệu học viên. `PACKAGE_MANIFEST.json`, khi có trong gói Starter, là biên nhận của đúng gói mã nguồn đó; không thay bảng phạm vi hoặc kết quả kiểm của bài làm. Không đưa `.env` thật vào Git hoặc artifact. Đọc [Hướng dẫn bắt đầu](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md) trước khi phát triển.
 
 ## Khởi động offline fixture
 
@@ -87,12 +96,12 @@ COMPOSE_PROJECT_NAME=insighthub-c07-starter ENV_FILE=.env make backup-restore-ch
 python3 scripts/check_project.py
 make sbom
 git add .
-git commit -m "Prepare reviewed starter release"
+git commit -m "chore(release): prepare reviewed delivery package"
 make package
 make verify-package
 ```
 
-Backup drill yêu cầu corpus có dữ liệu, một chat thành công và một failed attempt; xem lệnh seed riêng trong [Runbook](docs/Runbook_Starter_v1.md). `make package` chỉ chạy trên working tree sạch, có SRS và SBOM khớp version. Nếu không có thay đổi để commit, bỏ qua lệnh commit; không tạo commit rỗng.
+Backup drill yêu cầu corpus có dữ liệu, một chat thành công và một failed attempt; xem lệnh seed riêng trong [Runbook](docs/Runbook_Starter_v1.md). `make package` chỉ chạy trên working tree sạch, có SRS và SBOM khớp version. Tên gói chứa cả phiên bản runtime và revision tài liệu, ví dụ `insighthub-starter-v1.0.0-rc.3-docs20260923.zip`; manifest định danh đúng commit và bộ Requirements/SRS đi kèm. Tài liệu trong `docs/archive/` không đưa vào gói học viên. Nếu không có thay đổi để commit, bỏ qua lệnh commit; không tạo commit rỗng.
 
 ## Dừng
 

@@ -2,6 +2,7 @@
 
 import argparse
 import hashlib
+import io
 import json
 import re
 import zipfile
@@ -14,6 +15,7 @@ SECRET_PATTERNS = {
     "OpenAI-style API key": re.compile(rb"sk-[0-9A-Za-z_-]{20,}"),
     "Slack token": re.compile(rb"xox[baprs]-[0-9A-Za-z-]{20,}"),
     "AWS access key": re.compile(rb"AKIA[0-9A-Z]{16}"),
+    "GitHub token": re.compile(rb"(?:gh[pousr]_[0-9A-Za-z]{30,}|github_pat_[0-9A-Za-z_]{40,})"),
 }
 
 
@@ -46,7 +48,6 @@ def main():
             raise SystemExit("Release archive must be created from a clean working tree")
         required_files = (
             "README.md",
-            "START_HERE.md",
             "GETTING_STARTED.md",
             "docker-compose.yml",
             "docs/Model_Profiles_And_Reranking.md",
@@ -56,14 +57,15 @@ def main():
             "scripts/run_aev.py",
             "scripts/check_project.py",
             "scripts/backup_restore_check.py",
-            "docs/learner/00_START_LEARNING.md",
-            "docs/learner/01_PRE_Milestones.md",
-            "docs/learner/02_SRS_Assignment_Map.md",
-            "docs/learner/03_Rubric_Evidence.md",
-            "docs/learner/04_Auth_Email_Feasibility.md",
             "api/migrations/002_operation_deadlines.sql",
-            "requirements/SRS_InsightHub_v2.4.md",
+            "starter.manifest.json",
         )
+        delivery = json.loads(archive.read(prefix + 'starter.manifest.json'))
+        required_files += tuple(delivery[key] for key in ('requirements_baseline', 'learner_requirements', 'api_schema_reference'))
+        if manifest['requirements']['path'] != delivery['requirements_baseline']:
+            raise SystemExit('Package SRS path differs from delivery metadata')
+        if manifest.get('documentation_revision') != delivery['documentation_revision']:
+            raise SystemExit('Documentation revision mismatch')
         for required in required_files:
             if prefix + required not in names:
                 raise SystemExit(f"Required file is missing: {required}")
@@ -72,6 +74,8 @@ def main():
         if set(names) != expected_names:
             raise SystemExit("Archive file list does not match manifest")
         for relative, expected in manifest["files"].items():
+            if 'archive' in PurePosixPath(relative).parts:
+                raise SystemExit(f'Archived content must not be delivered: {relative}')
             payload = archive.read(prefix + relative)
             actual = sha256(payload)
             if actual != expected:
@@ -79,6 +83,28 @@ def main():
             for label, pattern in SECRET_PATTERNS.items():
                 if pattern.search(payload):
                     raise SystemExit(f"Possible {label} found in: {relative}")
+            if relative == delivery['api_schema_reference']:
+                with zipfile.ZipFile(io.BytesIO(payload)) as reference:
+                    reference_manifest = json.loads(reference.read('API_Schema_Reference/Manifest_Reference.json'))
+                    if reference_manifest['srs']['sha256'] != manifest['requirements']['sha256']:
+                        raise SystemExit('API/schema reference SRS hash mismatch')
+                    if reference_manifest['srs']['path'] != '../' + PurePosixPath(delivery['requirements_baseline']).name:
+                        raise SystemExit('API/schema reference SRS path mismatch')
+                    expected_reference = {'API_Schema_Reference/Manifest_Reference.json'}
+                    for item in reference_manifest['contract_files']:
+                        name = 'API_Schema_Reference/' + item['path']
+                        if sha256(reference.read(name)) != item['sha256']:
+                            raise SystemExit(f'API/schema reference checksum mismatch: {name}')
+                        expected_reference.add(name)
+                    if set(reference.namelist()) != expected_reference:
+                        raise SystemExit('API/schema reference file list mismatch')
+                    for member in reference.namelist():
+                        member_path = PurePosixPath(member)
+                        if member_path.is_absolute() or '..' in member_path.parts:
+                            raise SystemExit(f'Unsafe reference path: {member}')
+                        for label, pattern in SECRET_PATTERNS.items():
+                            if pattern.search(reference.read(member)):
+                                raise SystemExit(f'Possible {label} found in reference: {member}')
         srs_path = manifest["requirements"]["path"]
         if sha256(archive.read(prefix + srs_path)) != manifest["requirements"]["sha256"]:
             raise SystemExit("SRS checksum mismatch")

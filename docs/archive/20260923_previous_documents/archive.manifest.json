@@ -1,0 +1,54 @@
+{
+  "date": "2026-09-23",
+  "purpose": "Archive superseded documents; only relative links were adjusted in archived Markdown.",
+  "files": [
+    {
+      "original": "03_HocLieu/RunningProject/insighthub/docs/learner/00_START_LEARNING.md",
+      "archive": "03_HocLieu/RunningProject/insighthub/docs/archive/20260923_previous_documents/docs/learner/00_START_LEARNING.md",
+      "sha256_before": "255975803e8e319c69051f86b7db11d4e07d7b1c2ccdcf788050292d3a9edfae",
+      "sha256_archived": "4b3e4330adf0c0b4057beb72350deea7d0db9673a3397bfc883f17d7dbf3c543"
+    },
+    {
+      "original": "03_HocLieu/RunningProject/insighthub/docs/learner/01_PRE_Milestones.md",
+      "archive": "03_HocLieu/RunningProject/insighthub/docs/archive/20260923_previous_documents/docs/learner/01_PRE_Milestones.md",
+      "sha256_before": "8edffeaa08cdee91a83a73e927c5f8426fce60827699f07b5aca1ae66b91fe4f",
+      "sha256_archived": "e8319647c52306d42345bc7affa439e30cf020f9469edc98ddfa96adc2af5837"
+    },
+    {
+      "original": "03_HocLieu/RunningProject/insighthub/docs/learner/02_SRS_Assignment_Map.md",
+      "archive": "03_HocLieu/RunningProject/insighthub/docs/archive/20260923_previous_documents/docs/learner/02_SRS_Assignment_Map.md",
+      "sha256_before": "a5494ac87360d29316129b82c1b729a1fbab0dae6ff74676e506b2ba0e980c97",
+      "sha256_archived": "a5494ac87360d29316129b82c1b729a1fbab0dae6ff74676e506b2ba0e980c97"
+    },
+    {
+      "original": "03_HocLieu/RunningProject/insighthub/docs/learner/03_Rubric_Evidence.md",
+      "archive": "03_HocLieu/RunningProject/insighthub/docs/archive/20260923_previous_documents/docs/learner/03_Rubric_Evidence.md",
+      "sha256_before": "f9aa0a50bc7dc5200843c6e2fe93eecde52bf613d4ba4652f6e02caf3917b597",
+      "sha256_archived": "f9aa0a50bc7dc5200843c6e2fe93eecde52bf613d4ba4652f6e02caf3917b597"
+    },
+    {
+      "original": "03_HocLieu/RunningProject/insighthub/docs/learner/04_Auth_Email_Feasibility.md",
+      "archive": "03_HocLieu/RunningProject/insighthub/docs/archive/20260923_previous_documents/docs/learner/04_Auth_Email_Feasibility.md",
+      "sha256_before": "31a1508b9073956b651a415f88c68b3405eceab5b0278cb502badc5c34e62de1",
+      "sha256_archived": "31a1508b9073956b651a415f88c68b3405eceab5b0278cb502badc5c34e62de1"
+    },
+    {
+      "original": "03_HocLieu/RunningProject/insighthub/requirements/SRS_InsightHub_v2.4.md",
+      "archive": "03_HocLieu/RunningProject/insighthub/docs/archive/20260923_previous_documents/requirements/SRS_InsightHub_v2.4.md",
+      "sha256_before": "508051860184a2ba52d1a0b1c9f29151d3f5f02de48b21ace3a8266e67f7e507",
+      "sha256_archived": "508051860184a2ba52d1a0b1c9f29151d3f5f02de48b21ace3a8266e67f7e507"
+    },
+    {
+      "original": "03_HocLieu/RunningProject/insighthub/START_HERE.md",
+      "archive": "03_HocLieu/RunningProject/insighthub/docs/archive/20260923_previous_documents/START_HERE.md",
+      "sha256_before": "c46fe549760196d6f9cc8bcc08b5ddaf4126c80c31114ff292725426321b169e",
+      "sha256_archived": "d74b27755eab80332333124e56821c932db866c928fd312404a1ddffadc53331"
+    },
+    {
+      "original": "03_HocLieu/RunningProject/insighthub/docs/Integration_Guide_Auth_Notebook.md",
+      "archive": "03_HocLieu/RunningProject/insighthub/docs/archive/20260923_previous_documents/docs/Integration_Guide_Auth_Notebook.md",
+      "sha256_before": "577bb894b19856dcb96e7cd0fe4aadbe9502ac6942fb2b744de59115efd778a0",
+      "sha256_archived": "577bb894b19856dcb96e7cd0fe4aadbe9502ac6942fb2b744de59115efd778a0"
+    }
+  ]
+}
