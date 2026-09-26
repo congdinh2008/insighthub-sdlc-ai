@@ -61,3 +61,9 @@ Không có silent fallback giữa các provider. Nếu reranker được bật m
 - Citation chỉ trỏ tới context đã retrieve từ document còn `Ready`.
 - Mọi claim được công bố trong `Answered` có ít nhất một citation hợp lệ.
 - Đổi embedding identity không tái dùng vector cũ.
+
+## Ranh giới mở rộng của bài học viên
+
+Các invariant trên mô tả nền local dùng chung. `ready_document_ids(None)` lấy tài liệu Ready của thư viện nền; `operation_records` phục vụ replay có TTL, chưa thay lưu trữ Conversation/AI Output của bài làm. Chưa có session, Notebook hoặc ownership để bảo vệ dữ liệu đa người dùng.
+
+Khi tích hợp, học viên xác lập người dùng từ session phía server, giới hạn tập nguồn theo Notebook và quyền trước retrieval, thiết kế migration và persistence nghiệp vụ độc lập với operation TTL. Đọc [Requirements mục 13.4](learner_v1.0_20260923/01_Requirements_InsightHub.md#tich-hop-starter) để xác định điểm cần thay đổi và phép kiểm. Chọn module nền tại M2; giữ characterization test trước lần sửa đầu tiên. Starter không cung cấp sẵn implementation Auth, Notebook hoặc AI Tool của bài tập.
