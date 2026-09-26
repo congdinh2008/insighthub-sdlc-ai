@@ -43,6 +43,10 @@ docker compose --env-file .env -p insighthub-c07-starter up --build -d --wait
 
 Upload riêng từng file trong `sample-docs/`. Fixture trả trích đoạn có nhãn để kiểm flow. Nó không chứng minh câu trả lời AI có chất lượng.
 
+Ghi SHA mã nguồn và hash tệp mẫu đã dùng trong hồ sơ milestone. Khi chạy lại trên dữ liệu còn tồn tại, cùng byte của tài liệu `Ready` được dedup; cùng byte của tài liệu `Failed` trả `409 document_conflict` theo [API Contract](docs/API_Contract_Starter_v1.md). Đổi `Idempotency-Key` không đổi danh tính nội dung. Với ca kiểm validation cho tệp mới, dùng nội dung thử riêng; với ca dedup/retry, giữ nguyên nội dung để kiểm đúng hành vi. Không xóa volume hoặc nới expected result để làm test đạt.
+
+Nếu giảng viên cung cấp revision Starter mới, giữ commit nền cũ, review diff trước khi tích hợp vào fork và kiểm lại phần bị ảnh hưởng. Không reset mất bài làm; evidence của lần chạy trước vẫn thuộc SHA/corpus trước đó.
+
 ## Kiểm tra
 
 ```sh
@@ -101,7 +105,7 @@ make package
 make verify-package
 ```
 
-Backup drill yêu cầu corpus có dữ liệu, một chat thành công và một failed attempt; xem lệnh seed riêng trong [Runbook](docs/Runbook_Starter_v1.md). `make package` chỉ chạy trên working tree sạch, có SRS và SBOM khớp version. Tên gói chứa cả phiên bản runtime và revision tài liệu, ví dụ `insighthub-starter-v1.0.0-rc.3-docs20260923.zip`; manifest định danh đúng commit và bộ Requirements/SRS đi kèm. Tài liệu trong `docs/archive/` không đưa vào gói học viên. Nếu không có thay đổi để commit, bỏ qua lệnh commit; không tạo commit rỗng.
+Backup drill yêu cầu corpus có dữ liệu, một chat thành công và một failed attempt; xem lệnh seed riêng trong [Runbook](docs/Runbook_Starter_v1.md). `make package` chỉ chạy trên working tree sạch, có SRS và SBOM khớp version. Tên gói chứa cả phiên bản runtime và revision tài liệu, ví dụ `insighthub-starter-v1.0.0-rc.3-docs20260926.zip`; manifest định danh đúng commit và bộ Requirements/SRS đi kèm. Tài liệu trong `docs/archive/` không đưa vào gói học viên. Nếu không có thay đổi để commit, bỏ qua lệnh commit; không tạo commit rỗng.
 
 ## Dừng
 

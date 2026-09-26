@@ -1,6 +1,6 @@
 # Requirements - Dự án cá nhân InsightHub
 
-B2B C07 - SDLC with AI | Phiên bản 1.0 | 23/09/2026
+B2B C07 - SDLC with AI | Phiên bản 1.0 | Revision hướng dẫn 26/09/2026
 Học trực tuyến, thực hiện cá nhân | 10 buổi, 25 giờ trên lớp và 45 giờ tự học
 
 Tài liệu xác định các chức năng InsightHub học viên phải xây, cách áp dụng SDLC và AI vào 29 công việc, cùng kết quả cần đạt qua 10 buổi. Phạm vi, thiết kế và tích hợp, rubric, cách nộp bài và mẫu evidence được trình bày trong cùng tài liệu. Học viên bắt đầu tại mục 1-2, thực hiện milestone tương ứng và tra các mục chuyên đề ngay trong tài liệu.
@@ -11,7 +11,7 @@ Tài liệu xác định các chức năng InsightHub học viên phải xây, c
 | --- | --- |
 | Chín nhóm chức năng bắt buộc và trách nhiệm | [1. Phạm vi sản phẩm](#san-pham) |
 | Khởi động, lộ trình, cách nộp và điểm số | [2. Hướng dẫn thực hiện](#bat-dau) |
-| Chức năng cần đạt qua từng milestone | [Ma trận tiến độ sản phẩm](#ma-tran-chuc-nang) |
+| Chức năng và cách kiểm từng milestone | [Ma trận tiến độ sản phẩm](#ma-tran-chuc-nang), [đầu vào và cách đo](#do-ket-qua-milestone) |
 | Buổi 1-2 | [M0.1](#m01), [M0.2](#m02) |
 | Buổi 3-5 | [M1](#m1), [M2.1](#m21), [M2](#m2) |
 | Buổi 6-7 | [M3.1](#m31), [M3](#m3) |
@@ -119,6 +119,27 @@ Mỗi milestone được trình bày theo sáu phần: kết quả InsightHub c�
 
 Bắt đầu từ checklist chức năng, tự xác định hành vi và test case, rồi dùng AI hỗ trợ phần công việc cụ thể. Các điều kiện hoàn thành giúp tự rà soát tiến độ; cách tính điểm và điều kiện hoàn thành khóa học vẫn theo mục 2.4-2.8. Khi thiếu quyền dịch vụ hoặc phát sinh chênh lệch thời gian, ghi rõ phần bị ảnh hưởng và bước xử lý, không tự bỏ chức năng hoặc tính thêm giờ ngoài ngân sách.
 
+<a id="do-ket-qua-milestone"></a>
+
+#### 2.1.3. Đầu vào, output và cách đo từng milestone
+
+Dùng bảng dưới để tự kiểm và ghi kết quả trong cùng bản nộp ở mục 2.3; chi tiết hành vi và rubric nằm tại milestone tương ứng. Không tạo thêm bài nộp hoặc điểm số. Ghi rõ phiên bản đã kiểm, input, expected, actual và link evidence; phần chưa làm hoặc bị chặn không được ghi đạt.
+
+| Milestone | Đầu vào cần có | Output quan sát được và cách kiểm |
+| --- | --- | --- |
+| M0.1 / LR-01..03 | Fork đúng Starter, môi trường fixture và yêu cầu hiện hành. | Upload, Chat và mở đúng citation; JSON qua validator và đối chiếu ý nghĩa với nguồn; một lỗi AI có căn cứ, bản sửa và kiểm lại. Ghi giới hạn fixture, không kết luận chất lượng model thật. |
+| M0.2 / LR-04..05 | Repo chạy được; sandbox/tool và quyền thực hành do lớp xác nhận. | Workflow thực chạy, có success, lỗi công cụ và thao tác vượt quyền bị môi trường từ chối; làm lại được theo hướng dẫn. Lưu event/response thật, không chỉ lời AI. |
+| M1 / LR-06..07 | Baseline M0 và phạm vi chín nhóm chức năng. | Backlog nối LR/AC và dependency; commit/PR/review; kết quả kiểm chất lượng đúng SHA theo LR-07. Mở artifact/log để xác nhận phép kiểm thực chạy. |
+| M2.1 / LR-08..09 | Backlog, SRS và quyền Google/email/AI trước spike. | Một bảng 163 AC phân biệt 151 áp dụng/12 ngoài phạm vi, có input/expected; spike có actual và quyết định giải pháp. Không coi spike là hoàn thiện toàn Auth. |
+| M2 / LR-10..11 | Kết quả spike, UI/UX nguồn đã chốt và hợp đồng tham khảo. | Handoff nối flow-state-AC-API-data, hai viewport/keyboard, schema và ADR; giảng viên mở được thiết kế. Xác định module nền cần characterization trước khi sửa. |
+| M3.1 / LR-12..13 | Thiết kế lát cắt; characterization của module nền trước lần sửa đầu. | Auth-Notebook-Document-Chat/citation và mở lại conversation; API chặn tài khoản B truy dữ liệu A, persistence qua restart, quy tắc operation áp dụng cho Chat. TDD có red đúng nguyên nhân, green và regression. Phạm vi Auth theo mục 2.1.1, chưa yêu cầu đủ năm email ở đây. |
+| M3 / LR-14..19 | Lát cắt M3.1 và thiết kế phần dùng chung cho hai tool. | Chín nhóm chức năng hoạt động, full Auth/năm email, Summary/Quiz, Output và lifecycle; test UI/API/data theo nhánh. Refactor có baseline/diff/regression, hoàn thiện ASG01 trước B9 theo hạn nguồn. |
+| M4 / LR-20..24 | Test/evidence tích lũy cùng feature, corpus/oracle hai tool. | Tổng hợp kết quả AC đến hạn, mapping 21 UAT, 12 lượt nội dung AI cùng ngoại lệ, UI/performance/security và retest. AC phát hành ở M5 ghi chưa kiểm/chưa đến hạn, không ghi Pass sớm. |
+| M5 / LR-25..27 | Candidate đã kiểm và dữ liệu nghiệp vụ bài làm. | R1 cài được, populated restore giữ dữ liệu/quyền A-B; CR thực hiện sau R1 thành R1.1 có regression. Cập nhật AC M5 và các kết quả chịu ảnh hưởng, không lấy restore của Starter thay phần mở rộng. |
+| Capstone / LR-28..29 | Tag phát hành, source và evidence thống nhất. | Demo đúng phiên bản, truy một yêu cầu qua SDLC, giải thích quyết định kỹ thuật/AI và kế hoạch áp dụng 30 ngày. Kế hoạch này không giao thêm 30 ngày triển khai bắt buộc. |
+
+Phân biệt ba kết quả: output milestone đạt/chưa đạt; verdict từng AC theo mục 16.1; điểm phản hồi theo rubric. M0-M2 có thể hoàn thành output phân tích/thiết kế trong khi AC runtime chưa kiểm. Không lấy điểm rubric thay verdict AC hoặc dùng một nhánh đã đạt để kết luận toàn bộ AC đạt.
+
 ### 2.2. Khởi động và trách nhiệm
 
 1. Kiểm tra tài khoản Claude do công ty cấp và quyền truy cập repository Starter, Google, email và dịch vụ AI theo hướng dẫn lớp. Ghi phần chưa được cấp quyền để giảng viên hỗ trợ.
@@ -151,6 +172,7 @@ Milestone: M0.1
 Link Pull Request:
 Phiên bản mã nguồn đã kiểm tra: <link commit trên Git>
 Đã hoàn thành: <việc và đường dẫn file/Figma/kết quả>
+Output milestone: <đạt/chưa đạt, phạm vi đến hạn và lý do>
 Đã kiểm tra: <lệnh hoặc bước chạy, kỳ vọng, thực tế, link log>
 Quyết định với AI: <đề xuất đã giữ/sửa/bác bỏ và lý do>
 Còn thiếu hoặc cần hỗ trợ:
@@ -280,6 +302,8 @@ Dùng cùng tài liệu mẫu cho demo Starter và phân tích nếu phù hợp.
 ### 4.1 Kết quả InsightHub cần đạt
 
 Có một workflow agent thực chạy trên repository InsightHub, được giới hạn quyền, xử lý được lỗi công cụ và chạy lại được từ hướng dẫn. Workflow phục vụ một công việc của project, chẳng hạn đối chiếu API upload với test hiện có; mốc này chưa yêu cầu thêm chức năng sản phẩm.
+
+Trước buổi 2, giảng viên xác nhận công cụ/sandbox, repository thử, thư mục/lệnh và dữ liệu được phép; học viên kiểm truy cập rồi thiết kế workflow. Có thể dùng tool tích hợp hoặc MCP theo quyền được cấp, không bắt buộc cài mọi công cụ. Nếu thiếu quyền, ghi lỗi và đề nghị môi trường lớp; tiếp tục chuẩn bị quy tắc/task brief, chưa kết luận workflow đạt. Dùng thao tác vô hại và dữ liệu giả để kiểm từ chối.
 
 ### 4.2 Chức năng và công việc cần thực hiện
 
@@ -479,6 +503,8 @@ Có thiết kế nối được từ hành trình người dùng đến UI, API,
 
    Xác định dữ liệu máy chủ quyết định, dữ liệu người dùng được nhập và dữ liệu nội bộ không được trả về. Tách nội dung Quiz trước và sau khi nộp. Phân biệt phiên bản cấu trúc `schema_version`, phiên bản thông tin mô tả `metadata_version`, tiêu đề nội dung `content.title` và tên hiển thị `display_name`. Thiết kế cách xử lý phiên bản không hỗ trợ, dữ liệu sai cấu trúc và cập nhật từ phiên bản cũ.
 
+   Chọn module nền dự kiến phải sửa khi tích hợp hoặc refactor; xác định hành vi cần giữ và phép characterization cần chạy trước lần sửa đầu. Việc này là phần kế hoạch tích hợp, không yêu cầu hoàn thành ASG01 tại M2.
+
    Mô tả giao dịch và các điều kiện phải luôn đúng khi gửi lặp, nộp Quiz, xóa nguồn, công bố kết quả và khởi động lại. Bản ghi chống gửi lặp hết hạn không được làm mất dữ liệu nghiệp vụ. Có ví dụ dữ liệu hợp lệ và không hợp lệ cho những nhánh đang thiết kế, kế hoạch migration, cùng ít nhất một ADR so sánh hai phương án. Đối chiếu [hướng dẫn thiết kế và tích hợp](#data-api) trước khi chọn cách áp dụng hợp đồng tham khảo vào Starter.
 
 ### 7.3 Điều kiện hoàn thành
@@ -549,7 +575,7 @@ Tài khoản A đăng nhập, tạo/mở Notebook, upload tài liệu, hỏi đ�
 | Chat và citation | A hỏi trên nguồn hợp lệ, nhận câu trả lời và mở vị trí nguồn tương ứng. | Kiểm nguồn trước retrieval, citation mở đúng tài liệu và vị trí còn quyền truy cập. |
 | Conversation | Lưu lượt hỏi đáp và mở lại conversation. | Nội dung còn sau reload/restart; tài khoản B không đọc được bằng cách thay ID. |
 
-Khi không chỉ định nguồn, lưu tập tài liệu `Ready` tại lần tiếp nhận đầu; nguồn được thêm sau đó không tham gia thao tác cũ. Danh sách rỗng hoặc không hợp lệ bị từ chối, không tự đổi phạm vi. Dữ liệu nghiệp vụ được lưu độc lập với operation TTL. Tích hợp các quy tắc idempotency, quota, deadline và kiểm quyền áp dụng cho luồng Chat theo SRS; kiểm tổng hợp tiếp tại M4. Trước lần sửa đầu tiên vào module nền dự kiến dùng cho bài refactor, lưu characterization test.
+Khi không chỉ định nguồn, lưu tập tài liệu `Ready` tại lần tiếp nhận đầu; nguồn được thêm sau đó không tham gia thao tác cũ. Danh sách rỗng hoặc không hợp lệ bị từ chối, không tự đổi phạm vi. Dữ liệu nghiệp vụ được lưu độc lập với operation TTL. Tích hợp các quy tắc idempotency, quota, deadline và kiểm quyền áp dụng cho luồng Chat theo SRS; kiểm tổng hợp tiếp tại M4. Trước lần sửa đầu tiên vào module nền dự kiến dùng cho bài refactor, lưu characterization test. Nếu sửa nền trong M3.1, phải giữ test và kết quả baseline trước diff đó, không chờ tới B7. ASG01 vẫn giao B7 và hoàn thiện trước B9 theo hạn tại mục 2.1.
 
 <a id="lr-13"></a>
 
@@ -606,6 +632,8 @@ Evidence cần nối được lần đăng nhập, Notebook, Document và Conver
 Bản phát triển có đầy đủ chín nhóm chức năng bắt buộc, tích hợp qua UI/API/DB và giữ đúng các quy tắc của SRS. Học viên tiếp tục từ hành trình M3.1, bổ sung các nhánh còn thiếu, test cùng chức năng và thực hiện refactor. M4 tổng hợp nghiệm thu, đánh giá AI, bảo mật và sửa lỗi còn phát hiện; không chờ M4 mới bắt đầu test.
 
 ### 9.2 Chức năng và công việc cần thực hiện
+
+Các mã LR dùng để truy vết, không phải thứ tự coding cứng. Thiết kế và tích hợp cơ chế dùng chung LR-18 trước hoặc cùng LR-16/17: trạng thái, quyền nguồn, quota/idempotency, deadline, schema validation và lưu kết quả. Tái dùng phần đã kiểm cho Chat ở M3.1; không chờ hai tool xong mới bổ sung quyền hoặc persistence.
 
 Các checklist dưới đây làm rõ phần chức năng phải hoàn thiện, không thay AC chi tiết và giới hạn của SRS. Đối chiếu mã yêu cầu tại mục 1.1 và [mapping từng AC](#pham-vi-truy-vet), cập nhật kết quả trong cùng bảng truy vết.
 
@@ -772,7 +800,7 @@ Một lượt có nội dung đạt khi đủ ý kỳ vọng, các dữ kiện �
 
 ### 10.3 Điều kiện hoàn thành
 
-- Bảng truy vết có kết quả cho 151 AC áp dụng và các nhánh, liên kết 21 UAT trong phạm vi hai tool; chưa chạy/bị chặn không được tính đạt.
+- Bảng truy vết giữ đủ 151 AC áp dụng và 12 AC ngoài phạm vi. Tổng hợp kết quả đã kiểm và phần còn thiếu cho từng nhánh, liên kết 21 UAT trong phạm vi hai tool. Các AC của IH-NFR-009, IH-NFR-010 và IH-REL-001..003 được gán M5: tại M4 ghi “chưa kiểm, chưa đến hạn M5” nếu chưa có evidence; không coi đây là phần đã Pass hoặc tự kéo toàn bộ M5 về M4. Output M4 được kiểm theo LR-20..24; các lỗi của phạm vi đến hạn vẫn phải được ghi và xử lý. Chưa chạy/bị chặn không được tính đạt.
 - Có test UI, API, data, quyền A/B, lifecycle, giới hạn và số đo theo LR-20 đến LR-22; lỗi đã sửa có regression test/retest.
 - Đủ 12 lượt nội dung AI và các ngoại lệ theo LR-23, lưu cả lượt lỗi; từng claim và câu hỏi Quiz được đối chiếu nguồn.
 - Kết quả kiểm bảo mật, SBOM, review và Assignment refactor được cập nhật. Chỉ kết luận sẵn sàng phát hành khi đáp ứng điều kiện SRS; điểm học tập không thay kết quả sản phẩm.
@@ -1029,6 +1057,8 @@ Việc sao chép tệp OpenAPI chưa hoàn thành LR-11: phải giải thích c�
 
 API Starter và hợp đồng tham khảo là đầu vào thiết kế. Hợp đồng của bài làm phải là nguồn thống nhất giữa Web, API và kiểm thử sau khi học viên chọn phương án. Định danh kỹ thuật, đường dẫn và cách lưu có thể khác; quy tắc nghiệp vụ và các giới hạn SRS vẫn giữ nguyên.
 
+<a id="tich-hop-starter"></a>
+
 ### 13.4. Quyền sở hữu và nhập dữ liệu nền
 
 Máy chủ suy ra người dùng từ phiên hợp lệ, xác định Notebook thật sự chứa đối tượng rồi kiểm quyền. Không sử dụng `owner_id` hoặc Notebook do client tự khai làm bằng chứng cấp quyền. Tập tài liệu được phép phải được xác định trước khi truy xuất, không đợi đến phản hồi mới lọc dữ liệu người khác.
@@ -1036,6 +1066,17 @@ Máy chủ suy ra người dùng từ phiên hợp lệ, xác định Notebook t
 Nếu cần nhập dữ liệu nền chưa có chủ sở hữu, người vận hành chỉ định tài khoản và Notebook đích bằng thao tác có kiểm soát. Kiểm dữ liệu mất liên kết và quan hệ sai chủ sở hữu trước khi đưa vào sử dụng. Không tự gán cho người đăng ký đầu tiên. Đây là nhập dữ liệu nền, không phải chức năng chuyển chủ sở hữu Notebook hoặc chuyển tài nguyên giữa các Notebook.
 
 Migration thực hiện trên dữ liệu đã có, theo hướng tiến tới cấu trúc mới. Có bản sao lưu và phương án phục hồi ứng dụng; không dùng xóa volume để thay cho chuyển đổi dữ liệu. Khóa ngoại, chỉ mục, cách lưu phiên hoặc bộ đếm là quyết định của thiết kế, không phải danh sách bảng bắt buộc do đề bài cung cấp.
+
+**Điểm đọc code trước khi tích hợp:** bảng sau chỉ rõ nền cần mở rộng, không cung cấp lời giải nghiệp vụ. Dùng ADR để chọn cấu trúc cụ thể, giữ hành vi SRS.
+
+| Vị trí Starter | Giới hạn nền hiện tại | Phần học viên tự thiết kế và kiểm |
+| --- | --- | --- |
+| `api/app/routers/documents.py`, `chat.py` và `operations.py` | Endpoint local chưa có session/Notebook/ownership của bài tập. | Xác lập session phía server và quyền của đúng đối tượng tại mọi đường đọc/ghi, source/citation và reconciliation; thử tài khoản A/B. |
+| `api/app/services/retrieval.py` | `ready_document_ids(None)` chọn tài liệu Ready của thư viện chung; danh sách ID chỉ được kiểm trạng thái. | Xác định Notebook/owner và lọc tập nguồn trước retrieval; mặc định lấy snapshot nguồn ở lần tiếp nhận đầu, replay không thêm nguồn mới. |
+| `infra/db/init.sql`, `api/app/core/operations.py` | Operation record có TTL và khóa dùng cho replay nền, chưa là Conversation/Output của bài làm. | Thiết kế scope operation/quota và persistence nghiệp vụ; kiểm gửi lặp, restart và dữ liệu còn sau operation TTL. |
+| `api/app/core/locks.py`, `api/migrations/` | Có cơ chế khóa và migration nền; chưa thay quy tắc vòng đời toàn bộ child resource của Notebook. | Giữ invariant trước khi mở rộng; migration forward trên dữ liệu có sẵn và kiểm các thứ tự xóa/công bố của SRS. |
+
+Tại M2 xác định module và test baseline; tại M3.1 kiểm phần đến hạn của lát cắt Chat, tại M3 mở rộng cho Summary/Quiz và lifecycle còn lại, M4 kiểm tổng hợp. Không chờ M4 mới viết test quyền hoặc characterization; không yêu cầu hoàn thiện toàn bộ phần mở rộng tại M3.1.
 
 ### 13.5. Tình huống dùng để rà thiết kế và kiểm triển khai
 
@@ -1072,6 +1113,8 @@ Mục tiêu là chọn giải pháp xác thực có bằng chứng đáp ứng S
 | Chính sách nghiệp vụ | Dùng BR-02/BR-03, LIM-01, LIM-07 đến LIM-09, LIM-19 và mục 3.2.4/3.2.6 của [SRS](02_SRS_InsightHub_v1.0.md). Giá trị mặc định của thư viện không thay yêu cầu. |
 | Dữ liệu thử | Hai tài khoản độc lập; các trường hợp có mật khẩu, chờ xác minh và chỉ dùng Google. Chỉ sử dụng email được phép và dữ liệu giả. |
 | Bí mật cấu hình | Chỉ ghi tên biến trong `.env.example`; giá trị thật ở `.env` hoặc kho bí mật của lớp. Không lưu liên kết xác thực còn hiệu lực vào hồ sơ nộp. |
+
+Trước M2.1, học viên kiểm truy cập các đầu vào được cấp; giảng viên/quản trị lớp xử lý quyền, mạng hoặc tenant thiếu. Học viên vẫn phải cấu hình giải pháp đã chọn và thực hiện spike theo mục 14.2-14.3, rồi xây đầy đủ tại M3. Quyền truy cập dịch vụ không đồng nghĩa nghiệp vụ Auth/email đã được làm sẵn. Không tự mua dịch vụ hoặc gửi dữ liệu ngoài phạm vi được phép để vượt phần bị chặn.
 
 Chọn thành phần xác thực đã có thay vì tự viết thuật toán mật mã. Học viên vẫn chịu trách nhiệm kiểm quyền nghiệp vụ tại máy chủ theo [hướng dẫn tích hợp](#data-api).
 
@@ -1411,7 +1454,9 @@ Ghi một lần ở đầu bảng: tên và phiên bản SRS được sử dụn
 
 Mỗi AC có một kết luận tổng hợp. Các điều kiện hoặc yêu cầu thành phần có thể ghi trong ô tương ứng hoặc liên kết tới test case chi tiết của cùng bảng. Không tạo bảng kết luận thứ hai cho cùng phạm vi. Chỉ ghi AC đạt khi mọi điều kiện áp dụng đều đạt; dùng chung test không được làm mất kết luận riêng của từng AC. Điều kiện chưa kiểm, bị chặn hoặc ngoài phạm vi không ghi đạt.
 
-Có thể dùng Markdown, CSV hoặc công cụ quản lý của lớp. M2.1 ghi yêu cầu và kỳ vọng; M2 nối thiết kế; M3.1-M3 bổ sung kiểm cùng chức năng; M4 tổng hợp, sau đó cập nhật phần bị ảnh hưởng ở R1.1. Dùng [mẫu minh chứng](#evidence) ngay trong hồ sơ hiện có.
+Có thể dùng Markdown, CSV hoặc công cụ quản lý của lớp. M2.1 ghi yêu cầu và kỳ vọng; M2 nối thiết kế; M3.1-M3 bổ sung kiểm cùng chức năng; M4 tổng hợp kết quả đến hạn; M5 bổ sung kết quả release/restore/CR và cập nhật phần bị ảnh hưởng ở R1.1. Dùng [mẫu minh chứng](#evidence) ngay trong hồ sơ hiện có.
+
+**Ví dụ cách ghi ở M4, không phải kết quả kiểm sẵn:** một nhánh upload đã chạy ghi actual/log/commit và kết luận của nhánh; nếu AC còn nhánh chưa chạy thì verdict AC vẫn chưa đạt đủ. Với `IH-REL-001-AC01` chưa kiểm bản release, ghi kết luận “chưa kiểm”, ghi chú “chưa đến hạn M5”, task LR-25 và bước kiểm dự kiến. Giữ AC này trong 151 AC áp dụng, không chuyển sang ngoài phạm vi. Khi có evidence M5 mới cập nhật verdict; điều kiện phát hành không được giảm.
 
 ### 16.2. Nội dung cần ghi theo loại công việc
 
