@@ -49,7 +49,7 @@ Starter hiện dành cho môi trường phát triển local, chưa có xác th�
 | Thành phần | Yêu cầu |
 | --- | --- |
 | Git | Tải mã nguồn và quản lý lịch sử thay đổi. |
-| Docker | Docker Desktop hoặc Docker Engine có Docker Compose v2; đang chạy trước khi khởi động ứng dụng. Windows dùng WSL2 theo [hướng dẫn Windows](GETTING_STARTED.md#windows-wsl2). |
+| Docker | Học viên tự chuẩn bị trên máy cá nhân: Docker Desktop, Docker Engine hoặc phương án tương thích (Colima, OrbStack, Podman) có Docker Compose v2; đang chạy trước khi khởi động ứng dụng. Windows dùng WSL2 theo [hướng dẫn Windows](GETTING_STARTED.md#windows-wsl2). |
 | Tài nguyên | Khoảng 3 GiB RAM trống (tổng `mem_limit` của các service khoảng 2,3 GiB, cộng thêm khi build); cổng `3107` và `8107` chưa được sử dụng. |
 | Kết nối mạng | Cần cho lần tải image và cài dependency đầu tiên. Luồng AI ở chế độ fixture không gọi dịch vụ bên ngoài. |
 | Công cụ kiểm tra | Python 3.11+ và Make để chạy script/kiểm thử; Node.js 24.20.0 khi chạy browser E2E trên máy. |
@@ -138,8 +138,8 @@ Dùng một file `.env` cho cấu hình local; bắt đầu từ [`.env.example`
 | Biến | Mặc định | Ý nghĩa |
 | --- | --- | --- |
 | `RAG_MODE` | `fixture` | `fixture` để kiểm luồng offline; `real` để gọi dịch vụ AI. |
-| `DEEPSEEK_API_KEY` | Trống | Khóa DeepSeek, cần cho cấu hình AI thật mặc định. |
-| `GEMINI_API_KEY` | Trống | Khóa Gemini, cần cho cấu hình AI thật mặc định. |
+| `DEEPSEEK_API_KEY` | Trống | Khóa DeepSeek học viên tự mua, cần cho cấu hình AI thật mặc định; có thể thay bằng provider tùy chọn theo [Model Profiles](docs/Model_Profiles_And_Reranking.md). |
+| `GEMINI_API_KEY` | Trống | Khóa Gemini học viên tự mua hoặc tạo, cần cho embedding mặc định. |
 | `API_PORT` | `8107` | Cổng API trên máy local. |
 | `WEB_PORT` | `3107` | Cổng Web trên máy local. |
 
@@ -159,7 +159,7 @@ API_PORT=8117 WEB_PORT=3117 docker compose --env-file .env -p insighthub-c07-rea
 
 Truy cập Web tại [localhost:3117](http://localhost:3117). API và runtime profile tương ứng ở cổng `8117`. Tải lại tài liệu vào môi trường này; vector tạo bằng fixture không dùng thay cho embedding thật. Khi dừng môi trường real, dùng cùng tên project `insighthub-c07-real`.
 
-Ở chế độ real, nội dung tài liệu và câu hỏi dùng tạo embedding được gửi tới Gemini; câu hỏi và các đoạn nguồn được chọn được gửi tới DeepSeek. Chỉ dùng dữ liệu được phép xử lý, giữ khóa trong `.env` và không commit khóa vào Git. Chi tiết model, retrieval, reranker và đánh giá tại [Model Profiles](docs/Model_Profiles_And_Reranking.md) và [hướng dẫn evaluation](evaluation/README.md).
+Ở chế độ real, nội dung tài liệu và câu hỏi dùng tạo embedding được gửi tới Gemini; câu hỏi và các đoạn nguồn được chọn được gửi tới DeepSeek. API key do học viên tự mua và tự chịu chi phí: đặt spending limit, chỉ giữ khóa trong `.env`, không commit khóa vào Git, không dán khóa vào công cụ AI và chỉ gửi dữ liệu giả. Chi tiết model, retrieval, reranker và đánh giá tại [Model Profiles](docs/Model_Profiles_And_Reranking.md) và [hướng dẫn evaluation](evaluation/README.md).
 
 ## Email local (Mailpit)
 

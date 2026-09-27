@@ -2,7 +2,7 @@
 
 ## Yêu cầu
 
-- Docker có Docker Compose v2: Docker Desktop (macOS/Windows) hoặc Docker Engine (Linux, WSL2). Windows xem mục [Windows (WSL2)](#windows-wsl2).
+- Máy cá nhân có Docker và Docker Compose v2 do học viên tự chuẩn bị: Docker Desktop (macOS/Windows), Docker Engine (Linux, WSL2), hoặc phương án thay thế như Colima, OrbStack (macOS) hay Podman nếu chạy được Docker Compose v2 của Starter. Học viên tự kiểm điều khoản sử dụng của công cụ đã chọn. Windows xem mục [Windows (WSL2)](#windows-wsl2).
 - RAM trống khoảng 3 GiB: tổng `mem_limit` của postgres, api, web là khoảng 2,3 GiB (768 MiB + 1 GiB + 512 MiB), cộng thêm khi build image.
 - Cổng 8107 và 3107 trống, hoặc đặt `API_PORT`/`WEB_PORT` khác.
 - Git, Python 3.11+ và Make để dùng công cụ kiểm/đóng gói. Browser E2E cần Node 24.20.0 và Playwright trong lockfile; chạy ứng dụng chỉ cần Docker.
@@ -16,11 +16,11 @@ WSL2 là đường chính thức trên Windows vì Makefile và script cần bas
    - Docker Desktop for Windows, bật `Settings > Resources > WSL integration` cho distro Ubuntu.
    - Docker Engine cài trong Ubuntu WSL theo hướng dẫn Docker cho Ubuntu; bật `systemd=true` trong `/etc/wsl.conf`.
 
-   Kiểm trong terminal Ubuntu: `docker compose version`. Docker Desktop yêu cầu subscription trả phí với doanh nghiệp lớn (theo điều khoản Docker: từ 250 nhân viên hoặc doanh thu từ 10 triệu USD/năm). **Công ty xác nhận license trước khi cài**; nếu chưa có, dùng Docker Engine trong WSL.
+   Kiểm trong terminal Ubuntu: `docker compose version`. Chọn cách phù hợp với máy cá nhân và tự kiểm điều khoản sử dụng của công cụ; Docker Engine trong WSL là phương án không cần Docker Desktop.
 3. Cài công cụ trong Ubuntu: `sudo apt update && sudo apt install -y git make python3 python3-venv curl`. Node.js 24.20.0 chỉ cần khi chạy browser E2E trên máy (cài qua nvm hoặc fnm).
 4. Clone repository **trong filesystem của WSL** (ví dụ `~/work/insighthub`), không clone vào `/mnt/c/...` vì I/O chậm, lỗi quyền file và file watcher. Mở bằng VS Code extension WSL (`code .` trong thư mục repo).
 5. Đặt `git config --global core.autocrlf input`. Repository có `.gitattributes` giữ LF và giữ nguyên byte của SRS, corpus, tài liệu mẫu.
-6. Nếu mạng công ty dùng proxy, cấu hình proxy cho Docker, apt và npm; báo mentor trước buổi B1 nếu build image bị chặn.
+6. Nếu mạng đang dùng cần proxy, cấu hình proxy cho Docker, apt và npm; báo mentor trước buổi B1 nếu build image bị chặn.
 
 **Phương án dự phòng: devcontainer.** Khi không cài được công cụ trong WSL, mở repo bằng VS Code Dev Containers (`Reopen in Container`). [`.devcontainer/devcontainer.json`](.devcontainer/devcontainer.json) cung cấp Python 3.12, Node 24.20.0, make và Docker-in-Docker; máy host vẫn cần Docker (Docker Desktop hoặc Docker Engine trong WSL). Cấu hình này chưa được pilot trên máy học viên; ghi lại lỗi gặp phải để mentor xử lý.
 
@@ -108,9 +108,9 @@ DEEPSEEK_API_KEY=<key DeepSeek>
 GEMINI_API_KEY=<key Gemini>
 ```
 
-Đây là ba biến cần cấu hình. DeepSeek trả lời bằng `deepseek-flash`; Gemini tạo embedding bằng `gemini-embedding-2`, 1024 chiều. Không cần key OpenAI, Anthropic, Voyage hoặc Cohere cho cấu hình này. Reranker mặc định tắt.
+Key do học viên tự mua và tự chịu chi phí; đặt spending limit trên tài khoản provider trước khi chạy. Muốn dùng provider khác thay DeepSeek (Gemini, Anthropic, gateway OpenAI-compatible, Ollama local), xem [Model Profiles](docs/Model_Profiles_And_Reranking.md#provider-tuy-chon). Đây là ba biến cần cấu hình. DeepSeek trả lời bằng `deepseek-flash`; Gemini tạo embedding bằng `gemini-embedding-2`, 1024 chiều. Không cần key OpenAI, Anthropic, Voyage hoặc Cohere cho cấu hình này. Reranker mặc định tắt.
 
-Điền khóa vào `.env` tại máy, không sửa file `.example`, gửi key trong chat hoặc commit credential. Nếu chuyển từ env cũ, bỏ các dòng `LLM_PROVIDER`, `EMBEDDING_PROVIDER`, `LLM_MODEL`, `EMBEDDING_MODEL`, `RAG_PROFILE`, `AI_DATA_USAGE_NOTICE` và `AI_DATA_POLICY_URL` để dùng mặc định mới. Thay model khi cần bằng hai biến được chú thích trong `.env.example`.
+Điền khóa vào `.env` tại máy, không sửa file `.example`, không gửi key trong chat hay dán vào công cụ AI, không commit credential. Chỉ gửi dữ liệu giả tới provider. Nếu chuyển từ env cũ, bỏ các dòng `LLM_PROVIDER`, `EMBEDDING_PROVIDER`, `LLM_MODEL`, `EMBEDDING_MODEL`, `RAG_PROFILE`, `AI_DATA_USAGE_NOTICE` và `AI_DATA_POLICY_URL` để dùng mặc định mới. Thay model khi cần bằng hai biến được chú thích trong `.env.example`.
 
 Áp dụng lại cấu hình và kiểm profile:
 

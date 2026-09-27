@@ -1,6 +1,15 @@
 # Model Profiles và Reranking
 
-Cập nhật: 19/09/2026; bổ sung profile thay thế ngày 27/09/2026. DeepSeek cho hỏi đáp theo lựa chọn của instructor; embedding giữ Gemini. Chất lượng AI cần được kiểm chứng AEV trên corpus sử dụng.
+Cập nhật: 19/09/2026; bổ sung provider tùy chọn ngày 27/09/2026. DeepSeek là cấu hình hỏi đáp mặc định; embedding mặc định Gemini. Học viên dùng API key tự mua và có thể chọn provider tùy chọn tại [mục dưới](#provider-tuy-chon). Chất lượng AI cần được kiểm chứng AEV trên corpus sử dụng.
+
+<a id="api-key-do-hoc-vien-tu-mua"></a>
+
+## API key do học viên tự mua
+
+- Học viên tự mua hoặc tạo API key cho provider đã chọn (DeepSeek mặc định, hoặc provider tùy chọn bên dưới) và tự chịu chi phí.
+- Đặt spending limit hoặc hạn mức ngân sách trên tài khoản provider trước khi chạy `RAG_MODE=real`.
+- Chỉ giữ key trong `.env` tại máy; không commit, không gửi trong chat, không dán key vào Claude hay công cụ AI khác. Nếu lộ key, thu hồi và tạo key mới.
+- Chỉ gửi corpus giả và dữ liệu thử tới provider.
 
 ## Một file `.env`
 
@@ -40,9 +49,11 @@ Nội dung tài liệu và câu hỏi dùng tạo embedding được gửi tới
 
 Các adapter Gemini generation, OpenAI-compatible, Anthropic, Voyage và Ollama vẫn được giữ cho bài học mở rộng. Chúng không yêu cầu key khi không được chọn. Muốn sử dụng, khai báo tường minh `LLM_PROVIDER`/`EMBEDDING_PROVIDER` cùng key, model và endpoint tương ứng; profile tự sinh là `custom` khi ngoài cấu hình lớp. `LLM_MODEL` và `EMBEDDING_MODEL` là override chung có ưu tiên cao hơn model riêng từng provider, chỉ dùng khi có chủ đích.
 
-## Profile thay thế khi không dùng DeepSeek
+<a id="provider-tuy-chon"></a>
 
-**Trạng thái:** chờ Samsung SDS xác nhận chính sách nhà cung cấp AI (quyết định D12). Chưa có xác nhận thì mentor chọn profile cho lớp; học viên không tự đổi sang provider chưa được duyệt và chỉ dùng dữ liệu giả lập.
+## Provider tùy chọn thay cho DeepSeek
+
+Học viên chọn DeepSeek (mặc định) hoặc một phương án dưới đây, tùy tài khoản và ngân sách của mình (quyết định D12). Ghi provider đã chọn vào evidence; áp dụng cùng quy tắc key ở mục [API key do học viên tự mua](#api-key-do-hoc-vien-tu-mua) và chỉ dùng dữ liệu giả lập.
 
 Các profile dưới đây chỉ đổi **generation**, giữ Gemini embedding nên embedding identity không đổi và **không cần ingest lại**. Chỉ dùng adapter đã có trong [`llm.py`](../api/app/services/llm.py); không cần sửa code. Thêm biến vào chính `.env`, áp dụng lại Compose rồi kiểm `/system/profile`.
 
@@ -50,7 +61,7 @@ Các profile dưới đây chỉ đổi **generation**, giữ Gemini embedding n
 | --- | --- | --- | --- |
 | A. Gemini cho cả hai (ít key nhất) | `LLM_PROVIDER=gemini`; `GEMINI_CHAT_MODEL` tùy chọn (mặc định `gemini-3.1-flash-lite`) | `classroom-gemini` | Chỉ Google Gemini |
 | B. Anthropic API | `LLM_PROVIDER=anthropic`, `ANTHROPIC_API_KEY`, `ANTHROPIC_CHAT_MODEL` (bắt buộc, không có mặc định) | `custom` | Gemini (embedding), Anthropic (câu hỏi và đoạn nguồn) |
-| C. Gateway OpenAI-compatible do công ty cấp | `LLM_PROVIDER=openai`, `OPENAI_API_KEY`, `OPENAI_BASE_URL` (bắt buộc), `OPENAI_CHAT_MODEL` | `custom` | Gemini và gateway công ty |
+| C. Gateway OpenAI-compatible do học viên chọn | `LLM_PROVIDER=openai`, `OPENAI_API_KEY`, `OPENAI_BASE_URL` (bắt buộc), `OPENAI_CHAT_MODEL` | `custom` | Gemini và gateway đã chọn |
 | D. Ollama local | `LLM_PROVIDER=ollama`, `OLLAMA_CHAT_MODEL`; `OLLAMA_BASE_URL` mặc định `http://ollama:11434` (profile `ollama`) hoặc `http://host.docker.internal:11434` (Ollama cài trên máy) | `custom` | Chỉ Gemini (embedding) |
 
 Ví dụ phương án A:
@@ -67,7 +78,7 @@ Ví dụ phương án B:
 RAG_MODE=real
 LLM_PROVIDER=anthropic
 ANTHROPIC_API_KEY=<key Anthropic API>
-ANTHROPIC_CHAT_MODEL=<model id được công ty duyệt>
+ANTHROPIC_CHAT_MODEL=<model id Anthropic học viên chọn>
 GEMINI_API_KEY=<key Gemini>
 ```
 
@@ -75,7 +86,7 @@ Lưu ý:
 
 - `DEEPSEEK_API_KEY` không cần khi `LLM_PROVIDER` khác `deepseek`.
 - Key Anthropic API tính phí riêng, không phải tài khoản Claude Pro/Max dùng cho Claude.ai/Claude Code.
-- Gateway phương án C phải hỗ trợ `/chat/completions`, `response_format` JSON và `max_completion_tokens`; kiểm bằng AEV trước khi dùng cho lớp.
+- Gateway phương án C phải hỗ trợ `/chat/completions`, `response_format` JSON và `max_completion_tokens`; kiểm bằng AEV trước khi dùng cho bài làm.
 - Muốn chạy hoàn toàn offline, thêm `EMBEDDING_PROVIDER=ollama` (chỉ hỗ trợ `mxbai-embed-large`, `EMBEDDING_DIM=1024`). Cách này đổi embedding identity nên phải ingest lại trong Compose project riêng; evidence gate `RETRIEVAL_MIN_SIMILARITY` về -1 và cần hiệu chỉnh bằng AEV. Máy cần đủ RAM/CPU cho model local.
 - Đổi generation provider là thay đổi cấu hình AI: chạy lại `python3 scripts/run_aev.py`, ghi provider, model, prompt version và kết quả vào evidence. Không so sánh trực tiếp kết quả AEV giữa các provider khi chưa review từng claim.
 

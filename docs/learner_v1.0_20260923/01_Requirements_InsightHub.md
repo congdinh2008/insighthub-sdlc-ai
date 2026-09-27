@@ -66,7 +66,7 @@ Phần [thiết kế dữ liệu và API](#data-api) xác định đầu ra cầ
 
 **Công cụ phát triển:** công ty cấp tài khoản Claude Pro/Max cho học viên, chỉ dùng cho học tập; Claude (Claude.ai, Claude Code) là công cụ AI chính của khóa học. ChatGPT/Codex là phương án bổ sung nếu học viên có tài khoản và muốn dùng; không bắt buộc có hoặc mua tài khoản ChatGPT. Mỗi Tool Guideline (TG) viết theo Claude và có mục **Mapping ChatGPT/Codex** ở cuối để tra thao tác tương đương. Học viên tự phân tích, kiểm chứng và giải thích quyết định, dù sử dụng công cụ nào. Quyền dùng Claude Code, MCP và kết nối repository được kiểm tra theo tài khoản thực tế; nếu chưa có quyền phù hợp, thực hành agent trên sandbox do lớp cung cấp.
 
-**Dịch vụ AI của sản phẩm:** InsightHub dùng DeepSeek để sinh nội dung và Gemini để tạo embedding theo cấu hình Starter; reranker tắt. Các dịch vụ này khác tài khoản AI dùng hỗ trợ phát triển. Dữ liệu gửi tới các provider này đi ra nước ngoài, vì vậy chỉ dùng corpus giả và dữ liệu thử; profile provider thay thế nằm tại [cấu hình mô hình](../Model_Profiles_And_Reranking.md).
+**Dịch vụ AI của sản phẩm:** học viên dùng **API key tự mua**: DeepSeek để sinh nội dung theo cấu hình mặc định của Starter, hoặc một provider tùy chọn được Starter hỗ trợ (Gemini, Anthropic, gateway OpenAI-compatible, Ollama local); embedding do học viên cấu hình, mặc định Gemini; reranker tắt. Chọn provider theo [cấu hình mô hình](../Model_Profiles_And_Reranking.md). Các dịch vụ này khác tài khoản Claude dùng hỗ trợ phát triển. Học viên tự chịu chi phí và đặt spending limit trên tài khoản provider; chỉ giữ key trong `.env`, không commit, không dán key vào Claude hay công cụ AI khác. Dữ liệu gửi tới provider bên ngoài có thể đi ra nước ngoài, vì vậy chỉ gửi corpus giả và dữ liệu thử.
 
 **Tài khoản và dữ liệu khi dùng AI:**
 
@@ -74,6 +74,7 @@ Phần [thiết kế dữ liệu và API](#data-api) xác định đầu ra cầ
 - Chỉ đưa vào Claude: Starter, corpus giả và bài làm của chính mình. Không đưa mã nguồn, tài liệu, dữ liệu hoặc credential của Samsung SDS hay khách hàng; không đưa `.env`, API key, token. Giữ các rule deny trong `.claude/settings.json` của Starter.
 - Không dùng `/feedback` hoặc chia sẻ transcript khi có nội dung bài làm chưa công khai.
 - Dùng tài khoản Google và email test riêng cho khóa học khi làm Auth/Email của InsightHub; không dùng tài khoản công ty.
+- Học trên máy cá nhân; tự chuẩn bị Docker phù hợp theo [GETTING_STARTED](../../GETTING_STARTED.md). Máy Windows dùng WSL2.
 - Khi áp dụng vào dự án thật sau khóa học, chỉ dùng công cụ AI và dữ liệu được Samsung SDS phê duyệt.
 
 **Cách học:** trước buổi học, đọc tài liệu và thực hiện các việc của milestone trong khả năng hiện tại; ghi phần đã làm và câu hỏi cần hỗ trợ. Trên lớp, trao đổi các điểm khó của dự án gắn với nội dung buổi học. Sau buổi học, cập nhật bài theo phản hồi và hoàn thiện trước hạn. Tổng 45 giờ tự học đã bao gồm đọc, thực hành, kiểm thử, sửa bài và chuẩn bị bảo vệ.
@@ -197,7 +198,7 @@ AC áp dụng được chia hai tầng để khối lượng M3 và M4 vừa ng�
 
 ### 2.2. Khởi động và trách nhiệm
 
-1. Kiểm tài khoản Claude Pro/Max do công ty cấp và tắt thiết lập cho phép training theo mục 1.3; kiểm quyền truy cập repository Starter, tài khoản Google/email test và dịch vụ AI theo hướng dẫn lớp. Ghi xác nhận privacy và phần chưa được cấp quyền vào checklist setup buổi 1 để giảng viên hỗ trợ.
+1. Kiểm tài khoản Claude Pro/Max do công ty cấp và tắt thiết lập cho phép training theo mục 1.3; kiểm quyền truy cập repository Starter, tài khoản Google/email test; tạo API key provider AI tự mua (DeepSeek hoặc provider tùy chọn), đặt spending limit và chỉ lưu key trong `.env`. Ghi xác nhận privacy và phần chưa được cấp quyền vào checklist setup buổi 1 để giảng viên hỗ trợ.
 2. Fork và clone Starter theo mục 2.3; ghi commit xuất phát rồi chạy chế độ fixture theo [GETTING_STARTED](../../GETTING_STARTED.md). Máy Windows dùng WSL2 theo [hướng dẫn Windows](../../GETTING_STARTED.md#windows-wsl2).
 3. Thử tải tài liệu, hỏi đáp và mở nguồn; ghi kết quả hoặc lỗi. Fixture hỗ trợ kiểm hành vi phần mềm, chưa chứng minh chất lượng nội dung của model thật.
 4. Đọc milestone đang thực hiện, lập bảng truy vết theo mục 15 và bổ sung kết quả dần theo mẫu tại mục 16. Không viết lại toàn bộ SRS hoặc tạo hồ sơ riêng cho từng mẫu.
@@ -370,7 +371,7 @@ Trước buổi 2, giảng viên xác nhận công cụ/sandbox, repository th�
 
 <a id="lr-04"></a>
 
-1. **Viết AI Usage Charter cho dự án.** Charter là quy tắc dùng AI của InsightHub, gồm: phân loại dữ liệu 4 mức (Public, Internal, Confidential, Personal/Sensitive) và mức nào được đưa vào công cụ AI; thư mục và lệnh được phép; người quyết định; cách dừng và khôi phục; ghi chú pháp lý ở mức áp dụng cho dự án: Việt Nam (Luật Trí tuệ nhân tạo 134/2025/QH15, Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15) và Hàn Quốc (AI Basic Act, PIPA). Phần pháp lý là nội dung đào tạo, không phải tư vấn pháp lý. Thử một thao tác ngoài quyền bằng dữ liệu giả trong môi trường thực hành được cấp. Minh chứng phải cho thấy công cụ hoặc môi trường đã từ chối thao tác; câu trả lời “không được phép” của mô hình chưa chứng minh giới hạn quyền được thực thi. Đọc tình huống prompt injection trong [`evaluation/corpus/04_injection_vi.md`](../../evaluation/corpus/04_injection_vi.md) và xác định control nào trong Charter hoặc quyền công cụ chặn được chỉ dẫn độc hại; phần này không cần nộp riêng.
+1. **Viết AI Usage Charter cho dự án.** Charter là quy tắc dùng AI của InsightHub, gồm: phân loại dữ liệu 4 mức (Public, Internal, Confidential, Personal/Sensitive) và mức nào được đưa vào công cụ AI; thư mục và lệnh được phép; người quyết định; cách dừng và khôi phục; ghi chú pháp lý ở mức áp dụng cho dự án theo pháp luật Việt Nam (Luật Trí tuệ nhân tạo 134/2025/QH15, Luật Bảo vệ dữ liệu cá nhân 91/2025/QH15). Phần pháp lý là nội dung đào tạo, không phải tư vấn pháp lý. Thử một thao tác ngoài quyền bằng dữ liệu giả trong môi trường thực hành được cấp. Minh chứng phải cho thấy công cụ hoặc môi trường đã từ chối thao tác; câu trả lời “không được phép” của mô hình chưa chứng minh giới hạn quyền được thực thi. Đọc tình huống prompt injection trong [`evaluation/corpus/04_injection_vi.md`](../../evaluation/corpus/04_injection_vi.md) và xác định control nào trong Charter hoặc quyền công cụ chặn được chỉ dẫn độc hại; phần này không cần nộp riêng.
 
 <a id="lr-05"></a>
 
@@ -389,7 +390,7 @@ Trước buổi 2, giảng viên xác nhận công cụ/sandbox, repository th�
 
 - Vòng làm việc của agent: lập kế hoạch, dùng công cụ, quan sát kết quả, điều chỉnh.
 - MCP, giới hạn quyền, prompt injection từ ngữ cảnh không tin cậy và điểm khôi phục.
-- AI Usage Charter: phân loại dữ liệu, quy tắc tài khoản và pháp lý VN/KR ở mức áp dụng.
+- AI Usage Charter: phân loại dữ liệu, quy tắc tài khoản và pháp lý Việt Nam ở mức áp dụng.
 - Hướng dẫn dự án cho AI, skill, hook và chuẩn hóa một tác vụ lặp.
 
 | Bước áp dụng | Công việc trên InsightHub | Kết quả cần kiểm |
@@ -514,7 +515,7 @@ Sản phẩm của mốc này là **bảng yêu cầu/test case và kết quả 
 | Google | Đăng nhập bằng tài khoản thử được phép; server kiểm bằng chứng identity của nhà cung cấp; có phép kiểm từ chối phản hồi không hợp lệ theo rủi ro của giải pháp. | Chứng minh tích hợp identity. Account/session và quyền Notebook trong ứng dụng được thiết kế M2, triển khai M3.1-M3. |
 | Email | Dịch vụ thật gửi tới inbox thử được phép; đối chiếu thư nhận và hành động verify/reset đại diện theo mục 14. Một lỗi gửi có thể kiểm bằng mô phỏng có kiểm soát. | Phân biệt kết nối/đăng nhập SMTP, dịch vụ chấp nhận gửi, thư nhận và kết quả hành động. Năm email được tích hợp đầy đủ tại M3. |
 | Linking, Pending và session | Dùng trạng thái thử để kiểm khả năng liên kết cùng email, recovery tài khoản chờ xác minh và thu hồi phiên cũ; ghi phần thư viện hỗ trợ/phần app phải xây. | Được dùng kho dữ liệu thử và mô phỏng lỗi/thời gian cho policy. Kết quả này chưa chứng minh transaction, cạnh tranh request hoặc session của ứng dụng chính. |
-| AI và embedding | Thử DeepSeek/Gemini với nguồn sát giới hạn 60.000 ký tự, cấu hình cho Summary/Quiz; kiểm output với expected từ nguồn, ghi tokens, thời gian và mức sử dụng. | Corpus giả/tổng hợp phải có nhãn. Kết quả chỉ xác nhận phép thử đã chạy; chất lượng trên bộ nghiệm thu và 12 lượt nội dung thuộc M4. |
+| AI và embedding | Thử provider đã chọn (DeepSeek hoặc provider tùy chọn; embedding mặc định Gemini) với nguồn sát giới hạn 60.000 ký tự, cấu hình cho Summary/Quiz; kiểm output với expected từ nguồn, ghi tokens, thời gian và mức sử dụng. | Corpus giả/tổng hợp phải có nhãn. Kết quả chỉ xác nhận phép thử đã chạy; chất lượng trên bộ nghiệm thu và 12 lượt nội dung thuộc M4. |
 
 Tái sử dụng SDK/thư viện, phần nền và dữ liệu mẫu được cấp; tự viết phần thử cần thiết để kiểm giả thuyết. Chọn unit, API hoặc browser test theo rủi ro cần chứng minh. Số test/checkpoint, số trình duyệt và mức hoàn thiện giao diện của một bộ spike tham khảo không trở thành yêu cầu bổ sung; phạm vi UI/browser của sản phẩm vẫn theo LR-10/LR-21.
 
@@ -591,7 +592,7 @@ Có thiết kế nối được từ hành trình người dùng đến UI, API,
 
    Mô tả giao dịch và các điều kiện phải luôn đúng khi gửi lặp, nộp Quiz, xóa nguồn, công bố kết quả và khởi động lại. Bản ghi chống gửi lặp hết hạn không được làm mất dữ liệu nghiệp vụ. Có ví dụ dữ liệu hợp lệ và không hợp lệ cho những nhánh đang thiết kế, kế hoạch migration, cùng ít nhất một ADR so sánh hai phương án. Đối chiếu [hướng dẫn thiết kế và tích hợp](#data-api) trước khi chọn cách áp dụng hợp đồng tham khảo vào Starter.
 
-   **Threat model sơ bộ.** Trong cùng hồ sơ thiết kế, vẽ data flow và trust boundary giữa trình duyệt, API, DB, tài liệu upload, RAG, provider AI, coding agent và MCP. Áp STRIDE cho các endpoint OpenAPI và thực thể ERD chính, ưu tiên Auth, ownership và Quiz. Đánh dấu luồng dữ liệu ra nước ngoài (Claude, DeepSeek, Gemini, Firebase hoặc dịch vụ Auth bên ngoài nếu dùng) và loại dữ liệu được phép đi qua theo AI Usage Charter. Tự phân loại mức rủi ro AI của InsightHub có lập luận. Threat model được cập nhật tại LR-24.
+   **Threat model sơ bộ.** Trong cùng hồ sơ thiết kế, vẽ data flow và trust boundary giữa trình duyệt, API, DB, tài liệu upload, RAG, provider AI, coding agent và MCP. Áp STRIDE cho các endpoint OpenAPI và thực thể ERD chính, ưu tiên Auth, ownership và Quiz. Đánh dấu luồng dữ liệu ra nước ngoài (Claude, provider AI học viên đã chọn như DeepSeek, Gemini, Anthropic hoặc gateway OpenAI-compatible; Ollama local nếu dùng thì không đi ra ngoài; Firebase hoặc dịch vụ Auth bên ngoài nếu dùng) và loại dữ liệu được phép đi qua theo AI Usage Charter. Tự phân loại mức rủi ro AI của InsightHub có lập luận. Threat model được cập nhật tại LR-24.
 
 ### 7.3 Điều kiện hoàn thành
 
@@ -963,7 +964,7 @@ Có bản R1 của bài tập cài được trên môi trường sạch, dữ li
 
 <a id="lr-25"></a>
 
-1. **Phát hành bản R1 của bài tập.** Gắn phiên bản và Git tag cho sản phẩm trong phạm vi 151 tiêu chí áp dụng, Tóm tắt và Quiz. Đóng gói kèm checksum, cấu hình mẫu và hướng dẫn cài, chạy, xử lý lỗi; kiểm cài đặt trên môi trường sạch và các luồng chính. Ghi giới hạn, lỗi còn mở và kết quả đúng bản phát hành. Ghi chú phát hành có mục tính năng AI: gắn nhãn nội dung do AI tạo cho Chat, Summary và Quiz, nêu giới hạn đã biết, yêu cầu người dùng kiểm lại và kênh báo sự cố. Khi chỉ dùng nội bộ, InsightHub được miễn nghĩa vụ gắn nhãn theo Luật Trí tuệ nhân tạo 134/2025/QH15 và Nghị định 142/2026/NĐ-CP của Việt Nam, AI Basic Act của Hàn Quốc; vẫn gắn nhãn như best practice để sẵn sàng khi mở rộng. Đây là nội dung đào tạo, không phải tư vấn pháp lý. Hồ sơ không được kết luận đã hoàn thành toàn bộ năm công cụ của SRS. Không bàn giao bí mật hoặc dữ liệu riêng.
+1. **Phát hành bản R1 của bài tập.** Gắn phiên bản và Git tag cho sản phẩm trong phạm vi 151 tiêu chí áp dụng, Tóm tắt và Quiz. Đóng gói kèm checksum, cấu hình mẫu và hướng dẫn cài, chạy, xử lý lỗi; kiểm cài đặt trên môi trường sạch và các luồng chính. Ghi giới hạn, lỗi còn mở và kết quả đúng bản phát hành. Ghi chú phát hành có mục tính năng AI: gắn nhãn nội dung do AI tạo cho Chat, Summary và Quiz, nêu giới hạn đã biết, yêu cầu người dùng kiểm lại và kênh báo sự cố. Khi chỉ dùng nội bộ, InsightHub được miễn nghĩa vụ gắn nhãn theo Luật Trí tuệ nhân tạo 134/2025/QH15 và Nghị định 142/2026/NĐ-CP của Việt Nam; vẫn gắn nhãn như best practice để sẵn sàng khi mở rộng. Đây là nội dung đào tạo, không phải tư vấn pháp lý. Hồ sơ không được kết luận đã hoàn thành toàn bộ năm công cụ của SRS. Không bàn giao bí mật hoặc dữ liệu riêng.
 
 <a id="lr-26"></a>
 
@@ -1221,7 +1222,7 @@ Mục tiêu là chọn giải pháp xác thực có bằng chứng đáp ứng S
 | Dữ liệu thử | Hai tài khoản độc lập; các trường hợp có mật khẩu, chờ xác minh và chỉ dùng Google. Chỉ sử dụng email được phép và dữ liệu giả. |
 | Bí mật cấu hình | Chỉ ghi tên biến trong `.env.example`; giá trị thật ở `.env` hoặc kho bí mật của lớp. Không lưu liên kết xác thực còn hiệu lực vào hồ sơ nộp. |
 
-Trước M2.1, học viên kiểm truy cập các đầu vào được cấp; giảng viên/quản trị lớp xử lý quyền, mạng hoặc tenant thiếu. Học viên vẫn phải cấu hình giải pháp đã chọn và thực hiện spike theo mục 14.2-14.3, rồi xây đầy đủ tại M3. Quyền truy cập dịch vụ không đồng nghĩa nghiệp vụ Auth/email đã được làm sẵn. Không tự mua dịch vụ hoặc gửi dữ liệu ngoài phạm vi được phép để vượt phần bị chặn.
+Trước M2.1, học viên kiểm truy cập các đầu vào được cấp; giảng viên/quản trị lớp xử lý quyền, mạng hoặc tenant thiếu. Học viên vẫn phải cấu hình giải pháp đã chọn và thực hiện spike theo mục 14.2-14.3, rồi xây đầy đủ tại M3. Quyền truy cập dịch vụ không đồng nghĩa nghiệp vụ Auth/email đã được làm sẵn. Ngoài API key AI tự mua theo mục 1.3, không tự mua thêm dịch vụ hoặc gửi dữ liệu ngoài phạm vi được phép để vượt phần bị chặn.
 
 Chọn thành phần xác thực đã có thay vì tự viết thuật toán mật mã. Học viên vẫn chịu trách nhiệm kiểm quyền nghiệp vụ tại máy chủ theo [hướng dẫn tích hợp](#data-api).
 
