@@ -2,12 +2,33 @@
 import argparse
 import hashlib
 import json
+import os
+import re
 import subprocess
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 TABLES=('schema_migrations','embedding_index','documents','document_sources','source_segments','chunks','ingestion_attempts','operation_records')
+# Extension point: learners add their own tables (users, notebooks, notes...) via
+# --extra-tables a,b or BACKUP_EXTRA_TABLES=a,b. Defaults stay the Starter tables.
+EXTRA_TABLES_ENV='BACKUP_EXTRA_TABLES'
+TABLE_NAME=re.compile(r'^[a-z_][a-z0-9_]{0,62}(\.[a-z_][a-z0-9_]{0,62})?$')
+
+
+def resolve_tables(extra=None, environ=None):
+    """Starter tables plus validated extra tables, in order and without duplicates."""
+    environ=os.environ if environ is None else environ
+    raw=extra if extra is not None else environ.get(EXTRA_TABLES_ENV,'')
+    tables=list(TABLES)
+    for name in (part.strip() for part in raw.split(',')):
+        if not name:
+            continue
+        if not TABLE_NAME.match(name):
+            raise SystemExit(f'Invalid table name for backup check: {name!r}')
+        if name not in tables:
+            tables.append(name)
+    return tuple(tables)
 
 
 def main():
@@ -16,7 +37,9 @@ def main():
     parser.add_argument('--env-file',default='.env.example')
     parser.add_argument('--output-dir',default='reports/backup-restore')
     parser.add_argument('--keep-backup',action='store_true')
+    parser.add_argument('--extra-tables',default=None,help=f'Comma-separated extra tables to fingerprint (default: ${EXTRA_TABLES_ENV})')
     args=parser.parse_args()
+    tables=resolve_tables(args.extra_tables)
     compose=['docker','compose','--env-file',args.env_file,'-p',args.project]
     suffix=uuid.uuid4().hex[:12]; database='insighthub_restore_'+suffix
     output=ROOT/args.output_dir; output.mkdir(parents=True,exist_ok=True,mode=0o700)
@@ -29,7 +52,7 @@ def main():
         return run(compose+['exec','-T','postgres','psql','-U','insighthub','-d',database,'-At','-c',query])
     def fingerprint(database):
         result={}
-        for table in TABLES:
+        for table in tables:
             # Stable row ordering hashes every value, including bytes, vectors and JSON.
             raw=sql(database,f'SELECT row_to_json(t)::text FROM {table} t ORDER BY row_to_json(t)::text COLLATE "C"')
             result[table]={'rows':len(raw.splitlines()),'sha256':hashlib.sha256(raw.encode()).hexdigest()}

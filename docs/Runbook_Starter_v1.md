@@ -46,6 +46,8 @@ COMPOSE_PROJECT_NAME=insighthub-c07-starter ENV_FILE=.env make backup-restore-ch
 
 Script từ chối database rỗng. Nó hash mọi giá trị của tám bảng, gồm bytes gốc, segments, vectors, attempts và operations; so sánh trước/restore/sau để phát hiện thay đổi đồng thời. API trên database restore phải đọc đúng toàn văn/locator, đối soát chat và retrieve đúng phạm vi. Database tạm và dump tự xóa sau drill; report hash được giữ trong `reports/backup-restore/`.
 
+**Thêm bảng của bài làm:** tám bảng trên là mặc định. Khi thêm bảng mới (ví dụ `users`, `notebooks`, `notes`), đưa chúng vào drill bằng `--extra-tables users,notebooks,notes` hoặc biến môi trường `BACKUP_EXTRA_TABLES=users,notebooks,notes` (dùng được với `make backup-restore-check`). Tên bảng chỉ gồm chữ thường, số, `_` và tùy chọn tiền tố schema; tên không hợp lệ bị từ chối. Điều kiện "database không rỗng" vẫn áp dụng cho các bảng nền; kiểm đọc qua API cho dữ liệu mới do học viên bổ sung.
+
 Tạo corpus fixture cho drill trong namespace test riêng:
 
 ```sh
