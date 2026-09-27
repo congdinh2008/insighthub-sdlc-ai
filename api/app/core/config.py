@@ -93,6 +93,12 @@ class Settings(BaseSettings):
         "Nội dung câu hỏi và trích đoạn tài liệu có thể được gửi tới provider đã cấu hình."
     )
     migration_path: str = "/app/migrations"
+    # Transactional email (infrastructure only). Defaults target the local Mailpit
+    # catcher from the Compose profile "mail"; nothing is sent until code calls it.
+    smtp_host: str = "mailpit"
+    smtp_port: int = Field(default=1025, ge=1, le=65535)
+    smtp_timeout_seconds: float = Field(default=10, gt=0, le=60, allow_inf_nan=False)
+    mail_from: str = "InsightHub <no-reply@insighthub.local>"
 
     @model_validator(mode="before")
     @classmethod

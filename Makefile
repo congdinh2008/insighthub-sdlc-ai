@@ -3,12 +3,19 @@ PYTHON ?= python3
 API_URL ?= http://127.0.0.1:8107
 WEB_URL ?= http://127.0.0.1:3107
 
-.PHONY: up down build test test-db test-backend test-web test-tools test-e2e test-release smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
+.PHONY: up down build test test-db test-backend test-web test-tools test-e2e test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
 up:
 	$(COMPOSE) up --build -d --wait
 
 down:
-	$(COMPOSE) --profile ollama --profile checks down
+	$(COMPOSE) --profile ollama --profile checks --profile mail down
+
+# Optional local mail catcher (Mailpit): SMTP 127.0.0.1:1025, UI http://127.0.0.1:8025
+mail-up:
+	$(COMPOSE) --profile mail up -d mailpit
+
+mail-down:
+	$(COMPOSE) --profile mail stop mailpit
 
 build:
 	$(COMPOSE) build api web

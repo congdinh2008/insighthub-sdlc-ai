@@ -64,6 +64,20 @@ Ghi SHA mã nguồn và hash tệp mẫu đã dùng trong hồ sơ milestone. Kh
 
 Nếu giảng viên cung cấp revision Starter mới, giữ commit nền cũ, review diff trước khi tích hợp vào fork và kiểm lại phần bị ảnh hưởng. Không reset mất bài làm; evidence của lần chạy trước vẫn thuộc SHA/corpus trước đó.
 
+## Email local với Mailpit (tùy chọn)
+
+Starter cấp hạ tầng tối thiểu cho phần Auth/Email của bài làm: mail catcher Mailpit (Compose profile `mail`) và adapter SMTP [`api/app/core/mailer.py`](api/app/core/mailer.py). Starter **không** có luồng xác minh email hoặc reset mật khẩu; học viên tự thiết kế và kiểm các luồng này theo Requirements.
+
+```sh
+make COMPOSE="docker compose --env-file .env -p insighthub-c07-starter" mail-up
+```
+
+- SMTP: `127.0.0.1:1025` từ máy; `mailpit:1025` từ container API (mặc định của `SMTP_HOST`/`SMTP_PORT`).
+- Giao diện xem thư: http://127.0.0.1:8025
+- Đổi cổng khi bị chiếm: `MAIL_SMTP_PORT`, `MAIL_UI_PORT`. Đổi người gửi: `MAIL_FROM`.
+
+Mailpit giữ thư trong máy, không gửi ra Internet. Chỉ dùng địa chỉ email test; không dùng email hoặc dữ liệu thật của công ty. Dừng bằng `make ... mail-down`.
+
 ## Kiểm tra
 
 ```sh

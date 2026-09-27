@@ -161,6 +161,10 @@ Truy cập Web tại [localhost:3117](http://localhost:3117). API và runtime pr
 
 Ở chế độ real, nội dung tài liệu và câu hỏi dùng tạo embedding được gửi tới Gemini; câu hỏi và các đoạn nguồn được chọn được gửi tới DeepSeek. Chỉ dùng dữ liệu được phép xử lý, giữ khóa trong `.env` và không commit khóa vào Git. Chi tiết model, retrieval, reranker và đánh giá tại [Model Profiles](docs/Model_Profiles_And_Reranking.md) và [hướng dẫn evaluation](evaluation/README.md).
 
+## Email local (Mailpit)
+
+Phần Auth/Email dùng mail catcher Mailpit chạy local (Compose profile `mail`, SMTP `127.0.0.1:1025`, giao diện `127.0.0.1:8025`) và adapter SMTP tối thiểu `api/app/core/mailer.py`. Starter chưa có luồng xác minh hoặc reset mật khẩu. Xem [hướng dẫn Mailpit](GETTING_STARTED.md#email-local-với-mailpit-tùy-chọn).
+
 ## Cấu trúc repository
 
 ```text

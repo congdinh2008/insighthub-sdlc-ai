@@ -21,6 +21,13 @@
     },
     {
       "type": "container",
+      "name": "axllent/mailpit:v1.31.2",
+      "version": "sha256:74d609a42ec279aa63c6b4622a6fa9b5408d1ad5b1d76a1c4be40a265ce0863d",
+      "scope": "required",
+      "bom-ref": "container:axllent/mailpit:v1.31.2@sha256:74d609a42ec279aa63c6b4622a6fa9b5408d1ad5b1d76a1c4be40a265ce0863d"
+    },
+    {
+      "type": "container",
       "name": "ollama/ollama:0.33.3",
       "version": "sha256:32931b46719f673c05fdbaa81ccb26da18ea4a1c57590a754874ab28ba269eb2",
       "scope": "required",

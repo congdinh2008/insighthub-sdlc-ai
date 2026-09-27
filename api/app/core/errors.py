@@ -102,3 +102,9 @@ class SourceSetInvalid(ServiceError):
     status_code = 422
     code = "source_set_invalid"
     message = "Danh sách tài liệu nguồn không hợp lệ hoặc chưa sẵn sàng."
+
+
+class MailDeliveryError(ServiceError):
+    status_code = 502
+    code = "mail_delivery_error"
+    message = "Không gửi được email. Hãy thử lại sau."

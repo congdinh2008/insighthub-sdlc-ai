@@ -68,6 +68,9 @@ services:
       EXPOSE_DEBUG_CONTEXTS: ${EXPOSE_DEBUG_CONTEXTS:-}
       AI_DATA_POLICY_URL: ${AI_DATA_POLICY_URL:-}
       AI_DATA_USAGE_NOTICE: ${AI_DATA_USAGE_NOTICE:-}
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-}
+      MAIL_FROM: ${MAIL_FROM:-}
       MIGRATION_PATH: /app/migrations
     extra_hosts:
       - "host.docker.internal:host-gateway"
@@ -92,6 +95,16 @@ services:
     command: ["sh", "-c", "npm run typecheck && npm test"]
     environment:
       NEXT_TELEMETRY_DISABLED: "1"
+  mailpit:
+    # Local mail catcher for Auth/Email practice. Start with: make mail-up
+    image: axllent/mailpit:v1.31.2@sha256:74d609a42ec279aa63c6b4622a6fa9b5408d1ad5b1d76a1c4be40a265ce0863d
+    profiles: ["mail"]
+    environment:
+      MP_MAX_MESSAGES: "500"
+    ports:
+      - "127.0.0.1:${MAIL_SMTP_PORT:-1025}:1025"
+      - "127.0.0.1:${MAIL_UI_PORT:-8025}:8025"
+    mem_limit: 128m
   ollama:
     image: ollama/ollama:0.33.3@sha256:32931b46719f673c05fdbaa81ccb26da18ea4a1c57590a754874ab28ba269eb2
     profiles: ["ollama"]
