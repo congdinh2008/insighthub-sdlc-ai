@@ -1,6 +1,6 @@
 # Requirements - Dự án cá nhân InsightHub
 
-B2B C07 - SDLC with AI | Phiên bản 1.0 | Revision hướng dẫn 26/09/2026
+B2B C07 - SDLC with AI | Phiên bản 1.0 | Revision hướng dẫn 27/09/2026
 Học trực tuyến, thực hiện cá nhân | 10 buổi, 25 giờ trên lớp và 45 giờ tự học
 
 Tài liệu xác định các chức năng InsightHub học viên phải xây, cách áp dụng SDLC và AI vào 29 công việc, cùng kết quả cần đạt qua 10 buổi. Phạm vi, thiết kế và tích hợp, rubric, cách nộp bài và mẫu evidence được trình bày trong cùng tài liệu. Học viên bắt đầu tại mục 1-2, thực hiện milestone tương ứng và tra các mục chuyên đề ngay trong tài liệu.
@@ -11,7 +11,7 @@ Tài liệu xác định các chức năng InsightHub học viên phải xây, c
 | --- | --- |
 | Chín nhóm chức năng bắt buộc và trách nhiệm | [1. Phạm vi sản phẩm](#san-pham) |
 | Khởi động, lộ trình, cách nộp và điểm số | [2. Hướng dẫn thực hiện](#bat-dau) |
-| Chức năng và cách kiểm từng milestone | [Ma trận tiến độ sản phẩm](#ma-tran-chuc-nang), [đầu vào và cách đo](#do-ket-qua-milestone) |
+| Phạm vi, kết quả và cách review milestone theo SDLC | [Ma trận tiến độ sản phẩm](#ma-tran-chuc-nang), [bản đồ milestone](#do-ket-qua-milestone), [cách làm xuyên SDLC](#sdlc-xuyen-milestone) |
 | Buổi 1-2 | [M0.1](#m01), [M0.2](#m02) |
 | Buổi 3-5 | [M1](#m1), [M2.1](#m21), [M2](#m2) |
 | Buổi 6-7 | [M3.1](#m31), [M3](#m3) |
@@ -70,7 +70,7 @@ Phần [thiết kế dữ liệu và API](#data-api) xác định đầu ra cầ
 
 **Cách học:** trước buổi học, đọc tài liệu và thực hiện các việc của milestone trong khả năng hiện tại; ghi phần đã làm và câu hỏi cần hỗ trợ. Trên lớp, trao đổi các điểm khó của dự án gắn với nội dung buổi học. Sau buổi học, cập nhật bài theo phản hồi và hoàn thiện trước hạn. Tổng 45 giờ tự học đã bao gồm đọc, thực hành, kiểm thử, sửa bài và chuẩn bị bảo vệ.
 
-**Cách làm với AI:** tự xác định yêu cầu và kết quả kỳ vọng, cung cấp ngữ cảnh, yêu cầu AI đề xuất kế hoạch, thực hiện từng thay đổi nhỏ rồi tự kiểm tra. Lưu một vài quyết định tiêu biểu đã giữ, sửa hoặc bác bỏ đề xuất AI và lý do; không cần nộp toàn bộ hội thoại. Không đưa bí mật xác thực, tệp `.env` thật hoặc dữ liệu công ty chưa được phép vào Git hay công cụ AI.
+**Cách làm với AI:** được dùng AI Agent xuyên quá trình đọc nguồn, phân tích, lập kế hoạch, thiết kế, code, test, review và soạn hồ sơ. Học viên đối chiếu và chốt yêu cầu/kết quả kỳ vọng theo nguồn, kiểm thay đổi và giải thích quyết định; không bắt gõ thủ công toàn bộ bảng AC hoặc tự viết mọi dòng code trước khi dùng AI. Với bước nền, cần tự giải thích được mục tiêu, input, expected và cách kiểm trước khi giao agent thực hiện. Lưu một vài quyết định tiêu biểu đã giữ, sửa hoặc bác bỏ đề xuất AI và lý do; không cần nộp toàn bộ hội thoại. Quiz vẫn tự làm theo mục 2.5. Không đưa bí mật xác thực, tệp `.env` thật hoặc dữ liệu công ty chưa được phép vào Git hay công cụ AI.
 
 <a id="bat-dau"></a>
 
@@ -115,30 +115,43 @@ Mỗi ô là mức hoàn thành được yêu cầu, không phải kết quả �
 
 #### 2.1.2. Cách sử dụng yêu cầu theo milestone
 
-Mỗi milestone được trình bày theo sáu phần: kết quả InsightHub cần đạt; chức năng và công việc cần thực hiện; điều kiện hoàn thành; cách áp dụng SDLC và AI; evidence/cách nộp; rubric. M0-M2 tạo kết quả khởi động, phân tích, thử khả thi và thiết kế; các mốc này chưa yêu cầu toàn bộ chức năng hoạt động. Từ M3.1, các chức năng được triển khai phải có kết quả chạy và test trên phiên bản xác định.
+Mỗi milestone được trình bày theo sáu phần: vai trò trong SDLC và kết quả cần đạt; chức năng và công việc cần thực hiện; điều kiện hoàn thành; cách áp dụng SDLC và AI; evidence/cách nộp; rubric. Trước khi làm, xác định đầu vào, công việc đến hạn, kết quả cần trình bày và phần bàn giao cho mốc sau trong bảng dưới. Tra checklist mục 2.1.1 để biết chức năng nào phải chạy, rồi đọc milestone tương ứng để thực hiện.
 
-Bắt đầu từ checklist chức năng, tự xác định hành vi và test case, rồi dùng AI hỗ trợ phần công việc cụ thể. Các điều kiện hoàn thành giúp tự rà soát tiến độ; cách tính điểm và điều kiện hoàn thành khóa học vẫn theo mục 2.4-2.8. Khi thiếu quyền dịch vụ hoặc phát sinh chênh lệch thời gian, ghi rõ phần bị ảnh hưởng và bước xử lý, không tự bỏ chức năng hoặc tính thêm giờ ngoài ngân sách.
+M0-M2 có đầu ra chạy nền, workflow, phân tích, spike và thiết kế. M3.1 là mốc đầu tiên phải trình bày hành trình nghiệp vụ mới qua UI/API/DB; M3 hoàn thiện các chức năng còn lại. Các điều kiện hoàn thành giúp tự rà soát tiến độ; cách tính điểm và điều kiện hoàn thành khóa học vẫn theo mục 2.4-2.8.
 
 <a id="do-ket-qua-milestone"></a>
 
 #### 2.1.3. Đầu vào, output và cách đo từng milestone
 
-Dùng bảng dưới để tự kiểm và ghi kết quả trong cùng bản nộp ở mục 2.3; chi tiết hành vi và rubric nằm tại milestone tương ứng. Không tạo thêm bài nộp hoặc điểm số. Ghi rõ phiên bản đã kiểm, input, expected, actual và link evidence; phần chưa làm hoặc bị chặn không được ghi đạt.
+Dùng bảng này để trình bày kết quả trong PR/bản nộp hiện có, không tạo thêm báo cáo hoặc video bắt buộc. “Trình bày” có thể là mở thiết kế, chạy tác vụ hoặc đối chiếu log đúng phiên bản, tùy loại đầu ra. Ghi input, expected, actual và evidence; phần chưa làm hoặc bị chặn không được ghi đạt.
 
-| Milestone | Đầu vào cần có | Output quan sát được và cách kiểm |
-| --- | --- | --- |
-| M0.1 / LR-01..03 | Fork đúng Starter, môi trường fixture và yêu cầu hiện hành. | Upload, Chat và mở đúng citation; JSON qua validator và đối chiếu ý nghĩa với nguồn; một lỗi AI có căn cứ, bản sửa và kiểm lại. Ghi giới hạn fixture, không kết luận chất lượng model thật. |
-| M0.2 / LR-04..05 | Repo chạy được; sandbox/tool và quyền thực hành do lớp xác nhận. | Workflow thực chạy, có success, lỗi công cụ và thao tác vượt quyền bị môi trường từ chối; làm lại được theo hướng dẫn. Lưu event/response thật, không chỉ lời AI. |
-| M1 / LR-06..07 | Baseline M0 và phạm vi chín nhóm chức năng. | Backlog nối LR/AC và dependency; commit/PR/review; kết quả kiểm chất lượng đúng SHA theo LR-07. Mở artifact/log để xác nhận phép kiểm thực chạy. |
-| M2.1 / LR-08..09 | Backlog, SRS và quyền Google/email/AI trước spike. | Một bảng 163 AC phân biệt 151 áp dụng/12 ngoài phạm vi, có input/expected; spike có actual và quyết định giải pháp. Không coi spike là hoàn thiện toàn Auth. |
-| M2 / LR-10..11 | Kết quả spike, UI/UX nguồn đã chốt và hợp đồng tham khảo. | Handoff nối flow-state-AC-API-data, hai viewport/keyboard, schema và ADR; giảng viên mở được thiết kế. Xác định module nền cần characterization trước khi sửa. |
-| M3.1 / LR-12..13 | Thiết kế lát cắt; characterization của module nền trước lần sửa đầu. | Auth-Notebook-Document-Chat/citation và mở lại conversation; API chặn tài khoản B truy dữ liệu A, persistence qua restart, quy tắc operation áp dụng cho Chat. TDD có red đúng nguyên nhân, green và regression. Phạm vi Auth theo mục 2.1.1, chưa yêu cầu đủ năm email ở đây. |
-| M3 / LR-14..19 | Lát cắt M3.1 và thiết kế phần dùng chung cho hai tool. | Chín nhóm chức năng hoạt động, full Auth/năm email, Summary/Quiz, Output và lifecycle; test UI/API/data theo nhánh. Refactor có baseline/diff/regression, hoàn thiện ASG01 trước B9 theo hạn nguồn. |
-| M4 / LR-20..24 | Test/evidence tích lũy cùng feature, corpus/oracle hai tool. | Tổng hợp kết quả AC đến hạn, mapping 21 UAT, 12 lượt nội dung AI cùng ngoại lệ, UI/performance/security và retest. AC phát hành ở M5 ghi chưa kiểm/chưa đến hạn, không ghi Pass sớm. |
-| M5 / LR-25..27 | Candidate đã kiểm và dữ liệu nghiệp vụ bài làm. | R1 cài được, populated restore giữ dữ liệu/quyền A-B; CR thực hiện sau R1 thành R1.1 có regression. Cập nhật AC M5 và các kết quả chịu ảnh hưởng, không lấy restore của Starter thay phần mở rộng. |
-| Capstone / LR-28..29 | Tag phát hành, source và evidence thống nhất. | Demo đúng phiên bản, truy một yêu cầu qua SDLC, giải thích quyết định kỹ thuật/AI và kế hoạch áp dụng 30 ngày. Kế hoạch này không giao thêm 30 ngày triển khai bắt buộc. |
+| Milestone / công việc | Trọng tâm SDLC và đầu vào | Học viên cần làm và trình bày được | Bàn giao và ranh giới kết quả |
+| --- | --- | --- | --- |
+| **M0.1 / B1 / LR-01..03** | Khảo sát hệ thống và kiểm chứng AI. Fork Starter, môi trường fixture, SRS. | Chạy upload → Chat → mở citation; kiểm JSON và ý nghĩa của một phân tích AC; chỉ ra, sửa và kiểm lại một lỗi AI. | Có baseline chạy được và hiểu phần nền để lập kế hoạch. Chưa xây Auth/Notebook/tool; fixture chưa chứng minh chất lượng model thật. |
+| **M0.2 / B2 / LR-04..05** | Thiết lập cách làm việc với agent. Repo chạy được, sandbox/tool được cấp quyền. | Workflow cho một tác vụ project thực chạy; chỉ ra success, lỗi công cụ, thao tác vượt quyền bị môi trường từ chối và cách chạy lại. | Có workflow/quy tắc dùng tiếp xuyên khóa. Chưa yêu cầu feature mới hoặc tự xây một nền tảng agent. |
+| **M1 / B3 / LR-06..07** | Khởi tạo, lập kế hoạch và kiểm soát thay đổi. Baseline M0 và chín nhóm chức năng. | Mở backlog để giải thích phần kế thừa/phải xây, dependency, AC, estimate; mở PR/review và kết quả CI đúng commit. | Backlog và quy trình Git/CI làm đầu vào M2.1. Kế hoạch được cập nhật theo phân tích/spike; chưa kết luận chức năng đã hoàn thành. |
+| **M2.1 / B4 / LR-08..09** | Phân tích yêu cầu, thiết kế test và giảm rủi ro. Backlog, SRS, quyền Google/email/AI. | Bảng 163 AC, gồm 151 áp dụng/12 ngoài phạm vi, có nhánh/input/expected; giải thích 1-2 yêu cầu rủi ro; trình bày kết quả spike và quyết định có căn cứ. | Bàn giao yêu cầu, test design, khả năng/giới hạn giải pháp và việc còn mở cho M2. Code giới hạn ở spike; chưa cần UI sản phẩm hoặc toàn bộ test tự động. |
+| **M2 / B5 / LR-10..11** | Thiết kế giải pháp. Yêu cầu/test design, spike và hợp đồng tham khảo. | Đi xuyên Figma → flow/state → AC → API → dữ liệu; kiểm hai viewport/keyboard; giải thích ADR, migration và module cần characterization. | Thiết kế đủ để triển khai hành trình M3.1 và phần còn lại M3. Prototype Figma chưa phải chức năng đã chạy trên ứng dụng. |
+| **M3.1 / B6 / LR-12..13** | Triển khai và kiểm thử hành trình đầu tiên. Thiết kế M2; characterization trước lần sửa nền. | A đăng nhập thật → Notebook → upload → Chat/citation → mở lại conversation sau reload/restart; API chặn B; trình bày TDD red-green-regression. | Có hành trình mới chạy qua UI/API/DB, gồm quy tắc operation áp dụng cho Chat. Full Auth, các email còn lại, Note/Summary/Quiz hoàn thiện tại M3. |
+| **M3 / B7 / LR-14..19** | Hoàn thiện chức năng, tích hợp và refactor. Hành trình M3.1 và thiết kế phần dùng chung. | Chín nhóm chức năng hoạt động, đủ Auth/năm email, Summary/Quiz, Output/lifecycle; test theo nhánh; refactor có baseline/diff/regression. | Bản tích hợp và evidence cho M4. ASG01 vẫn hoàn thiện trước B9; có đủ tính năng chưa đồng nghĩa đã nghiệm thu mọi AC. |
+| **M4 / B8 / LR-20..24** | Kiểm tổng hợp, chất lượng và bảo mật. Bản M3, test tích lũy, corpus/oracle. | Kết luận từng AC đến hạn, nối 21 UAT; 12 lượt nội dung AI cùng ngoại lệ; UI/performance/security, defect và retest có căn cứ. | Candidate cùng kết luận đủ/chưa đủ điều kiện phát hành. AC release/restore thuộc M5 còn ghi chưa kiểm/chưa đến hạn nếu chưa có evidence. |
+| **M5 / B9 / LR-25..27** | Phát hành, vận hành local/sandbox và bảo trì. Candidate đã kiểm, dữ liệu nghiệp vụ. | Cài sạch R1; restore dữ liệu có sẵn và kiểm quyền A/B; sau R1 thực hiện CR thành R1.1, có regression và rollback bảo toàn dữ liệu. | Tag, gói, runbook và evidence R1/R1.1 cho Capstone. Kiểm cả dữ liệu phần mở rộng; phạm vi triển khai là local/sandbox. |
+| **Capstone / B10 / LR-28..29** | Nghiệm thu, bàn giao và phản tư. Tag, source, sản phẩm và evidence thống nhất. | Demo sản phẩm đúng phiên bản; truy một yêu cầu qua các bước SDLC; bảo vệ quyết định kỹ thuật/AI và trình bày kế hoạch áp dụng 30 ngày. | Bàn giao project/evidence cá nhân, giới hạn và kế hoạch áp dụng. Kế hoạch 30 ngày không giao thêm 30 ngày triển khai bắt buộc. |
 
 Phân biệt ba kết quả: output milestone đạt/chưa đạt; verdict từng AC theo mục 16.1; điểm phản hồi theo rubric. M0-M2 có thể hoàn thành output phân tích/thiết kế trong khi AC runtime chưa kiểm. Không lấy điểm rubric thay verdict AC hoặc dùng một nhánh đã đạt để kết luận toàn bộ AC đạt.
+
+<a id="sdlc-xuyen-milestone"></a>
+
+#### 2.1.4. Cách làm xuyên SDLC và xử lý phần chưa hoàn tất
+
+Milestone là điểm kiểm tiến độ học tập và sản phẩm. Trong mỗi mốc, thực hiện vòng làm việc: **đọc yêu cầu → xác lập expected → lập kế hoạch/thử phương án → thực hiện → kiểm và review → cập nhật kết quả, quyết định và việc tiếp theo**. Khi phát hiện sai hoặc thiếu, quay lại phần yêu cầu/thiết kế bị ảnh hưởng, ghi căn cứ và kiểm lại. Các quyết định nghiệp vụ đã chốt chỉ thay khi có yêu cầu thay đổi được xác nhận.
+
+- **Yêu cầu và test phát triển cùng sản phẩm:** M2.1 xác định đủ hành vi/nhánh/input/expected và cách đo; M2 bổ sung chi tiết API/data; M3.1-M3 bổ sung test thực chạy theo thay đổi; M4 tổng hợp và kiểm phần còn thiếu. Không chờ M4 mới test hoặc kiểm quyền.
+- **Thiết kế phục vụ triển khai:** spike được dùng thiết kế tối thiểu để kiểm giả định; M2 hoàn thiện thiết kế tích hợp. Khi code khác thiết kế đã chọn, giải thích lý do và cập nhật các phần liên quan trong cùng PR.
+- **Chuyển tiếp theo dependency:** phần độc lập có đầu vào đủ được tiếp tục. Phần bị chặn ghi yêu cầu bị ảnh hưởng, cách đã thử, vai trò cần hỗ trợ và mốc/bước kiểm tiếp theo trong bản nộp; chưa được ghi hoàn thành hoặc tích hợp Pass. Không tự miễn AC.
+- **Thời gian có AI:** estimate gồm đọc/hiểu, giao việc cho agent, kiểm/review, sửa/retest và chờ/hỗ trợ. Tái dùng kết quả đã làm trên lớp trong POST; ghi chênh lệch và việc còn lại để giảng viên hỗ trợ trong ngân sách tại mục 2.1. Tốc độ sinh code hoặc thời gian chạy test không đại diện thời gian hoàn thành của học viên.
+
+Khi review, dùng hồ sơ hiện có để trả lời: yêu cầu nào chi phối; expected lấy từ đâu; kết quả được kiểm bằng gì; vì sao chọn hoặc sửa giải pháp; phần còn mở ảnh hưởng bước tiếp theo thế nào. Đây là cách giải thích công việc theo SDLC, không thêm bài nộp, trọng số hoặc thủ tục phê duyệt cho mọi bước.
 
 ### 2.2. Khởi động và trách nhiệm
 
@@ -235,7 +248,9 @@ Phân bổ trong đề bài: tham dự chiếm 10 điểm phần trăm toàn kh�
 
 ## 3. M0.1 - Chạy Starter và phân tích một yêu cầu InsightHub bằng AI
 
-### 3.1 Kết quả InsightHub cần đạt
+### 3.1 Vai trò trong SDLC và kết quả cần đạt
+
+**Trọng tâm:** khảo sát baseline và thực hành kiểm chứng AI trước khi lập kế hoạch phát triển.
 
 Starter chạy được hành trình upload tài liệu → hỏi đáp → mở citation trong chế độ fixture. Học viên xác định được phần nền đã có và kiểm chứng một đầu ra phân tích yêu cầu do AI tạo; chưa phải triển khai Auth, Notebook hoặc AI Tools ở mốc này.
 
@@ -299,7 +314,9 @@ Dùng cùng tài liệu mẫu cho demo Starter và phân tích nếu phù hợp.
 
 ## 4. M0.2 - Xây workflow AI Agent cho một tác vụ InsightHub
 
-### 4.1 Kết quả InsightHub cần đạt
+### 4.1 Vai trò trong SDLC và kết quả cần đạt
+
+**Trọng tâm:** thiết lập workflow và giới hạn quyền cho cách làm việc với agent xuyên dự án.
 
 Có một workflow agent thực chạy trên repository InsightHub, được giới hạn quyền, xử lý được lỗi công cụ và chạy lại được từ hướng dẫn. Workflow phục vụ một công việc của project, chẳng hạn đối chiếu API upload với test hiện có; mốc này chưa yêu cầu thêm chức năng sản phẩm.
 
@@ -362,7 +379,9 @@ Rubric đánh giá workflow giải quyết công việc cụ thể trong Insight
 
 ## 5. M1 - Lập backlog chức năng InsightHub và thiết lập Git/CI
 
-### 5.1 Kết quả InsightHub cần đạt
+### 5.1 Vai trò trong SDLC và kết quả cần đạt
+
+**Trọng tâm:** khởi tạo dự án, lập kế hoạch và thiết lập kiểm soát thay đổi/chất lượng.
 
 Có kế hoạch cá nhân cho đầy đủ chín nhóm chức năng tại mục 1.1, chỉ rõ phần Starter cung cấp, phần phải xây và phụ thuộc giữa các phần. Repository cá nhân có issue, Pull Request, tự review và CI thực chạy. Đầu vào là kết quả khảo sát Starter và workflow của M0.
 
@@ -423,9 +442,13 @@ Tiêu chí phạm vi và backlog được đối chiếu theo chín nhóm chức
 
 ## 6. M2.1 - Làm rõ nghiệp vụ và thử tích hợp Auth, Email, AI
 
-### 6.1 Kết quả InsightHub cần đạt
+### 6.1 Vai trò trong SDLC và kết quả cần đạt
 
-Có yêu cầu, test case và kỳ vọng cho từng nhóm chức năng, cùng kết quả spike các phụ thuộc có rủi ro: Google Auth, transactional email, account linking/session và cấu hình AI. Đầu vào là backlog M1; kết quả dùng để quyết định thiết kế tại M2, chưa thay nghiệm thu chức năng.
+**Trọng tâm:** phân tích yêu cầu, thiết kế test và thử rủi ro kỹ thuật trước quyết định thiết kế tích hợp.
+
+Có yêu cầu và test design cho chín nhóm chức năng, cùng bằng chứng để quyết định thiết kế Auth, email và AI tại M2. Học viên trình bày được: cần xây hành vi nào, sẽ kiểm ra sao, giải pháp đã thử hỗ trợ đến đâu và còn việc gì phải xử lý. Đầu vào là backlog M1 và SRS; công việc gồm LR-08 phân tích/thiết kế test và LR-09 thử khả thi.
+
+Sản phẩm của mốc này là **bảng yêu cầu/test case và kết quả spike có quyết định**. Có thể chạy code thử nghiệm độc lập, dùng script hoặc giao diện tối thiểu. Chưa yêu cầu ghép Auth, Notebook, Summary hoặc Quiz vào ứng dụng chính; hành trình sản phẩm đầu tiên đến hạn ở M3.1.
 
 ### 6.2 Chức năng và công việc cần thực hiện
 
@@ -433,16 +456,30 @@ Có yêu cầu, test case và kỳ vọng cho từng nhóm chức năng, cùng k
 
 1. **Lập bảng truy vết yêu cầu và test case.** Dùng danh mục 163 tiêu chí trong bảng phạm vi để quản lý 151 tiêu chí áp dụng và 12 tiêu chí ngoài bài tập. Ghi phiên bản SRS, mã yêu cầu thành phần nếu có, điều kiện hoặc nhánh cần kiểm, công việc triển khai, đầu vào và kết quả kỳ vọng. Chọn 1-2 yêu cầu có rủi ro để phân tích sâu, sau đó rà đủ phần còn lại; không viết lại toàn bộ SRS. Bao phủ luồng chính, edge case, sai quyền, đồng thời và lỗi dịch vụ. Yêu cầu về thời gian và giao diện phải có môi trường, cách đo. Dùng một bảng xuyên khóa theo [mẫu kết quả](#bang-ket-qua); chỉ kết luận một AC đạt khi mọi điều kiện áp dụng của AC đó đạt.
 
+   Ở mốc này, test case mô tả điều kiện, dữ liệu, hành động và kết quả ở mức nghiệp vụ đủ để kiểm được. Chi tiết endpoint, selector UI, schema lưu trữ và script tự động bổ sung theo thiết kế M2 và triển khai M3.1-M3. Giữ đầy đủ nhánh cần kiểm dù chưa có code; đánh dấu đã thiết kế/chưa chạy thay vì tạo kết quả giả. Một test có thể dùng chung cho nhiều AC khi chỉ rõ điều kiện nào được chứng minh.
+
 <a id="lr-09"></a>
 
 2. **Thử tích hợp trước khi chốt thiết kế.** Tại M2.1, thử các khả năng có thể làm thay đổi lựa chọn giải pháp: đăng nhập Google với tài khoản thử, gửi và nhận email thật, liên kết tài khoản trùng email, xử lý tài khoản chờ xác minh và thu hồi phiên. Ghi phần thư viện đã hỗ trợ, phần phải bổ sung và phụ thuộc cần giảng viên xử lý theo [hướng dẫn thử khả thi](#auth-email). Thử cấu hình DeepSeek và embedding với đầu vào sát giới hạn 60.000 ký tự; ghi số token thực tế, giới hạn ngữ cảnh, thời gian và mức sử dụng. Phân biệt kết quả thật với mô phỏng. Hoàn thiện chức năng tại M3 và kiểm đầy đủ tại M4; kết quả thử sớm không thay nghiệm thu.
+
+   Trước mỗi spike, ghi câu hỏi/giả thuyết, phép thử, expected và khoảng thời gian dự kiến trong kế hoạch hiện có. Dừng vòng thử khi đủ căn cứ quyết định hoặc khi xác định được phụ thuộc chặn; ghi việc còn mở và bước xử lý. Thử phương án ưu tiên trước, chỉ mở rộng thử nghiệm khi kết quả chưa giải quyết rủi ro chi phối. So sánh phương án có thể dựa trên tài liệu chính thức và kết quả thử, không bắt xây hai giải pháp hoàn chỉnh.
+
+| Phần cần thử ở LR-09 | Kết quả học viên cần trình bày | Giới hạn và việc ở mốc sau |
+| --- | --- | --- |
+| Google | Đăng nhập bằng tài khoản thử được phép; server kiểm bằng chứng identity của nhà cung cấp; có phép kiểm từ chối phản hồi không hợp lệ theo rủi ro của giải pháp. | Chứng minh tích hợp identity. Account/session và quyền Notebook trong ứng dụng được thiết kế M2, triển khai M3.1-M3. |
+| Email | Dịch vụ thật gửi tới inbox thử được phép; đối chiếu thư nhận và hành động verify/reset đại diện theo mục 14. Một lỗi gửi có thể kiểm bằng mô phỏng có kiểm soát. | Phân biệt kết nối/đăng nhập SMTP, dịch vụ chấp nhận gửi, thư nhận và kết quả hành động. Năm email được tích hợp đầy đủ tại M3. |
+| Linking, Pending và session | Dùng trạng thái thử để kiểm khả năng liên kết cùng email, recovery tài khoản chờ xác minh và thu hồi phiên cũ; ghi phần thư viện hỗ trợ/phần app phải xây. | Được dùng kho dữ liệu thử và mô phỏng lỗi/thời gian cho policy. Kết quả này chưa chứng minh transaction, cạnh tranh request hoặc session của ứng dụng chính. |
+| AI và embedding | Thử DeepSeek/Gemini với nguồn sát giới hạn 60.000 ký tự, cấu hình cho Summary/Quiz; kiểm output với expected từ nguồn, ghi tokens, thời gian và mức sử dụng. | Corpus giả/tổng hợp phải có nhãn. Kết quả chỉ xác nhận phép thử đã chạy; chất lượng trên bộ nghiệm thu và 12 lượt nội dung thuộc M4. |
+
+Tái sử dụng SDK/thư viện, phần nền và dữ liệu mẫu được cấp; tự viết phần thử cần thiết để kiểm giả thuyết. Chọn unit, API hoặc browser test theo rủi ro cần chứng minh. Số test/checkpoint, số trình duyệt và mức hoàn thiện giao diện của một bộ spike tham khảo không trở thành yêu cầu bổ sung; phạm vi UI/browser của sản phẩm vẫn theo LR-10/LR-21.
 
 ### 6.3 Điều kiện hoàn thành
 
 - Một bảng truy vết chứa đủ 163 AC, phân biệt 151 AC áp dụng và 12 AC ngoài phạm vi; các nhánh có input và expected result.
 - Làm rõ quyền, trạng thái và lỗi theo từng chức năng; không chỉ liệt kê mã AC hoặc ghi chung “CRUD”.
-- Spike Google/email/AI có cấu hình, kết quả và giới hạn kiểm; phần bị chặn có evidence và bước xử lý, không được ghi Pass.
-- Các giả định còn mở được nối tới thiết kế hoặc công việc cần xử lý trước khi triển khai phần phụ thuộc.
+- Spike Google/email/AI và policy có giả thuyết, cấu hình, expected/actual, evidence đúng phiên bản/chế độ chạy và giới hạn; kết luận nêu rõ giữ, sửa hoặc cần thử lại phương án vì căn cứ nào.
+- Phần bị chặn có evidence và bước xử lý, không được ghi tích hợp Pass. Phân tích đã làm vẫn được ghi nhận theo rubric; kết quả tích hợp còn mở phải thể hiện riêng trong output milestone.
+- Cập nhật backlog/estimate và bàn giao cho M2: quyết định đã có căn cứ, phần thư viện/app chịu trách nhiệm, giả định còn mở, vai trò cần hỗ trợ và mốc kiểm tiếp. Chỉ tiếp tục phần thiết kế có đầu vào đủ theo mục 2.1.4.
 
 ### 6.4 Áp dụng SDLC và AI
 
@@ -469,7 +506,7 @@ Cho Claude tìm mâu thuẫn, thiếu điều kiện và edge case trong từng 
 
 **Hạn hoàn thiện:** trước buổi 5 ít nhất 12 giờ. Gửi link PR nhánh `milestone/m2.1` và bản ghi nộp bài. Đính kèm bảng yêu cầu và test case, kết quả thử tích hợp, quyết định kỹ thuật và cấu hình mẫu không chứa bí mật. Phụ thuộc bị chặn có minh chứng được ghi nhận về kỹ năng phân tích; không được đánh dấu tích hợp đã đạt khi chưa chạy thật.
 
-Các phân tích theo nhóm bổ sung vào cùng bảng truy vết và hồ sơ spike. Đánh dấu rõ test case đã thiết kế, đã chạy, chưa chạy hoặc bị chặn; chưa có sản phẩm hoàn chỉnh ở M2.1 không đồng nghĩa mọi test case đã được thực thi.
+Trong hồ sơ hiện có, cần mở được ba phần: **bảng trace/test design; kết quả spike và giới hạn; quyết định/việc bàn giao M2**. Có thể gộp vào cùng file và dẫn tới log/code; không bắt tạo ba báo cáo riêng. Khi review, chọn yêu cầu đã phân tích sâu, đối chiếu expected với SRS rồi chỉ ra một kết quả spike đã ảnh hưởng quyết định thiết kế thế nào. Đánh dấu rõ test case đã thiết kế, đã chạy, chưa chạy hoặc bị chặn.
 
 ### 6.6 Rubric đánh giá
 
@@ -487,7 +524,9 @@ Rubric yêu cầu và test case được đối chiếu trực tiếp với hàn
 
 ## 7. M2 - Thiết kế UI, API và schema cho các chức năng InsightHub
 
-### 7.1 Kết quả InsightHub cần đạt
+### 7.1 Vai trò trong SDLC và kết quả cần đạt
+
+**Trọng tâm:** thiết kế giải pháp, đối chiếu phương án và chuẩn bị triển khai từ yêu cầu đã làm rõ.
 
 Có thiết kế nối được từ hành trình người dùng đến UI, API, schema và test case cho phạm vi bài tập. Đầu vào là yêu cầu và kết quả spike M2.1; thiết kế đủ rõ để triển khai hành trình M3.1 và các chức năng còn lại tại M3.
 
@@ -557,7 +596,9 @@ Dùng cùng hồ sơ thiết kế để liên kết flow - state - AC - API - da
 
 ## 8. M3.1 - Chạy hành trình Auth - Notebook - Document - Chat bằng TDD
 
-### 8.1 Kết quả InsightHub cần đạt
+### 8.1 Vai trò trong SDLC và kết quả cần đạt
+
+**Trọng tâm:** triển khai hành trình đầu tiên, TDD và kiểm tích hợp trên ứng dụng chính.
 
 Tài khoản A đăng nhập, tạo/mở Notebook, upload tài liệu, hỏi đáp và mở citation; conversation đọc lại được sau reload/restart. Tài khoản B bị chặn khi truy cập dữ liệu của A. Đây là hành trình tích hợp đầu tiên trên thiết kế M2; toàn bộ Auth, năm email, Note, Summary và Quiz được hoàn thiện tại M3.
 
@@ -627,7 +668,9 @@ Evidence cần nối được lần đăng nhập, Notebook, Document và Conver
 
 ## 9. M3 - Hoàn thiện Auth, Email, dữ liệu nghiệp vụ, Summary và Quiz
 
-### 9.1 Kết quả InsightHub cần đạt
+### 9.1 Vai trò trong SDLC và kết quả cần đạt
+
+**Trọng tâm:** phát triển tăng dần, tích hợp đủ chức năng và refactor có kiểm hồi quy.
 
 Bản phát triển có đầy đủ chín nhóm chức năng bắt buộc, tích hợp qua UI/API/DB và giữ đúng các quy tắc của SRS. Học viên tiếp tục từ hành trình M3.1, bổ sung các nhánh còn thiếu, test cùng chức năng và thực hiện refactor. M4 tổng hợp nghiệm thu, đánh giá AI, bảo mật và sửa lỗi còn phát hiện; không chờ M4 mới bắt đầu test.
 
@@ -758,9 +801,11 @@ Dòng tài khoản/dữ liệu đối chiếu riêng checklist Auth, năm email 
 
 ## 10. M4 - Kiểm từng chức năng, chất lượng AI và bảo mật InsightHub
 
-### 10.1 Kết quả InsightHub cần đạt
+### 10.1 Vai trò trong SDLC và kết quả cần đạt
 
-Có kết luận kiểm chứng trên bản tích hợp M3: từng AC áp dụng có kết quả, lỗi được sửa và retest; chất lượng Chat/Summary/Quiz được đánh giá bằng model thật. Học viên chứng minh sản phẩm hoạt động, cách ly dữ liệu và xử lý ngoại lệ đúng, cùng các giới hạn còn tồn tại.
+**Trọng tâm:** tổng hợp kiểm chứng chức năng, chất lượng AI, bảo mật và đánh giá điều kiện phát hành.
+
+Có kết luận kiểm chứng trên bản tích hợp M3: từng AC đến hạn M4 có kết quả, lỗi được sửa và retest; chất lượng Chat/Summary/Quiz được đánh giá bằng model thật. Bảng vẫn giữ đủ 151 AC áp dụng, với các AC release/restore đến hạn M5 ghi đúng trạng thái theo mục 10.3. Học viên chứng minh sản phẩm hoạt động, cách ly dữ liệu và xử lý ngoại lệ đúng, cùng các giới hạn còn tồn tại.
 
 ### 10.2 Chức năng và công việc cần thực hiện
 
@@ -850,7 +895,9 @@ Mỗi kết luận cần chỉ ra chức năng, AC/nhánh, input, expected/actua
 
 ## 11. M5 - Phát hành R1, kiểm restore và thực hiện thay đổi R1.1
 
-### 11.1 Kết quả InsightHub cần đạt
+### 11.1 Vai trò trong SDLC và kết quả cần đạt
+
+**Trọng tâm:** phát hành, kiểm vận hành/khôi phục và xử lý thay đổi sau R1.
 
 Có bản R1 của bài tập cài được trên môi trường sạch, dữ liệu và quyền được kiểm sau migration/restore, sau đó có một thay đổi thành R1.1 cùng regression test. Đầu vào là bản đã kiểm tại M4; chỉ gọi sẵn sàng bàn giao khi đáp ứng điều kiện phát hành của SRS.
 
@@ -914,7 +961,9 @@ Rubric release/restore dựa trên hành trình và dữ liệu thật của bà
 
 ## 12. Capstone - Demo InsightHub và bảo vệ quyết định xuyên SDLC
 
-### 12.1 Kết quả InsightHub cần đạt
+### 12.1 Vai trò trong SDLC và kết quả cần đạt
+
+**Trọng tâm:** nghiệm thu, bàn giao và giải thích quyết định xuyên vòng đời sản phẩm.
 
 Học viên tự demo bản phát hành đã nộp và giải thích được cách chuyển một yêu cầu thành thiết kế, code, test, release và thay đổi. Kết quả sử dụng AI được chứng minh bằng sản phẩm và quyết định cá nhân; kế hoạch 30 ngày chuyển bài học sang công việc thực tế.
 
@@ -1122,7 +1171,7 @@ Chọn thành phần xác thực đã có thay vì tự viết thuật toán m�
 
 | Mốc | Công việc và đầu ra |
 | --- | --- |
-| M2.1 | Lập bảng yêu cầu, khả năng giải pháp, phần phải bổ sung và phép thử. Chạy luồng Google và gửi/nhận email thật; thử khả năng liên kết tài khoản trùng email, xử lý chờ xác minh, thu hồi phiên. Chưa yêu cầu toàn bộ giao diện hoàn chỉnh. |
+| M2.1 | Spike độc lập theo mục 6.2: Google và gửi/nhận/hành động email thật, thử policy linking/Pending/session. Ghi capability, actual, giới hạn và quyết định. Chưa yêu cầu ghép vào UI/API/DB nghiệp vụ chính. |
 | M2 | Chọn phương án qua ADR, ghi ít nhất hai phương án và căn cứ. Thiết kế phiên, danh tính, dữ liệu điều khiển và quyền phù hợp kết quả thử. |
 | M3.1 | Tích hợp một Auth flow hợp lệ và session thực cho hành trình Notebook - Document - Chat. Nếu chọn email/mật khẩu, phải có EML-001 và xác minh email; hoàn thiện cả hai phương thức và các email còn lại ở M3. |
 | M3 | Hoàn thiện các luồng tài khoản cùng năm email giao dịch; tích hợp với Notebook và giao diện. Ghi kiểm chứng cùng chức năng. |
@@ -1130,7 +1179,7 @@ Chọn thành phần xác thực đã có thay vì tự viết thuật toán m�
 
 ### 14.3. Ma trận hành vi cần kiểm
 
-M2.1 chọn phép thử đủ để quyết định giải pháp ở các rủi ro đã nêu; mọi dòng sau phải được hoàn thiện và có kết quả trước khi kết luận đạt phần xác thực tại M4.
+M2.1 chọn phép thử đại diện trong các nhóm Google, email, linking, Pending và session để quyết định giải pháp theo mục 6.2. Bảng dưới là phạm vi hành vi tích lũy tới M4, không phải yêu cầu triển khai toàn bộ Auth trong spike. Mọi dòng phải được hoàn thiện và có kết quả trước khi kết luận đạt phần xác thực tại M4.
 
 | Tình huống | Kết quả kỳ vọng |
 | --- | --- |
@@ -1152,6 +1201,8 @@ M2.1 chọn phép thử đủ để quyết định giải pháp ở các rủi 
 Có thể mô phỏng lỗi provider và thời gian để kiểm ngoại lệ; phải ghi rõ chế độ chạy. Không đánh dấu đăng nhập Google hoặc email thật đã đạt chỉ từ kết quả mô phỏng.
 
 ### 14.4. Kiểm năm email giao dịch
+
+M2.1 dùng luồng verify/reset đại diện để kiểm dịch vụ và hành động trong spike. M3 tích hợp đủ năm loại dưới đây vào đúng nghiệp vụ ứng dụng; M4 tổng hợp kết quả các nhánh, lỗi và giới hạn. Giữ evidence spike riêng với evidence của chức năng đã tích hợp.
 
 | Mã | Tình huống | Kết quả cần quan sát |
 | --- | --- | --- |
@@ -1456,12 +1507,15 @@ Mỗi AC có một kết luận tổng hợp. Các điều kiện hoặc yêu c�
 
 Có thể dùng Markdown, CSV hoặc công cụ quản lý của lớp. M2.1 ghi yêu cầu và kỳ vọng; M2 nối thiết kế; M3.1-M3 bổ sung kiểm cùng chức năng; M4 tổng hợp kết quả đến hạn; M5 bổ sung kết quả release/restore/CR và cập nhật phần bị ảnh hưởng ở R1.1. Dùng [mẫu minh chứng](#evidence) ngay trong hồ sơ hiện có.
 
+“Đã thiết kế” mô tả mức chuẩn bị test case, không phải verdict AC. Khi chưa chạy, cột thực tế ghi “chưa chạy”, cột kết luận ghi “chưa kiểm”; nếu bị chặn thì ghi nguyên nhân/bước xử lý. Kết quả spike ghi trong hồ sơ LR-09 và dẫn vào quyết định thiết kế; chỉ dùng để kết luận AC sản phẩm khi đã kiểm đúng hành vi, phạm vi và phiên bản ứng dụng cần nghiệm thu. Số assertion hoặc lượt lặp cùng test trên nhiều viewport không phải số AC đạt.
+
 **Ví dụ cách ghi ở M4, không phải kết quả kiểm sẵn:** một nhánh upload đã chạy ghi actual/log/commit và kết luận của nhánh; nếu AC còn nhánh chưa chạy thì verdict AC vẫn chưa đạt đủ. Với `IH-REL-001-AC01` chưa kiểm bản release, ghi kết luận “chưa kiểm”, ghi chú “chưa đến hạn M5”, task LR-25 và bước kiểm dự kiến. Giữ AC này trong 151 AC áp dụng, không chuyển sang ngoài phạm vi. Khi có evidence M5 mới cập nhật verdict; điều kiện phát hành không được giảm.
 
 ### 16.2. Nội dung cần ghi theo loại công việc
 
 | Loại | Nội dung |
 | --- | --- |
+| Spike khả thi | Câu hỏi/giả thuyết, yêu cầu liên quan, phép thử/expected, thời gian dự kiến, actual/evidence và chế độ chạy; kết luận giữ/sửa/thử lại; giới hạn, phần app phải xây, việc còn mở, vai trò hỗ trợ và mốc kiểm tiếp |
 | Test/nghiệm thu | Yêu cầu, điều kiện, bước chạy, kỳ vọng/thực tế, môi trường, commit, kết quả và lỗi liên quan |
 | Đánh giá AI | Test case/lượt chạy, nguồn và hash/vị trí, ý kỳ vọng, mô hình sinh nội dung, mô hình embedding, phiên bản prompt và schema, kết quả đối chiếu, thời gian/mức sử dụng và người kiểm |
 | Lỗi | Bước tái hiện, kỳ vọng/thực tế, tác động, phiên bản lỗi, bản sửa, kết quả kiểm lại và hồi quy |
