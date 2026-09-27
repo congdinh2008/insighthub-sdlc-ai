@@ -234,5 +234,7 @@ git diff --check
 | Hiểu mã nguồn nền và giao tiếp hiện có | [Kiến trúc](docs/Architecture_Starter_v1.md), [API Starter](docs/API_Contract_Starter_v1.md) |
 | Chọn cấu hình AI và kiểm chất lượng | [Model Profiles](docs/Model_Profiles_And_Reranking.md), [Evaluation](evaluation/README.md) |
 | Vận hành, khôi phục và xử lý lỗi | [Runbook](docs/Runbook_Starter_v1.md) |
+| Thêm lint, secret scan, dependency scan (M1) | [M1 Lint/Scan Guide](docs/M1_Lint_Scan_Guide.md) |
+| Chọn module legacy cho characterization/refactor | [Module legacy](docs/Legacy_Modules.md) |
 
 SRS và hợp đồng tham khảo trong bộ tài liệu học viên mô tả sản phẩm cần phát triển. Khi tích hợp, đối chiếu với API Starter hiện có và ghi rõ quyết định thay đổi trong bài làm.
