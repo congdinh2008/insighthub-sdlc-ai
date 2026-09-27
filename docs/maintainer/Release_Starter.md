@@ -36,9 +36,25 @@ Nếu không có thay đổi để commit, bỏ qua lệnh commit; không tạo 
 
 Trên GitHub, chạy workflow [Starter release gate](../../.github/workflows/starter-release.yml) bằng `workflow_dispatch` trên repository gốc. Workflow này không tự chạy trên fork của học viên.
 
+## Phát hành repository học viên
+
+Không cho học viên fork repository tác giả: lịch sử Git còn tài liệu đã loại (ví dụ `docs/archive`). Tạo repository học viên từ snapshot một commit đã qua gate:
+
+```sh
+python3 scripts/maintainer/build_trace_skeleton.py      # khi Requirements đổi bảng AC, tier hoặc mức rủi ro
+python3 scripts/trace_check.py
+bash scripts/maintainer/make_learner_snapshot.sh <commit-hoặc-tag> ../insighthub-learner learner-r1.0
+cd ../insighthub-learner
+git remote add origin <URL repository học viên>
+git push -u origin main --tags
+```
+
+Script dùng `git archive` (chỉ file đã track), bỏ `scripts/maintainer/`, `dist/`, `docs/archive`, kiểm không có `.env` hoặc chuỗi giống API key, tạo một commit và tag. Công bố URL và tag cho lớp; học viên fork repository này.
+
 ## Lưu ý khi đổi tài liệu học viên
 
 - Đổi SRS phải cập nhật `sha256` trong `API_Schema_Reference/Manifest_Reference.json` của ZIP API/Schema, nếu không `check_project.py` báo `Reference SRS hash drift`.
 - `.gitattributes` giữ SRS, `evaluation/corpus/` và `sample-docs/` ở dạng byte-exact (`-text`) để hash không đổi trên Windows.
-- Đổi thư mục `docs/learner_*` phải cập nhật `starter.manifest.json` (`requirements_baseline`, `learner_requirements`, `api_schema_reference`, `documentation_revision`).
+- Tài liệu học viên nằm tại `docs/learner/` (không gắn version vào tên thư mục). Đổi vị trí phải cập nhật `starter.manifest.json` (`requirements_baseline`, `learner_requirements`, `api_schema_reference`, `documentation_revision`).
+- Đổi mức rủi ro gợi ý hoặc danh sách Core/Extended: sửa bản đồ trong `scripts/maintainer/build_trace_skeleton.py`, chạy lại script và công bố cho lớp trước milestone liên quan.
 - Giữ nhãn version cho tới khi Academic Owner quyết định baseline lớp.

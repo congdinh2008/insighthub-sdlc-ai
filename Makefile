@@ -3,7 +3,7 @@ PYTHON ?= python3
 API_URL ?= http://127.0.0.1:8107
 WEB_URL ?= http://127.0.0.1:3107
 
-.PHONY: up down build test test-db test-backend test-web test-tools test-e2e test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
+.PHONY: trace-check trace-sample eval ai-bom delivery-report up down build test test-db test-backend test-web test-tools test-e2e test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
 up:
 	$(COMPOSE) up --build -d --wait
 
@@ -63,6 +63,22 @@ aev:
 
 backup-restore-check:
 	$(PYTHON) scripts/backup_restore_check.py --project "$${COMPOSE_PROJECT_NAME:?Set COMPOSE_PROJECT_NAME}" --env-file "$${ENV_FILE:-.env.example}"
+
+# AI Engineering Kit (docs/ai/README.md)
+trace-check:
+	$(PYTHON) scripts/trace_check.py $(if $(GATE),--gate $(GATE),)
+
+trace-sample:
+	$(PYTHON) scripts/trace_sample.py --seed "$${SEED:?Set SEED, for example SEED=hv01-20261004}" --size "$${SIZE:-10}"
+
+eval:
+	$(PYTHON) evaluation/harness/run_eval.py --api-url "$(API_URL)" $(if $(SUITE),--suite $(SUITE),) $(if $(K),--k $(K),)
+
+ai-bom:
+	$(PYTHON) scripts/generate_ai_bom.py
+
+delivery-report:
+	$(PYTHON) scripts/delivery_report.py
 
 reranker-local-up:
 	TEI_IMAGE=$$(if [ "$$(uname -m)" = "arm64" ] || [ "$$(uname -m)" = "aarch64" ]; then echo ghcr.io/huggingface/text-embeddings-inference:cpu-arm64-1.9; else echo ghcr.io/huggingface/text-embeddings-inference:cpu-1.9; fi) docker compose -f infra/reranker/docker-compose.yml up -d

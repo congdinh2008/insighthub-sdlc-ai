@@ -4,7 +4,7 @@
 
 InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa và hỏi đáp có nguồn trích dẫn bằng Retrieval-Augmented Generation (RAG). Từ nền này, học viên phát triển sản phẩm cá nhân qua các giai đoạn phân tích yêu cầu, thiết kế, lập trình, kiểm thử, phát hành và bảo trì trong chương trình **B2B C07 - SDLC with AI**.
 
-**Runtime nền:** `v1.0.0-rc.3` · **Requirements:** `1.1 Draft`, revision 27/09/2026 (phát hành sau diễn tập M3) · **Starter revision:** 27/09/2026 (tách CI, Mailpit, WSL2, Claude Code settings) · **Chủ dự án:** Đinh Xuân Công
+**Runtime nền:** `v1.0.0-rc.3` · **Requirements:** `1.1 Draft`, revision 28/09/2026 (phát hành sau diễn tập M3) · **Starter revision:** 28/09/2026 (AI Engineering Kit, bảng trace, eval harness, hướng dẫn Auth) · **Chủ dự án:** Đinh Xuân Công
 
 [Hướng dẫn cài đặt](GETTING_STARTED.md) · [Yêu cầu bài tập](docs/learner/01_Requirements_InsightHub.md) · [Kiến trúc](docs/Architecture_Starter_v1.md) · [API](docs/API_Contract_Starter_v1.md)
 
@@ -38,7 +38,21 @@ Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các ch�
 
 Công ty cấp tài khoản Claude cho học viên làm công cụ phát triển chính. ChatGPT là lựa chọn bổ sung nếu học viên có tài khoản; mỗi người tự phân tích, kiểm chứng và giải thích quyết định.
 
-Coding agent đọc quy tắc chung tại [`AGENTS.md`](AGENTS.md); Claude Code đọc thêm [`CLAUDE.md`](CLAUDE.md) và áp dụng rule `deny` trong [`.claude/settings.json`](.claude/settings.json) (chặn đọc `.env`, `.env.*`, `secrets/`, file khóa; chặn `rm -rf`, `git push --force`, `git reset --hard`, lệnh đóng gói). Rule này là lưới an toàn, không thay việc học viên đọc và duyệt từng lệnh.
+Coding agent đọc quy tắc chung tại [`AGENTS.md`](AGENTS.md); Claude Code đọc thêm [`CLAUDE.md`](CLAUDE.md) và áp dụng rule `deny` cùng hai hook trong [`.claude/settings.json`](.claude/settings.json): `block-secrets` (chặn đọc/in `.env`, `secrets/`, file khóa) và `protect-approved-tests` (chặn agent sửa test đã duyệt). Rule và hook là lưới an toàn, không thay việc học viên đọc và duyệt từng lệnh.
+
+### AI Engineering Kit
+
+Repository có sẵn khung để dự án vận hành AI một cách có kiểm soát; học viên hoàn thiện dần theo milestone ([bản đồ Kit](docs/ai/README.md)):
+
+| Thành phần | Vị trí |
+| --- | --- |
+| Quy tắc agent, quyền, hook | `AGENTS.md`, `CLAUDE.md`, `.claude/` |
+| Template context pack, Charter, skill, subagent, checklist review | `docs/ai/templates/` |
+| PR template (AI usage, DoD), issue template (tính năng, task giao agent, lỗi) | `.github/` |
+| Bảng truy vết 163 AC, mức rủi ro, lấy mẫu có seed | `trace/`, `scripts/trace_check.py`, `scripts/trace_sample.py` |
+| Spec chain Specify, Plan, Tasks | `specs/` |
+| Eval harness: golden set, grader bằng code, pass^k | `evaluation/harness/`, `make eval` |
+| AI Delivery Log, báo cáo KPI, AI-BOM | `docs/ai/delivery-log.csv`, `make delivery-report`, `make ai-bom` |
 
 Starter hiện dành cho môi trường phát triển local, chưa có xác thực và phân quyền đa người dùng. Cần hoàn thiện các phần này trước khi triển khai cho nhiều người dùng.
 
@@ -173,15 +187,19 @@ Phần Auth/Email dùng mail catcher Mailpit chạy local (Compose profile `mail
 ├── web/                         # Next.js, giao diện, API proxy và tests
 ├── infra/                       # Khởi tạo database và cấu hình reranker tùy chọn
 ├── docs/
-│   ├── adr/                     # Các quyết định kiến trúc
-│   ├── learner/    # Một Requirements, một SRS, một ZIP API/Schema
-│   └── release/                 # Checklist, SBOM và bằng chứng kiểm theo phiên bản
-├── evaluation/                  # Corpus và định nghĩa các lượt đánh giá AI
+│   ├── adr/                     # Quyết định kiến trúc và template ADR
+│   ├── ai/                      # AI Engineering Kit: bản đồ, review workflow, template, delivery log
+│   ├── learner/                 # Một Requirements, một SRS, một ZIP API/Schema
+│   ├── security/                # Template threat model
+│   └── release/                 # Checklist, SBOM, template release note và bằng chứng kiểm
+├── evaluation/                  # Corpus, AEV-01 và eval harness (golden set, grader, pass^k)
+├── specs/                       # Specify, Plan, Tasks theo tính năng
+├── trace/                       # Bảng truy vết AC xuyên khóa
 ├── sample-docs/                 # Tài liệu mẫu để thử ứng dụng
 ├── scripts/                     # Smoke, evaluation, backup/restore và đóng gói
-├── .claude/settings.json        # Rule Claude Code: chặn đọc .env/secrets và lệnh phá hủy
+├── .claude/                     # settings.json (deny, hook), hooks/, approved-tests.txt
 ├── .devcontainer/               # Devcontainer dự phòng (Windows không dùng được WSL2)
-├── .github/workflows/           # Quy trình kiểm tra trên GitHub Actions
+├── .github/                     # Workflow CI, PR template, issue template
 ├── .env.example                # Cấu hình mẫu, không chứa khóa thật
 ├── docker-compose.yml          # Các dịch vụ và volume của môi trường local
 ├── Makefile                    # Các lệnh phát triển và kiểm tra
@@ -213,7 +231,7 @@ python3 scripts/check_project.py
 git diff --check
 ```
 
-[App CI](.github/workflows/app-ci.yml) chạy trên push vào `main` và trên pull request: build, backend/web/tool tests, smoke, Playwright E2E và `npm audit`. Workflow này không kiểm version, hash tài liệu hoặc đóng gói, nên học viên được đổi version và tài liệu của bài làm. [Starter release gate](.github/workflows/starter-release.yml) chỉ chạy thủ công cho người bảo trì Starter. Kết quả CI cần xem theo đúng commit trên GitHub. Các lệnh E2E, đánh giá AI và sao lưu/khôi phục được hướng dẫn tại [Runbook](docs/Runbook_Starter_v1.md) và [Getting Started](GETTING_STARTED.md). Đóng gói Starter là việc của người bảo trì: [Release Starter](docs/maintainer/Release_Starter.md), [release checklist](docs/release/Starter_Readiness_v1.0.0.md).
+[App CI](.github/workflows/app-ci.yml) chạy trên push vào `main` và trên pull request. Job `governance` (không cần Docker) kiểm bảng trace, chặn thay đổi test đã duyệt thiếu trailer `Test-Change-Approved` và chạy test công cụ/hook. Job `application` build, chạy backend/web/tool tests, smoke, Playwright E2E và `npm audit`. Workflow này không kiểm version, hash tài liệu hoặc đóng gói, nên học viên được đổi version và tài liệu của bài làm. [Starter release gate](.github/workflows/starter-release.yml) chỉ chạy thủ công cho người bảo trì Starter. Kết quả CI cần xem theo đúng commit trên GitHub. Các lệnh E2E, đánh giá AI và sao lưu/khôi phục được hướng dẫn tại [Runbook](docs/Runbook_Starter_v1.md) và [Getting Started](GETTING_STARTED.md). Đóng gói Starter là việc của người bảo trì: [Release Starter](docs/maintainer/Release_Starter.md), [release checklist](docs/release/Starter_Readiness_v1.0.0.md).
 
 ## Giới hạn và lưu ý khi mở rộng
 
@@ -236,5 +254,10 @@ git diff --check
 | Vận hành, khôi phục và xử lý lỗi | [Runbook](docs/Runbook_Starter_v1.md) |
 | Thêm lint, secret scan, dependency scan (M1) | [M1 Lint/Scan Guide](docs/M1_Lint_Scan_Guide.md) |
 | Chọn module legacy cho characterization/refactor | [Module legacy](docs/Legacy_Modules.md) |
+| Thành phần AI Engineering Kit theo milestone | [AI Engineering Kit](docs/ai/README.md), [Review Workflow](docs/ai/Review_Workflow.md) |
+| Tích hợp Auth, Google và email | [Hướng dẫn Auth](docs/Auth_Integration_Guide.md) |
+| Bảng truy vết và kiểm chứng theo rủi ro | [trace/README](trace/README.md) |
+| Spec chain và eval harness | [specs/README](specs/README.md), [Eval harness](evaluation/harness/README.md) |
+| Template ADR, threat model, release note | [ADR](docs/adr/ADR-000-Template.md), [Threat model](docs/security/Threat_Model_Template.md), [Release note](docs/release/Release_Notes_Template.md) |
 
 SRS và hợp đồng tham khảo trong bộ tài liệu học viên mô tả sản phẩm cần phát triển. Khi tích hợp, đối chiếu với API Starter hiện có và ghi rõ quyết định thay đổi trong bài làm.

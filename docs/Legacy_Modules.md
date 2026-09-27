@@ -18,6 +18,10 @@ Số liệu đo bằng `radon cc -s` trên Starter `v1.0.0-rc.3` ngày 27/09/202
 3. Refactor từng bước nhỏ (extract function, bảng quy tắc, early return), chạy lại test sau mỗi bước, commit riêng để rollback được.
 4. Không đổi thông điệp lỗi công khai, giới hạn mặc định, embedding identity hoặc quy tắc "provider thật không fallback sang fixture" nếu không có ADR.
 
+## Chứng minh test bắt lỗi (mutation testing)
+
+Rubric Assignment (mức Đầy đủ) yêu cầu chứng minh test bắt lỗi. Cách gọn: chạy mutation testing trên đúng module đã chọn, ví dụ `mutmut` cho Python, giới hạn phạm vi file để thời gian chạy ngắn. Ghi số mutant sống, phân tích ít nhất một mutant sống (test thiếu assertion hay mutant tương đương), bổ sung test rồi chạy lại. Không đặt mục tiêu phần trăm mutation score cố định; giá trị nằm ở phân tích.
+
 ## Chọn module khác
 
 Học viên được chọn module khác (ví dụ `api/app/services/llm.py::_parse_result`, D (22)) nếu nêu lý do trong hồ sơ milestone: độ phức tạp đo được, mức rủi ro, test hiện có và phạm vi ảnh hưởng. Module chọn phải thuộc mã nền của Starter, không phải phần học viên vừa viết.

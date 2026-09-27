@@ -69,6 +69,17 @@ pip-audit -r api/requirements.txt
 npm audit --omit=dev --audit-level=high --prefix web
 ```
 
+### Kiểm package do AI đề xuất có tồn tại thật
+
+Coding agent có thể đề xuất package không tồn tại hoặc gần tên package phổ biến (slopsquatting). Trước khi thêm dependency mới:
+
+```sh
+pip index versions <tên-package>          # Python: package có trên PyPI và các phiên bản
+npm view <tên-package> name version repository.url maintainers   # Node
+```
+
+Đối chiếu tên, publisher, repository nguồn, số phiên bản và mức phổ biến; pin phiên bản trong `requirements.in`/`package.json`. Ghi lần kiểm vào mục AI usage của PR nếu package do AI đề xuất.
+
 ## Job CI mẫu
 
 Thêm job này vào `.github/workflows/app-ci.yml` của fork. Pin action theo SHA như các bước hiện có.
@@ -102,3 +113,5 @@ ESLint chạy trong job có `npm ci --prefix web`, với danh sách `.ts`/`.tsx`
 - Lệnh đã chạy, version công cụ, SHA commit và kết quả thực tế (link CI run hoặc log).
 - Bảng triage finding baseline: sửa, chấp nhận có lý do, hoặc để sau kèm owner.
 - Ít nhất một PR có lint/scan chạy trên changed files và đạt.
+- PR có review theo [Review Workflow](ai/Review_Workflow.md): `/code-review --comment`, một finding được xác minh độc lập.
+- Dòng đầu tiên trong `docs/ai/delivery-log.csv`.

@@ -14,3 +14,14 @@
 - Không chạy script đóng gói/phát hành Starter (`make package`, `make verify-package`, `make test-release`, `scripts/package_starter.py`, `scripts/verify_package.py`); đó là việc của người bảo trì ([Release Starter](docs/maintainer/Release_Starter.md)).
 - Không đọc, in hoặc gửi `.env`, API key, token; chỉ tham chiếu tên biến trong `README.md`.
 - Fixture xác nhận behavior của phần mềm, không phải semantic evaluation của AI thật.
+
+## AI Engineering Kit
+
+Bản đồ Kit theo milestone: [docs/ai/README.md](docs/ai/README.md).
+
+- **Truy vết:** `trace/ac-trace.csv` là bảng truy vết duy nhất. Chỉ triển khai AC đã `Human-verified`; bản nháp AI ghi `draft_by=AI`. Không ghi `Passed` khi thiếu commit và evidence. Chạy `python3 scripts/trace_check.py` trước khi báo xong.
+- **Test-as-spec:** không sửa test liệt kê trong `.claude/approved-tests.txt`. Test đã duyệt chỉ được học viên sửa trong commit riêng có trailer `Test-Change-Approved: <lý do>`; CI kiểm bằng `scripts/check_approved_tests.py`.
+- **Spec chain:** task lấy từ `specs/<feature>/tasks.md`; code khác plan thì cập nhật plan/tasks trong cùng PR và ghi lý do.
+- **PR:** dùng `.github/pull_request_template.md`, giữ diff khoảng 400 dòng trở xuống (không tính file sinh tự động) hoặc ghi lý do; điền mục AI usage và một dòng `docs/ai/delivery-log.csv` với số đo thật.
+- **Package mới:** kiểm package tồn tại trên registry chính thức, đúng tên và publisher, pin phiên bản trước khi thêm; không cài package chỉ vì AI đề xuất.
+- **Migration và CI do agent sinh:** review theo [checklist](docs/ai/templates/Review_Checklist_Migration_CI.md) trước khi merge.

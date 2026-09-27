@@ -11,6 +11,21 @@ concurrency:
   group: app-ci-${{ github.ref }}
   cancel-in-progress: true
 jobs:
+  governance:
+    # Fast checks without Docker: trace consistency, test-as-spec guard, tool tests.
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - name: Trace consistency
+        run: python3 scripts/trace_check.py
+      - name: Approved tests changed only with trailer
+        if: github.event_name == 'pull_request'
+        run: python3 scripts/check_approved_tests.py --base "origin/${{ github.base_ref }}"
+      - name: Tool and hook tests
+        run: python3 -m unittest discover -s scripts/tests -v
   application:
     runs-on: ubuntu-latest
     timeout-minutes: 45

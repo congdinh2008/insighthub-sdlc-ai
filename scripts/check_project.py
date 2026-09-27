@@ -61,13 +61,13 @@ def main():
     mapped = set(re.findall(r'\| `?(IH-[A-Z]+-\d{3})`? \|', mapping))
     assert requirements == mapped and len(requirements) == 72, 'Incomplete requirement mapping'
     assert acceptance <= set(re.findall(r'IH-[A-Z]+-\d{3}-AC\d{2}', mapping)) and len(acceptance) == 163, 'Incomplete AC mapping'
-    rows = re.findall(r'^\| (IH-[A-Z]+-\d{3}) \| (IH-[A-Z]+-\d{3}-AC\d{2}) \| (A|D[1-4]|N) \|', mapping, re.M)
+    rows = re.findall(r'^\| (IH-[A-Z]+-\d{3}) \| (IH-[A-Z]+-\d{3}-AC\d{2}) \| (A|D[1-5]|N) \|', mapping, re.M)
     assert len(rows) == 163 and {row[1] for row in rows} == acceptance, 'Incomplete AC table'
-    assert {scope: sum(row[2] == scope for row in rows) for scope in ['A', 'D1', 'D2', 'D3', 'D4', 'N']} == {'A': 136, 'D1': 9, 'D2': 3, 'D3': 2, 'D4': 1, 'N': 12}, 'Assignment scope drift'
+    assert {scope: sum(row[2] == scope for row in rows) for scope in ['A', 'D1', 'D2', 'D3', 'D4', 'D5', 'N']} == {'A': 135, 'D1': 9, 'D2': 3, 'D3': 2, 'D4': 1, 'D5': 1, 'N': 12}, 'Assignment scope drift'
     assert re.findall(r'<a id="lr-(\d+)">', mapping) == [f'{i:02}' for i in range(1, 30)], 'Learning task drift'
     broken = []
     markdown = list(ROOT.glob('*.md'))
-    for directory in ['docs', 'evaluation', 'sample-docs', 'infra', 'api/migrations']:
+    for directory in ['docs', 'evaluation', 'sample-docs', 'infra', 'api/migrations', 'specs', 'trace', '.github']:
         markdown.extend((ROOT / directory).rglob('*.md'))
     for path in markdown:
         if 'archive' in path.parts:

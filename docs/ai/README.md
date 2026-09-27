@@ -1,0 +1,28 @@
+# AI Engineering Kit của InsightHub
+
+Kit là phần repository ghi lại **cách dự án làm việc với AI**: quy tắc, ngữ cảnh, quyền, skill, hook, subagent, quy trình review, đặc tả, đánh giá và số đo. Mỗi milestone thêm hoặc hoàn thiện một thành phần trong output của LR hiện có; không tạo bài nộp riêng. Đến Capstone, học viên trình bày Kit như một tài sản có thể mang sang dự án thật (với công cụ và dữ liệu được Samsung SDS phê duyệt).
+
+## Bản đồ theo milestone
+
+| Kit | Artifact | Milestone / LR | Starter cấp | Học viên hoàn thành |
+| --- | --- | --- | --- | --- |
+| K1 Repository instructions | `AGENTS.md`, `CLAUDE.md` | M0.1 LR-03; M2 LR-11; M3.1 LR-13 | Bản nền | M0.1: biến lỗi AI ở LR-03 thành rule có cách kiểm. M2: glossary, invariant. M3.1: rule test-as-spec |
+| K2 Context pack | `docs/ai/context-pack.md` | M0.1 LR-02 | [Template](templates/context-pack.md) | Nguồn/phiên bản, invariant, phần loại bỏ; một lượt A/B có token |
+| K3 Charter và quyền | `docs/ai/AI_Usage_Charter.md`, `.claude/settings.json` | M0.2 LR-04 | [Template](templates/AI_Usage_Charter.md), `settings.json` | Phân loại dữ liệu, quyền, cách dừng/khôi phục, pháp lý Việt Nam |
+| K4 Skills | `.claude/skills/<tên>/SKILL.md` | M0.2 LR-05; M2.1 LR-08 | [Template](templates/SKILL.template.md) | Skill workflow (M0.2); skill `ac-drafter` viết nháp bảng trace (M2.1) |
+| K5 Hooks | `.claude/hooks/`, `.claude/approved-tests.txt` | M0.2 demo; M3.1 LR-13; M3 LR-19 | `block_secrets.py`, `protect_approved_tests.py` | Thêm test đã duyệt vào danh sách; hook tự động hóa ở LR-19; log tại `reports/hooks/events.jsonl` |
+| K6 Subagent | `.claude/agents/design-reviewer.md` | M2 LR-11; M4 LR-24 | [Template](templates/subagent.template.md) | Reviewer chỉ có tool đọc; finding được xác minh |
+| K7 Review pipeline | PR template, [Review Workflow](Review_Workflow.md) | M1 LR-07 trở đi | `.github/pull_request_template.md`, issue templates | `/code-review --comment`, `/security-review`, triage finding |
+| K8 Spec chain | `specs/quiz/{spec,plan,tasks}.md` | M2.1 spec; M2 plan, tasks; M3 task brief | [`specs/_template`](../../specs/_template/spec.md) | Bắt buộc cho Quiz; tính năng khác dùng lại nếu muốn |
+| K9 Eval harness | `evaluation/harness/`, `make eval` | M4 LR-23 | Skeleton golden set, grader, pass^k | Case và grader cho Summary/Quiz; adapter gọi API bài làm |
+| K10 AI Delivery Log | `docs/ai/delivery-log.csv` | Từ M1, mỗi PR một dòng; Capstone LR-29 | Header CSV, `scripts/delivery_report.py` | Ghi số đo thật; báo cáo baseline KPI |
+| K11 AI-BOM | `docs/ai/ai-bom.json` | M4 LR-24 | `scripts/generate_ai_bom.py` | Sinh tự động, bổ sung phần script không tự biết |
+
+Truy vết yêu cầu (`trace/ac-trace.csv`) có cột nguồn gốc bản nháp và người kiểm; xem [trace/README](../../trace/README.md).
+
+## Quy tắc chung
+
+- Kit phục vụ dự án InsightHub cụ thể. Quy tắc chung chung không gắn repo, lệnh hoặc cách kiểm không được tính.
+- Hướng dẫn phải có cơ chế thực thi khi có thể: quyền `deny`, hook, CI check, test. Chỉ viết lời nhắc cho model là chưa đủ.
+- Không đưa `.env`, API key, token, dữ liệu Samsung SDS hoặc khách hàng vào Kit, log hay transcript.
+- Số đo trong Delivery Log là số thật. Nếu không đo được, để trống và ghi lý do; không điền ước đoán.
