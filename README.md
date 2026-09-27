@@ -49,8 +49,8 @@ Starter hiện dành cho môi trường phát triển local, chưa có xác th�
 | Thành phần | Yêu cầu |
 | --- | --- |
 | Git | Tải mã nguồn và quản lý lịch sử thay đổi. |
-| Docker Desktop | Có Docker Compose v2; đang chạy trước khi khởi động ứng dụng. |
-| Tài nguyên | Khoảng 2 GiB RAM trống trở lên; cổng `3107` và `8107` chưa được sử dụng. |
+| Docker | Docker Desktop hoặc Docker Engine có Docker Compose v2; đang chạy trước khi khởi động ứng dụng. Windows dùng WSL2 theo [hướng dẫn Windows](GETTING_STARTED.md#windows-wsl2). |
+| Tài nguyên | Khoảng 3 GiB RAM trống (tổng `mem_limit` của các service khoảng 2,3 GiB, cộng thêm khi build); cổng `3107` và `8107` chưa được sử dụng. |
 | Kết nối mạng | Cần cho lần tải image và cài dependency đầu tiên. Luồng AI ở chế độ fixture không gọi dịch vụ bên ngoài. |
 | Công cụ kiểm tra | Python 3.11+ và Make để chạy script/kiểm thử; Node.js 24.20.0 khi chạy browser E2E trên máy. |
 
@@ -176,6 +176,7 @@ Truy cập Web tại [localhost:3117](http://localhost:3117). API và runtime pr
 ├── sample-docs/                 # Tài liệu mẫu để thử ứng dụng
 ├── scripts/                     # Smoke, evaluation, backup/restore và đóng gói
 ├── .claude/settings.json        # Rule Claude Code: chặn đọc .env/secrets và lệnh phá hủy
+├── .devcontainer/               # Devcontainer dự phòng (Windows không dùng được WSL2)
 ├── .github/workflows/           # Quy trình kiểm tra trên GitHub Actions
 ├── .env.example                # Cấu hình mẫu, không chứa khóa thật
 ├── docker-compose.yml          # Các dịch vụ và volume của môi trường local

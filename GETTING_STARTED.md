@@ -2,10 +2,27 @@
 
 ## Yêu cầu
 
-- Docker Desktop có Docker Compose v2.
-- RAM trống tối thiểu khoảng 2 GiB.
+- Docker có Docker Compose v2: Docker Desktop (macOS/Windows) hoặc Docker Engine (Linux, WSL2). Windows xem mục [Windows (WSL2)](#windows-wsl2).
+- RAM trống khoảng 3 GiB: tổng `mem_limit` của postgres, api, web là khoảng 2,3 GiB (768 MiB + 1 GiB + 512 MiB), cộng thêm khi build image.
 - Cổng 8107 và 3107 trống, hoặc đặt `API_PORT`/`WEB_PORT` khác.
 - Git, Python 3.11+ và Make để dùng công cụ kiểm/đóng gói. Browser E2E cần Node 24.20.0 và Playwright trong lockfile; chạy ứng dụng chỉ cần Docker.
+
+## Windows (WSL2)
+
+WSL2 là đường chính thức trên Windows vì Makefile và script cần bash, GNU make và python3. Chạy trực tiếp trên PowerShell/CMD không được hỗ trợ.
+
+1. Cài WSL2 và Ubuntu (PowerShell quyền Admin): `wsl --install -d Ubuntu-24.04`, khởi động lại máy, tạo user Linux. Kiểm `wsl -l -v` hiển thị `VERSION 2`.
+2. Chọn một cách chạy Docker:
+   - Docker Desktop for Windows, bật `Settings > Resources > WSL integration` cho distro Ubuntu.
+   - Docker Engine cài trong Ubuntu WSL theo hướng dẫn Docker cho Ubuntu; bật `systemd=true` trong `/etc/wsl.conf`.
+
+   Kiểm trong terminal Ubuntu: `docker compose version`. Docker Desktop yêu cầu subscription trả phí với doanh nghiệp lớn (theo điều khoản Docker: từ 250 nhân viên hoặc doanh thu từ 10 triệu USD/năm). **Công ty xác nhận license trước khi cài**; nếu chưa có, dùng Docker Engine trong WSL.
+3. Cài công cụ trong Ubuntu: `sudo apt update && sudo apt install -y git make python3 python3-venv curl`. Node.js 24.20.0 chỉ cần khi chạy browser E2E trên máy (cài qua nvm hoặc fnm).
+4. Clone repository **trong filesystem của WSL** (ví dụ `~/work/insighthub`), không clone vào `/mnt/c/...` vì I/O chậm, lỗi quyền file và file watcher. Mở bằng VS Code extension WSL (`code .` trong thư mục repo).
+5. Đặt `git config --global core.autocrlf input`. Repository có `.gitattributes` giữ LF và giữ nguyên byte của SRS, corpus, tài liệu mẫu.
+6. Nếu mạng công ty dùng proxy, cấu hình proxy cho Docker, apt và npm; báo mentor trước buổi B1 nếu build image bị chặn.
+
+**Phương án dự phòng: devcontainer.** Khi không cài được công cụ trong WSL, mở repo bằng VS Code Dev Containers (`Reopen in Container`). [`.devcontainer/devcontainer.json`](.devcontainer/devcontainer.json) cung cấp Python 3.12, Node 24.20.0, make và Docker-in-Docker; máy host vẫn cần Docker (Docker Desktop hoặc Docker Engine trong WSL). Cấu hình này chưa được pilot trên máy học viên; ghi lại lỗi gặp phải để mentor xử lý.
 
 ## Fork starter và khởi tạo bài làm
 
