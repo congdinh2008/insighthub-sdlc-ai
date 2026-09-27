@@ -2,6 +2,7 @@
 import hashlib
 import io
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -13,6 +14,8 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@unittest.skipUnless(os.environ.get('STARTER_RELEASE_CHECKS') == '1',
+                     'Maintainer release gate; run make test-release')
 class DeliveryTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

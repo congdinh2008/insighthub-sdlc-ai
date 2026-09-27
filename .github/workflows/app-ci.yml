@@ -1,0 +1,43 @@
+# Learner CI: application checks only. No version/hash gate, no packaging.
+# Maintainer release gate lives in starter-release.yml (manual trigger).
+name: App CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: app-ci-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  application:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      COMPOSE_PROJECT_NAME: insighthub-sdlc-ci
+      RAG_MODE: fixture
+      LLM_PROVIDER: fixture
+      EMBEDDING_PROVIDER: fixture
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24.20.0'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - name: Build and start stack
+        run: make up
+      - name: Backend, web and tool tests
+        run: make test
+      - name: Smoke test
+        run: make smoke
+      - name: Install web dependencies
+        run: npm ci --prefix web
+      - name: Playwright E2E
+        run: cd web && npx playwright install --with-deps chromium && npm run test:e2e
+      - name: npm audit
+        run: npm audit --omit=dev --audit-level=high --prefix web
+      - if: always()
+        name: Tear down
+        run: docker compose --profile checks down --volumes --remove-orphans

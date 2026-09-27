@@ -22,7 +22,7 @@ git switch -c milestone/m0.1
 
 `origin` phải trỏ tới fork cá nhân, `upstream` trỏ tới starter. Ghi commit nền và nguồn starter vào hồ sơ dự án; giữ nguyên lịch sử Git. Thiết lập `user.name` và `user.email` của học viên. Cách commit, tạo PR trong repository cá nhân, gửi bài cho giảng viên và thời hạn tại [Requirements](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md).
 
-Bật workflow `.github/workflows/starter.yml` trên fork nếu dùng GitHub Actions. Workflow mặc định dùng fixture, không cần khóa AI. Xác nhận kết quả khi workflow thực chạy; không giả định quyền Actions hoặc secret của repository gốc được chuyển sang fork.
+Bật workflow `.github/workflows/app-ci.yml` trên fork nếu dùng GitHub Actions. Workflow chạy trên push vào `main` và trên pull request, dùng fixture, không cần khóa AI. Workflow `starter-release.yml` dành cho người bảo trì Starter, chỉ chạy thủ công; học viên không cần chạy. Xác nhận kết quả khi workflow thực chạy; không giả định quyền Actions hoặc secret của repository gốc được chuyển sang fork.
 
 ## Khi nhận thêm gói ZIP
 

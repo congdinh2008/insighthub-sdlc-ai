@@ -1,10 +1,17 @@
-name: Developer application checks
-on: [push, pull_request]
+# Maintainer release gate for the Starter package. Manual trigger only.
+# Learners do not need this workflow; see docs/maintainer/Release_Starter.md.
+name: Starter release gate
+on:
+  workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: starter-release-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
-  application:
+  release:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     env:
       COMPOSE_PROJECT_NAME: insighthub-sdlc-ci
       RAG_MODE: fixture
@@ -20,6 +27,7 @@ jobs:
       - run: python3 scripts/check_project.py
       - run: make up
       - run: make test
+      - run: make test-release
       - run: make smoke
       - run: npm ci --prefix web
       - run: cd web && npx playwright install --with-deps chromium && npm run test:e2e

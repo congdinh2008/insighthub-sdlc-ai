@@ -3,7 +3,7 @@ PYTHON ?= python3
 API_URL ?= http://127.0.0.1:8107
 WEB_URL ?= http://127.0.0.1:3107
 
-.PHONY: up down build test test-db test-backend test-web smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
+.PHONY: up down build test test-db test-backend test-web test-tools test-e2e test-release smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
 up:
 	$(COMPOSE) up --build -d --wait
 
@@ -26,6 +26,10 @@ test-web:
 
 test-tools:
 	$(PYTHON) -m unittest discover -s scripts/tests -v
+
+# Maintainer only: delivery/package regression (see docs/maintainer/Release_Starter.md).
+test-release:
+	STARTER_RELEASE_CHECKS=1 $(PYTHON) -m unittest discover -s scripts/tests -v
 
 test-e2e:
 	cd web && npm run test:e2e
