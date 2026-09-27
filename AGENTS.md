@@ -2,7 +2,7 @@
 
 Đọc `README.md`, `GETTING_STARTED.md`, `docs/Architecture_Starter_v1.md` và `docs/API_Contract_Starter_v1.md` trước khi sửa.
 
-- Tài liệu bài tập sử dụng [Requirements học viên 1.0](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md) và SRS v1.0 đính kèm trong cùng thư mục. Bộ học viên gồm một Requirements chính, một SRS và một ZIP API/Schema tham khảo. Hợp đồng API tham khảo là thiết kế để đối chiếu; không tự thay giao tiếp runtime. Manifest của gói mã nguồn chỉ xác nhận đúng phiên bản gói được kiểm.
+- Tài liệu bài tập sử dụng [Requirements học viên 1.1 Draft](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md) và SRS v1.0 đính kèm trong cùng thư mục. Bộ học viên gồm một Requirements chính, một SRS và một ZIP API/Schema tham khảo. Hợp đồng API tham khảo là thiết kế để đối chiếu; không tự thay giao tiếp runtime. Manifest của gói mã nguồn chỉ xác nhận đúng phiên bản gói được kiểm.
 - Giữ kiến trúc đồng bộ Web/API/PostgreSQL và HTTP 201 sau ingestion thành công, trừ khi có quyết định mới được ghi bằng ADR.
 - Không làm yếu checksum, embedding identity, idempotency, deadline, citation validation, locks hoặc transaction để test pass.
 - Mọi thay đổi schema dùng forward migration. Không yêu cầu xóa volume như cách nâng cấp.

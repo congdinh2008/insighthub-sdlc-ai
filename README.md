@@ -4,7 +4,7 @@
 
 InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa và hỏi đáp có nguồn trích dẫn bằng Retrieval-Augmented Generation (RAG). Từ nền này, học viên phát triển sản phẩm cá nhân qua các giai đoạn phân tích yêu cầu, thiết kế, lập trình, kiểm thử, phát hành và bảo trì trong chương trình **B2B C07 - SDLC with AI**.
 
-**Runtime nền:** `v1.0.0-rc.3` · **Requirements:** `1.0`, revision hướng dẫn 26/09/2026 · **Starter revision:** 27/09/2026 (tách CI, Mailpit, WSL2, Claude Code settings) · **Chủ dự án:** Đinh Xuân Công
+**Runtime nền:** `v1.0.0-rc.3` · **Requirements:** `1.1 Draft`, revision 27/09/2026 (phát hành sau diễn tập M3) · **Starter revision:** 27/09/2026 (tách CI, Mailpit, WSL2, Claude Code settings) · **Chủ dự án:** Đinh Xuân Công
 
 [Hướng dẫn cài đặt](GETTING_STARTED.md) · [Yêu cầu bài tập](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md) · [Kiến trúc](docs/Architecture_Starter_v1.md) · [API](docs/API_Contract_Starter_v1.md)
 
@@ -23,7 +23,7 @@ InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa v
 | Nhóm chức năng | Kết quả cần xây dựng |
 | --- | --- |
 | Auth và Account | Đăng ký, xác minh email, đăng nhập mật khẩu/Google, liên kết danh tính, quản lý session, recovery, đổi mật khẩu và profile. |
-| Transactional Email | Tích hợp đủ năm email: xác minh, reset mật khẩu, thông báo liên kết Google, hướng dẫn tài khoản Google và thông báo thay đổi mật khẩu. |
+| Transactional Email | Tích hợp năm email: xác minh, reset mật khẩu, thông báo liên kết Google, hướng dẫn tài khoản Google và thông báo thay đổi mật khẩu. Starter cấp Mailpit và adapter SMTP tối thiểu; phần chấm theo tầng Core/Extended. |
 | Notebook | Tạo, liệt kê, mở, cập nhật và xóa; áp dụng ownership, giới hạn, pagination và version conflict. |
 | Document | Tích hợp upload, trạng thái, retry, citation và xóa của Starter với Notebook, quyền và vòng đời dữ liệu. |
 | Chat và Conversation | Hỏi đáp theo nguồn được phép; quản lý conversation và giữ lịch sử độc lập với operation TTL. |
@@ -32,7 +32,7 @@ InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa v
 | Quiz | Tạo đề, làm/nộp bài, chấm tại server, bảo vệ đáp án và lưu lịch sử lần làm. |
 | AI Job và Output | Theo dõi tác vụ, xem/lọc/rename/regenerate/delete kết quả; kiểm quota, idempotency, deadline và nguồn bị xóa. |
 
-Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các chức năng dùng chung trong bảng trên. Mindmap, Slide và Báo cáo chỉ được triển khai ở giai đoạn mở rộng cuối khi mentor cho phép. Học viên còn thực hiện UI/UX, test, release local/sandbox và một thay đổi sau phát hành; phạm vi có 151 AC áp dụng trong [bảng truy vết](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md#pham-vi-truy-vet).
+Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các chức năng dùng chung trong bảng trên. Mindmap, Slide và Báo cáo chỉ được triển khai ở giai đoạn mở rộng cuối khi mentor cho phép. Học viên còn thực hiện UI/UX, test, release local/sandbox và một thay đổi sau phát hành; phạm vi có 151 AC áp dụng trong [bảng truy vết](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md#pham-vi-truy-vet). AC được phân tầng Core (chấm) và Extended (Stretch, không trừ điểm); danh sách Core công bố trước M3, trước đó giữ trạng thái như Requirements 1.0 ([Core và Extended](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md#core-extended)).
 
 [Requirements](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md) là tài liệu giao việc chính, gồm chức năng, 29 công việc, mười milestone, dữ liệu/API, rubric và evidence. [Ma trận tiến độ sản phẩm](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md#ma-tran-chuc-nang) chỉ rõ mức hoàn thành từng nhóm: M3.1 chạy hành trình Auth - Notebook - Document - Chat; M3 hoàn thiện phạm vi; M4 kiểm tổng hợp; M5 phát hành R1 rồi thực hiện thay đổi R1.1. Mỗi milestone nối kết quả sản phẩm với cách áp dụng SDLC và AI.
 
@@ -228,7 +228,7 @@ git diff --check
 | Nhu cầu | Tài liệu |
 | --- | --- |
 | Cài đặt, fork repository và chạy ứng dụng | [Getting Started](GETTING_STARTED.md) |
-| Bắt đầu bài tập, xem lộ trình và cách nộp | [Requirements học viên 1.0](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md) |
+| Bắt đầu bài tập, xem lộ trình và cách nộp | [Requirements học viên 1.1 Draft](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md) |
 | Tra hành vi sản phẩm và tiêu chí chấp nhận | [SRS InsightHub v1.0](docs/learner_v1.0_20260923/02_SRS_InsightHub_v1.0.md) |
 | Thiết kế dữ liệu, API và tích hợp phần mở rộng | [Hướng dẫn tích hợp](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md#data-api) |
 | Hiểu mã nguồn nền và giao tiếp hiện có | [Kiến trúc](docs/Architecture_Starter_v1.md), [API Starter](docs/API_Contract_Starter_v1.md) |
