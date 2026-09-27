@@ -38,6 +38,8 @@ Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các ch�
 
 Công ty cấp tài khoản Claude cho học viên làm công cụ phát triển chính. ChatGPT là lựa chọn bổ sung nếu học viên có tài khoản; mỗi người tự phân tích, kiểm chứng và giải thích quyết định.
 
+Coding agent đọc quy tắc chung tại [`AGENTS.md`](AGENTS.md); Claude Code đọc thêm [`CLAUDE.md`](CLAUDE.md) và áp dụng rule `deny` trong [`.claude/settings.json`](.claude/settings.json) (chặn đọc `.env`, `.env.*`, `secrets/`, file khóa; chặn `rm -rf`, `git push --force`, `git reset --hard`, lệnh đóng gói). Rule này là lưới an toàn, không thay việc học viên đọc và duyệt từng lệnh.
+
 Starter hiện dành cho môi trường phát triển local, chưa có xác thực và phân quyền đa người dùng. Cần hoàn thiện các phần này trước khi triển khai cho nhiều người dùng.
 
 ## Bắt đầu nhanh
@@ -173,6 +175,7 @@ Truy cập Web tại [localhost:3117](http://localhost:3117). API và runtime pr
 ├── evaluation/                  # Corpus và định nghĩa các lượt đánh giá AI
 ├── sample-docs/                 # Tài liệu mẫu để thử ứng dụng
 ├── scripts/                     # Smoke, evaluation, backup/restore và đóng gói
+├── .claude/settings.json        # Rule Claude Code: chặn đọc .env/secrets và lệnh phá hủy
 ├── .github/workflows/           # Quy trình kiểm tra trên GitHub Actions
 ├── .env.example                # Cấu hình mẫu, không chứa khóa thật
 ├── docker-compose.yml          # Các dịch vụ và volume của môi trường local
