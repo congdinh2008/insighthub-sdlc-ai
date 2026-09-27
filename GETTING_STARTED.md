@@ -37,7 +37,7 @@ git rev-parse HEAD
 git switch -c milestone/m0.1
 ```
 
-`origin` phải trỏ tới fork cá nhân, `upstream` trỏ tới starter. Ghi commit nền và nguồn starter vào hồ sơ dự án; giữ nguyên lịch sử Git. Thiết lập `user.name` và `user.email` của học viên. Cách commit, tạo PR trong repository cá nhân, gửi bài cho giảng viên và thời hạn tại [Requirements](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md).
+`origin` phải trỏ tới fork cá nhân, `upstream` trỏ tới starter. Ghi commit nền và nguồn starter vào hồ sơ dự án; giữ nguyên lịch sử Git. Thiết lập `user.name` và `user.email` của học viên. Cách commit, tạo PR trong repository cá nhân, gửi bài cho giảng viên và thời hạn tại [Requirements](docs/learner/01_Requirements_InsightHub.md).
 
 Bật workflow `.github/workflows/app-ci.yml` trên fork nếu dùng GitHub Actions. Workflow chạy trên push vào `main` và trên pull request, dùng fixture, không cần khóa AI. Workflow `starter-release.yml` dành cho người bảo trì Starter, chỉ chạy thủ công; học viên không cần chạy. Xác nhận kết quả khi workflow thực chạy; không giả định quyền Actions hoặc secret của repository gốc được chuyển sang fork.
 
@@ -45,7 +45,7 @@ Bật workflow `.github/workflows/app-ci.yml` trên fork nếu dùng GitHub Acti
 
 ZIP dùng để đối chiếu hoặc kiểm cài đặt sạch, không thay repository fork nộp bài. Giải nén vào thư mục riêng và kiểm SHA-256 trước khi chạy; không ghi đè bản fork đang phát triển. Nếu chưa có quyền fork, báo giảng viên cấp quyền và tiếp tục kiểm setup trên ZIP, ghi rõ phụ thuộc chưa hoàn tất. Không tạo lịch sử Git mới để giả lập nguồn starter.
 
-[SRS của bài tập](docs/learner_v1.0_20260923/02_SRS_InsightHub_v1.0.md) và hợp đồng tham khảo nằm trong bộ tài liệu học viên. `PACKAGE_MANIFEST.json`, khi có trong gói Starter, là biên nhận của đúng gói mã nguồn đó; không thay bảng phạm vi hoặc kết quả kiểm của bài làm. Không đưa `.env` thật vào Git hoặc artifact. Đọc [Hướng dẫn bắt đầu](docs/learner_v1.0_20260923/01_Requirements_InsightHub.md) trước khi phát triển.
+[SRS của bài tập](docs/learner/02_SRS_InsightHub_v1.0.md) và hợp đồng tham khảo nằm trong bộ tài liệu học viên. `PACKAGE_MANIFEST.json`, khi có trong gói Starter, là biên nhận của đúng gói mã nguồn đó; không thay bảng phạm vi hoặc kết quả kiểm của bài làm. Không đưa `.env` thật vào Git hoặc artifact. Đọc [Hướng dẫn bắt đầu](docs/learner/01_Requirements_InsightHub.md) trước khi phát triển.
 
 ## Khởi động offline fixture
 
