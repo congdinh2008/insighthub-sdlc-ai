@@ -2,18 +2,20 @@
 
 **Ứng dụng quản lý và khai thác tài liệu cá nhân bằng AI**
 
-Phiên bản 1.0 Draft | 23/09/2026 | Tham chiếu khung SRS của ISO/IEC/IEEE 29148:2018
+Phiên bản 1.0 | 23/09/2026, phê duyệt baseline khóa học R1 ngày 27/09/2026 | Tham chiếu khung SRS của ISO/IEC/IEEE 29148:2018
+
+> **Phạm vi bài tập khóa C07:** 2 công cụ AI (Tóm tắt, Quiz), 12 lượt AEV (AEV-01, AEV-03, AEV-05 và hai lượt lặp); 151 AC áp dụng, Mindmap, Slide và Báo cáo ngoài phạm vi bài tập. Xem Requirements mục 15. SRS vẫn đặc tả sản phẩm R1 đầy đủ năm công cụ.
 
 | Thuộc tính | Giá trị |
 | --- | --- |
 | Mã tài liệu | SRS-IH-001 |
-| Phiên bản và trạng thái | 1.0 Draft - bản đặc tả đầu tiên, chờ rà soát và phê duyệt |
+| Phiên bản và trạng thái | 1.0, phê duyệt làm baseline khóa học R1 ngày 27/09/2026 (Đinh Xuân Công) |
 | Chủ sản phẩm và chủ tài liệu | Đinh Xuân Công |
 | Sản phẩm được đặc tả | InsightHub R1, đầy đủ năm công cụ AI |
 | Căn cứ xác định phạm vi | Mục tiêu OBJ-01..05, quy tắc BR-01..16 và giới hạn LIM-01..19 được trình bày trong tài liệu |
 | Nội dung đặc tả | 72 mã yêu cầu/nhóm yêu cầu, 169 yêu cầu thành phần, 163 tiêu chí chấp nhận; dữ liệu logic, giao tiếp và kiểm chứng R1 |
 | Tiêu chuẩn tham chiếu | ISO/IEC/IEEE 29148:2018, khung nội dung tài liệu đặc tả yêu cầu phần mềm |
-| Hiệu lực sử dụng | Bản đặc tả dùng để rà soát. Chủ sản phẩm phê duyệt trước khi sử dụng làm căn cứ nghiệm thu |
+| Hiệu lực sử dụng | Baseline khóa học R1: căn cứ phân tích, thiết kế, kiểm thử và nghiệm thu bài tập trong phạm vi Requirements mục 15. Thay đổi sau baseline chỉ áp dụng khi chủ sản phẩm phê duyệt yêu cầu thay đổi |
 | Đối tượng đọc | Chủ sản phẩm, chuyên viên phân tích nghiệp vụ, người thiết kế giao diện và trải nghiệm, lập trình viên, người kiểm thử và người vận hành |
 
 InsightHub cho phép người dùng tổ chức tài liệu trong các Notebook riêng tư, hỏi đáp dựa trên tài liệu nguồn, quản lý ghi chú và tạo nội dung bằng công cụ AI. Tài liệu xác định hành vi và ràng buộc để thiết kế, triển khai, kiểm thử và nghiệm thu sản phẩm.
@@ -2993,7 +2995,7 @@ Khi kết quả kiểm khả thi không đáp ứng yêu cầu, xử lý theo IH
 | Lý do nghiệp vụ | Mỗi yêu cầu hỗ trợ mục tiêu được chỉ ra ở 5.1.1/5.2; lựa chọn ngưỡng và tính khả thi được kiểm theo 3.2.5. |
 | Mức bắt buộc | Tất cả IH và AC thuộc phạm vi bắt buộc R1; thứ tự triển khai không làm giảm mức bắt buộc. |
 | Loại và phương pháp kiểm chứng | Loại ghi tại sổ thuộc tính; phương pháp viết đầy đủ sau AC của mỗi khối yêu cầu. |
-| Trạng thái | Draft để rà soát; kết quả phê duyệt nội dung và kết quả kiểm sản phẩm được ghi riêng theo phiên bản. |
+| Trạng thái | Baseline khóa học R1, phê duyệt ngày 27/09/2026; kết quả kiểm sản phẩm được ghi riêng theo phiên bản. |
 | Chủ thể quyết định | Chủ sản phẩm quyết định phạm vi và thay đổi; trách nhiệm rà soát chuyên môn tại 6.3. |
 | Phiên bản và thay đổi | Bằng chứng kiểm chứng ghi phiên bản SRS, mã yêu cầu/AC và cấu hình; thay đổi theo IH-REL-003. |
 | Phụ thuộc và rủi ro | Theo AS/DP, BR/LIM và hồ sơ REF-01..12. Điều kiện chưa kiểm phải có trạng thái riêng. |
@@ -3008,7 +3010,7 @@ Mã con áp dụng loại, mục tiêu, mức bắt buộc và phương pháp ki
 
 #### 5.1.1. Sổ thuộc tính yêu cầu
 
-Mọi dòng có mức bắt buộc **phải đáp ứng trong R1** và trạng thái nội dung **Draft để rà soát**. Cột căn cứ nghiệp vụ dẫn đến định nghĩa đang áp dụng trong chính tài liệu. Nguồn phát sinh và người xác nhận của yêu cầu bổ sung phải được ghi vào hồ sơ thay đổi khi tiếp nhận; không tự gán trạng thái phê duyệt từ bảng này.
+Mọi dòng có mức bắt buộc **phải đáp ứng trong R1** và trạng thái nội dung **Baseline khóa học R1**. Cột căn cứ nghiệp vụ dẫn đến định nghĩa đang áp dụng trong chính tài liệu. Nguồn phát sinh và người xác nhận của yêu cầu bổ sung phải được ghi vào hồ sơ thay đổi khi tiếp nhận; không tự gán trạng thái phê duyệt từ bảng này.
 
 | Mã và vị trí yêu cầu | Loại | Mục tiêu | Căn cứ nghiệp vụ |
 | --- | --- | --- | --- |
@@ -3855,6 +3857,7 @@ Mỗi dòng sau xác định một nhánh tại M1-M2; sau khi hoàn tất cấu
 | Phiên bản | Ngày | Nội dung |
 | --- | --- | --- |
 | 1.0 Draft | 23/09/2026 | Khởi tạo đặc tả InsightHub R1: phạm vi, yêu cầu chức năng và chất lượng, dữ liệu logic, giao tiếp, use case, kiểm chứng và truy vết. |
+| 1.0 | 27/09/2026 | Phê duyệt làm baseline khóa học R1 (Đinh Xuân Công); thêm banner phạm vi bài tập khóa C07. Không đổi yêu cầu, AC hoặc ngưỡng. |
 
 <a id="sec-6-3"></a>
 
@@ -3862,7 +3865,7 @@ Mỗi dòng sau xác định một nhánh tại M1-M2; sau khi hoàn tất cấu
 
 | Vai trò | Phạm vi rà soát | Trạng thái |
 | --- | --- | --- |
-| Chủ sản phẩm và chủ tài liệu | Đinh Xuân Công: mục tiêu, phạm vi, quy tắc nghiệp vụ và ngưỡng nghiệm thu. | Rà soát và phê duyệt nội dung, phạm vi và giới hạn trước nghiệm thu |
+| Chủ sản phẩm và chủ tài liệu | Đinh Xuân Công: mục tiêu, phạm vi, quy tắc nghiệp vụ và ngưỡng nghiệm thu. | Đã phê duyệt làm baseline khóa học R1 ngày 27/09/2026 |
 | Đại diện kỹ thuật | Tính khả thi, dữ liệu, xác thực, tích hợp, thời hạn xử lý và cấu hình đo hiệu năng; nhân sự do chủ sản phẩm phân công. | Thực hiện khi rà soát kỹ thuật |
 | Đại diện UI/UX | Luồng thao tác của người dùng, các màn hình và trạng thái, khả năng thích ứng với kích thước màn hình, khả năng tiếp cận và Figma. | Thực hiện khi rà soát thiết kế |
 | Đại diện QA và người dùng | Khả năng kiểm chứng, đáp án và tiêu chí đối chiếu AI, test case, UAT và điều kiện bàn giao. | Thực hiện khi rà soát nghiệm thu |

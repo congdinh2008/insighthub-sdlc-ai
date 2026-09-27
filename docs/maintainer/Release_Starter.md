@@ -32,7 +32,7 @@ make package
 make verify-package
 ```
 
-Nếu không có thay đổi để commit, bỏ qua lệnh commit; không tạo commit rỗng. Tên gói chứa phiên bản runtime và revision tài liệu, ví dụ `insighthub-starter-v1.0.0-rc.3-docs20260926.zip`; manifest định danh đúng commit và bộ Requirements/SRS đi kèm. Tài liệu lưu trữ cũ không nằm trong repo học viên; `package_starter.py` và `verify_package.py` vẫn loại mọi đường dẫn `archive`.
+Nếu không có thay đổi để commit, bỏ qua lệnh commit; không tạo commit rỗng. Tên gói chứa phiên bản runtime và revision tài liệu, ví dụ `insighthub-starter-v1.0.0-rc.3-docs20260927.zip`; manifest định danh đúng commit và bộ Requirements/SRS đi kèm. Tài liệu lưu trữ cũ không nằm trong repo học viên; `package_starter.py` và `verify_package.py` vẫn loại mọi đường dẫn `archive`.
 
 Trên GitHub, chạy workflow [Starter release gate](../../.github/workflows/starter-release.yml) bằng `workflow_dispatch` trên repository gốc. Workflow này không tự chạy trên fork của học viên.
 
