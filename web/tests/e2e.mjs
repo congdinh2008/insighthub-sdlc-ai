@@ -53,6 +53,9 @@ for (const viewport of [{width:1440,height:900},{width:390,height:844}]) {
     await page.locator('.citation-list button').first().click();await page.getByRole('region',{name:'Nội dung nguồn'}).locator('pre').waitFor();
     page.once('dialog',dialog=>dialog.accept());await row.getByRole('button',{name:'Xóa',exact:true}).click();
     await row.waitFor({state:'detached'});await page.getByRole('region',{name:'Nội dung nguồn'}).waitFor({state:'detached'});
+    // ChatPanel refreshes citations asynchronously after the document list/source view.
+    // Wait for the same required state, rather than asserting during that refresh.
+    await page.waitForFunction(()=>document.querySelector('.citation-list button')?.disabled===true);
     assert.equal(await page.locator('.citation-list button').first().isDisabled(),true);
     assert.match(await page.locator('.citation-list').innerText(),/không còn khả dụng/);
     record('deletion invalidates open source and historical citation');
