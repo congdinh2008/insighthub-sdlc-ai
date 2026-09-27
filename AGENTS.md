@@ -10,5 +10,7 @@
 - Auth/Notebook là extension của học viên. Policy ownership phải do server xác lập; không tin owner do client gửi và không tự nhận dữ liệu nền cho user đầu tiên.
 - Không log credentials, toàn văn tài liệu, prompt có nội dung nguồn hoặc provider body thô.
 - Dùng Compose namespace riêng. Không thao tác container hoặc volume của project khác.
-- Chạy backend, web và smoke tests phù hợp trước khi đóng gói. `scripts/verify_package.py` phải pass.
+- Trước khi báo xong: chạy backend, web và smoke tests phù hợp (`make test`, `make smoke`) và ghi lệnh, kết quả, SHA commit vào evidence của milestone. Không báo pass khi chưa thực chạy.
+- Không chạy script đóng gói/phát hành Starter (`make package`, `make verify-package`, `make test-release`, `scripts/package_starter.py`, `scripts/verify_package.py`); đó là việc của người bảo trì ([Release Starter](docs/maintainer/Release_Starter.md)).
+- Không đọc, in hoặc gửi `.env`, API key, token; chỉ tham chiếu tên biến trong `README.md`.
 - Fixture xác nhận behavior của phần mềm, không phải semantic evaluation của AI thật.

@@ -208,7 +208,7 @@ python3 scripts/check_project.py
 git diff --check
 ```
 
-[App CI](.github/workflows/app-ci.yml) chạy trên push vào `main` và trên pull request: build, backend/web/tool tests, smoke, Playwright E2E và `npm audit`. Workflow này không kiểm version, hash tài liệu hoặc đóng gói, nên học viên được đổi version và tài liệu của bài làm. [Starter release gate](.github/workflows/starter-release.yml) chỉ chạy thủ công cho người bảo trì Starter. Kết quả CI cần xem theo đúng commit trên GitHub. Các lệnh E2E, đánh giá AI, sao lưu/khôi phục và đóng gói được hướng dẫn tại [Runbook](docs/Runbook_Starter_v1.md), [Getting Started](GETTING_STARTED.md) và [release checklist](docs/release/Starter_Readiness_v1.0.0.md).
+[App CI](.github/workflows/app-ci.yml) chạy trên push vào `main` và trên pull request: build, backend/web/tool tests, smoke, Playwright E2E và `npm audit`. Workflow này không kiểm version, hash tài liệu hoặc đóng gói, nên học viên được đổi version và tài liệu của bài làm. [Starter release gate](.github/workflows/starter-release.yml) chỉ chạy thủ công cho người bảo trì Starter. Kết quả CI cần xem theo đúng commit trên GitHub. Các lệnh E2E, đánh giá AI và sao lưu/khôi phục được hướng dẫn tại [Runbook](docs/Runbook_Starter_v1.md) và [Getting Started](GETTING_STARTED.md). Đóng gói Starter là việc của người bảo trì: [Release Starter](docs/maintainer/Release_Starter.md), [release checklist](docs/release/Starter_Readiness_v1.0.0.md).
 
 ## Giới hạn và lưu ý khi mở rộng
 

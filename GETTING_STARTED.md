@@ -93,19 +93,15 @@ Profile đúng là `classroom-deepseek-gemini`, generation `deepseek`, embedding
 
 Ví dụ trên giữ fixture ở 8107/3107 và real ở 8117/3117 với volume riêng. Upload lại tài liệu gốc vào real runtime; không dùng vector fixture cho real. Chỉ đổi model hỏi đáp không làm thay đổi embedding identity. Chi tiết về reranker và tuning tại [Model Profiles và Reranking](docs/Model_Profiles_And_Reranking.md).
 
-## Backup và package
+## Backup và restore
 
 ```sh
 COMPOSE_PROJECT_NAME=insighthub-c07-starter ENV_FILE=.env make backup-restore-check
-python3 scripts/check_project.py
-make sbom
-git add .
-git commit -m "chore(release): prepare reviewed delivery package"
-make package
-make verify-package
 ```
 
-Backup drill yêu cầu corpus có dữ liệu, một chat thành công và một failed attempt; xem lệnh seed riêng trong [Runbook](docs/Runbook_Starter_v1.md). `make package` chỉ chạy trên working tree sạch, có SRS và SBOM khớp version. Tên gói chứa cả phiên bản runtime và revision tài liệu, ví dụ `insighthub-starter-v1.0.0-rc.3-docs20260926.zip`; manifest định danh đúng commit và bộ Requirements/SRS đi kèm. Tài liệu trong `docs/archive/` không đưa vào gói học viên. Nếu không có thay đổi để commit, bỏ qua lệnh commit; không tạo commit rỗng.
+Backup drill yêu cầu corpus có dữ liệu, một chat thành công và một failed attempt; xem lệnh seed riêng và cách thêm bảng mới của bài làm vào drill trong [Runbook](docs/Runbook_Starter_v1.md#backup-và-restore-drill).
+
+Đóng gói và phát hành gói Starter (`make package`, `make verify-package`, `make test-release`) là việc của người bảo trì, xem [Release Starter](docs/maintainer/Release_Starter.md). Học viên và coding agent không chạy các lệnh này.
 
 ## Dừng
 
