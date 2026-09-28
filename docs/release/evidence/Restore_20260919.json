@@ -1,0 +1,87 @@
+{
+  "schema_version": 2,
+  "created_at": "2026-09-19T10:18:37.004490+00:00",
+  "compose_project": "insighthub-c07-close-20260919",
+  "passed": true,
+  "backup_sha256": "92d67b0a9aadd463f71ef68c5d74ee343ae5d5b9255edd885e931a2840b692b8",
+  "source": {
+    "schema_migrations": {
+      "rows": 2,
+      "sha256": "0fad89a9ac2be504708457ada48eefd8f54d9118d96f2fd24baede05f11f05c9"
+    },
+    "embedding_index": {
+      "rows": 1,
+      "sha256": "cd6e16b52c82ee4a93c8fdfd9932b3f94efd21cd595c7b6d98f23ad2d035aa63"
+    },
+    "documents": {
+      "rows": 4,
+      "sha256": "a391eac38665d48881cb909da1f98ded424f769fb1bf8f6f6adbb0ce31ab066e"
+    },
+    "document_sources": {
+      "rows": 4,
+      "sha256": "201361147dddb2be07e697ae542d100d86438e2ee2609c3d02ff904d239e1796"
+    },
+    "source_segments": {
+      "rows": 4,
+      "sha256": "65715429b9ca8a8a6c105a9ecd6d176a4d1ad31ab2b0fd5dbd25dc03000c4782"
+    },
+    "chunks": {
+      "rows": 4,
+      "sha256": "3d61832f8fa8d7c81c92ae6983636ed326bcc6996b24cb6e6aac36755706c5cb"
+    },
+    "ingestion_attempts": {
+      "rows": 4,
+      "sha256": "7d9950eebc7aa15d0a2903f90b11927a8e49dbe2ed3203074ae28e1c7d85884b"
+    },
+    "operation_records": {
+      "rows": 57,
+      "sha256": "4b554844ee4cc064b87019c8db634d1f616e2e49a1e8e845e90ba7e35be20677"
+    }
+  },
+  "restored": {
+    "schema_migrations": {
+      "rows": 2,
+      "sha256": "0fad89a9ac2be504708457ada48eefd8f54d9118d96f2fd24baede05f11f05c9"
+    },
+    "embedding_index": {
+      "rows": 1,
+      "sha256": "cd6e16b52c82ee4a93c8fdfd9932b3f94efd21cd595c7b6d98f23ad2d035aa63"
+    },
+    "documents": {
+      "rows": 4,
+      "sha256": "a391eac38665d48881cb909da1f98ded424f769fb1bf8f6f6adbb0ce31ab066e"
+    },
+    "document_sources": {
+      "rows": 4,
+      "sha256": "201361147dddb2be07e697ae542d100d86438e2ee2609c3d02ff904d239e1796"
+    },
+    "source_segments": {
+      "rows": 4,
+      "sha256": "65715429b9ca8a8a6c105a9ecd6d176a4d1ad31ab2b0fd5dbd25dc03000c4782"
+    },
+    "chunks": {
+      "rows": 4,
+      "sha256": "3d61832f8fa8d7c81c92ae6983636ed326bcc6996b24cb6e6aac36755706c5cb"
+    },
+    "ingestion_attempts": {
+      "rows": 4,
+      "sha256": "7d9950eebc7aa15d0a2903f90b11927a8e49dbe2ed3203074ae28e1c7d85884b"
+    },
+    "operation_records": {
+      "rows": 57,
+      "sha256": "4b554844ee4cc064b87019c8db634d1f616e2e49a1e8e845e90ba7e35be20677"
+    }
+  },
+  "source_unchanged": true,
+  "content_equal": true,
+  "orphan_chunks": 0,
+  "failed_attempts": 1,
+  "application_probe": {
+    "source_reads": 20,
+    "all_source_checks": true,
+    "retrieval_contexts": 1,
+    "scope_valid": true,
+    "chat_operations": 13
+  },
+  "backup_retained": false
+}

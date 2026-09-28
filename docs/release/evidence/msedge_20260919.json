@@ -1,0 +1,78 @@
+{
+  "browser": "msedge",
+  "version": "153.0.4234.32",
+  "runs": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 900
+      },
+      "checks": [
+        {
+          "name": "source selection survives refresh/upload without expansion",
+          "passed": true
+        },
+        {
+          "name": "keyboard source navigation and Escape close",
+          "passed": true
+        },
+        {
+          "name": "deletion invalidates open source and historical citation",
+          "passed": true
+        },
+        {
+          "name": "retry input is keyboard accessible; wrong file rejected",
+          "passed": true
+        },
+        {
+          "name": "lost response reconciles beyond five seconds without resubmission",
+          "passed": true
+        },
+        {
+          "name": "reload restores pending chat with the original key",
+          "passed": true
+        },
+        {
+          "name": "responsive viewport has no horizontal overflow",
+          "passed": true
+        }
+      ]
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "checks": [
+        {
+          "name": "source selection survives refresh/upload without expansion",
+          "passed": true
+        },
+        {
+          "name": "keyboard source navigation and Escape close",
+          "passed": true
+        },
+        {
+          "name": "deletion invalidates open source and historical citation",
+          "passed": true
+        },
+        {
+          "name": "retry input is keyboard accessible; wrong file rejected",
+          "passed": true
+        },
+        {
+          "name": "lost response reconciles beyond five seconds without resubmission",
+          "passed": true
+        },
+        {
+          "name": "reload restores pending chat with the original key",
+          "passed": true
+        },
+        {
+          "name": "responsive viewport has no horizontal overflow",
+          "passed": true
+        }
+      ]
+    }
+  ]
+}

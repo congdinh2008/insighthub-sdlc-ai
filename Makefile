@@ -1,0 +1,87 @@
+COMPOSE ?= docker compose
+PYTHON ?= python3
+API_URL ?= http://127.0.0.1:8107
+WEB_URL ?= http://127.0.0.1:3107
+
+.PHONY: trace-check trace-sample eval ai-bom delivery-report up down build test test-db test-backend test-web test-tools test-e2e test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
+up:
+	$(COMPOSE) up --build -d --wait
+
+down:
+	$(COMPOSE) --profile ollama --profile checks --profile mail down
+
+# Optional local mail catcher (Mailpit): SMTP 127.0.0.1:1025, UI http://127.0.0.1:8025
+mail-up:
+	$(COMPOSE) --profile mail up -d mailpit
+
+mail-down:
+	$(COMPOSE) --profile mail stop mailpit
+
+build:
+	$(COMPOSE) build api web
+
+test-db:
+	$(COMPOSE) up -d --wait postgres
+
+test-backend: test-db
+	$(COMPOSE) build api
+	$(COMPOSE) run --rm --no-deps -e RUN_DB_TESTS=1 -e TEST_SCHEMA_PATH=/tmp/init.sql -v "$(CURDIR)/infra/db/init.sql:/tmp/init.sql:ro" api python -m unittest discover -s tests -v
+
+test-web:
+	$(COMPOSE) build web-check
+	$(COMPOSE) --profile checks run --rm --no-deps web-check
+
+test-tools:
+	$(PYTHON) -m unittest discover -s scripts/tests -v
+
+# Maintainer only: delivery/package regression (see docs/maintainer/Release_Starter.md).
+test-release:
+	STARTER_RELEASE_CHECKS=1 $(PYTHON) -m unittest discover -s scripts/tests -v
+
+test-e2e:
+	cd web && npm run test:e2e
+
+test: test-backend test-web test-tools
+
+smoke:
+	$(PYTHON) scripts/smoke.py --api-url "$(API_URL)" --web-url "$(WEB_URL)"
+
+migrate:
+	$(COMPOSE) run --rm api python -c "from app.core.db import initialize_database,close_pool; initialize_database(); close_pool()"
+
+sbom:
+	$(PYTHON) scripts/generate_sbom.py
+
+package: sbom
+	$(PYTHON) scripts/package_starter.py
+
+verify-package:
+	$(PYTHON) scripts/verify_package.py
+
+aev:
+	$(PYTHON) scripts/run_aev.py --api-url "$(API_URL)"
+
+backup-restore-check:
+	$(PYTHON) scripts/backup_restore_check.py --project "$${COMPOSE_PROJECT_NAME:?Set COMPOSE_PROJECT_NAME}" --env-file "$${ENV_FILE:-.env.example}"
+
+# AI Engineering Kit (docs/ai/README.md)
+trace-check:
+	$(PYTHON) scripts/trace_check.py $(if $(GATE),--gate $(GATE),)
+
+trace-sample:
+	$(PYTHON) scripts/trace_sample.py --seed "$${SEED:?Set SEED, for example SEED=hv01-20261004}" --size "$${SIZE:-10}"
+
+eval:
+	$(PYTHON) evaluation/harness/run_eval.py --api-url "$(API_URL)" $(if $(SUITE),--suite $(SUITE),) $(if $(K),--k $(K),)
+
+ai-bom:
+	$(PYTHON) scripts/generate_ai_bom.py
+
+delivery-report:
+	$(PYTHON) scripts/delivery_report.py
+
+reranker-local-up:
+	TEI_IMAGE=$$(if [ "$$(uname -m)" = "arm64" ] || [ "$$(uname -m)" = "aarch64" ]; then echo ghcr.io/huggingface/text-embeddings-inference:cpu-arm64-1.9; else echo ghcr.io/huggingface/text-embeddings-inference:cpu-1.9; fi) docker compose -f infra/reranker/docker-compose.yml up -d
+
+reranker-local-down:
+	docker compose -f infra/reranker/docker-compose.yml down
