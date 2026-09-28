@@ -92,6 +92,31 @@ class ApprovedTestsGuardTests(unittest.TestCase):
             ok = subprocess.run([sys.executable, str(script), "--base", base], cwd=self.repo, capture_output=True, text=True)
             self.assertEqual(ok.returncode, 0, ok.stdout)
 
+    def test_new_test_can_be_approved_without_trailer_but_not_weakened(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            self.repo = Path(tmp)
+            self.git("init", "-q")
+            (self.repo / ".claude").mkdir()
+            (self.repo / ".claude/approved-tests.txt").write_text("# none yet\n")
+            self.commit("base")
+            base = self.git("rev-parse", "HEAD").strip()
+            script = ROOT / "scripts" / "check_approved_tests.py"
+            check = lambda: subprocess.run([sys.executable, str(script), "--base", base], cwd=self.repo, capture_output=True, text=True)  # noqa: E731
+            (self.repo / "tests").mkdir()
+            (self.repo / "tests/test_b.py").write_text("assert 1\n")
+            (self.repo / ".claude/approved-tests.txt").write_text("tests/test_b.py\n")
+            self.commit("test: add and approve red test")
+            self.assertEqual(check().returncode, 0)
+            (self.repo / "tests/test_b.py").write_text("assert 0\n")
+            self.commit("feat: agent weakened test")
+            self.assertEqual(check().returncode, 1)
+            self.git("reset", "-q", "--hard", "HEAD~1")
+            (self.repo / ".claude/approved-tests.txt").write_text("# removed\n")
+            self.commit("chore: drop approval")
+            result = check()
+            self.assertEqual(result.returncode, 1)
+            self.assertIn("removed patterns", result.stdout)
+
 
 class EvalHarnessTests(unittest.TestCase):
     def quiz_case(self):

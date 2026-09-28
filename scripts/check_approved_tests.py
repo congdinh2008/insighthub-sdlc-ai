@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """CI guard for test-as-spec (LR-13).
 
-Every commit in BASE..HEAD that changes an approved test (glob patterns in
-.claude/approved-tests.txt, union of base and head so a PR cannot drop a pattern
-to bypass the rule) or the pattern file itself must carry the trailer
-`Test-Change-Approved: <reason>` written by the learner.
+A test is approved once its glob pattern is in .claude/approved-tests.txt at the
+parent of a commit. Every commit in BASE..HEAD that changes an approved test, or
+removes a pattern from the list (weakening the guard), must carry the trailer
+`Test-Change-Approved: <reason>` written by the learner. Adding a new test and
+approving it (adding its pattern) needs no trailer.
 
 Usage: python3 scripts/check_approved_tests.py --base origin/main
 """
@@ -33,11 +34,14 @@ def patterns_at(ref):
 
 
 def violations(base, head="HEAD"):
-    patterns = patterns_at(base) | patterns_at(head)
     found = []
-    for sha in git("rev-list", f"{base}..{head}").split():
-        files = git("diff-tree", "--no-commit-id", "--name-only", "-r", sha).split()
-        guarded = [f for f in files if f == PATTERN_FILE or any(fnmatch.fnmatch(f, p) for p in patterns)]
+    for sha in reversed(git("rev-list", "--first-parent", f"{base}..{head}").split()):
+        parent = f"{sha}^"
+        before = patterns_at(parent)
+        files = git("diff", "--name-only", parent, sha).split()
+        guarded = [f for f in files if any(fnmatch.fnmatch(f, p) for p in before)]
+        if PATTERN_FILE in files and before - patterns_at(sha):
+            guarded.append(PATTERN_FILE + " (removed patterns: " + ", ".join(sorted(before - patterns_at(sha))) + ")")
         if not guarded:
             continue
         message = git("log", "-1", "--format=%B", sha)
@@ -52,6 +56,11 @@ def main():
     parser.add_argument("--base", required=True, help="Base ref, for example origin/main")
     parser.add_argument("--head", default="HEAD")
     args = parser.parse_args()
+    try:
+        git("rev-parse", "--verify", "--quiet", f"{args.base}^{{commit}}")
+    except subprocess.CalledProcessError:
+        print(f"FAIL: không tìm thấy base ref '{args.base}'. Chạy 'git fetch origin' hoặc checkout với fetch-depth: 0.")
+        return 2
     problems = violations(args.base, args.head)
     if problems:
         for sha, files in problems:
