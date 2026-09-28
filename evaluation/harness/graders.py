@@ -41,13 +41,16 @@ def citation_scope(case, out, allowed_document_ids):
 
 
 def claims_reference_citations(case, out):
-    if case["expected_status"] != out.get("status") or out.get("status") in ("NoEvidence", "Failed"):
+    """Grounded outputs must cite; NoEvidence/Failed outputs must not carry claims or citations."""
+    if out.get("status") in ("NoEvidence", "Failed"):
         ok = not out.get("claims") and not out.get("citations")
         return ok, "no claims/citations on NoEvidence/Failed" if ok else "NoEvidence/Failed must not carry claims or citations"
     ids = {c.get("citation_id") for c in out.get("citations", [])}
     claims = out.get("claims", [])
     bad = [c.get("text", "")[:40] for c in claims if not c.get("citation_ids") or not set(c["citation_ids"]) <= ids]
-    return bool(claims) and not bad, f"claims without valid citation: {bad}" if bad else f"{len(claims)} claims cite known citations"
+    if not claims:
+        return False, "grounded output has no claims"
+    return not bad, f"claims without valid citation: {bad}" if bad else f"{len(claims)} claims cite known citations"
 
 
 def forbidden_terms(case, out):

@@ -13,8 +13,21 @@ import argparse
 import re
 import sys
 
-from trace_lib import (COLUMNS, DRAFT_BY, MILESTONE_ORDER, REQUIREMENTS, RISKS, TIERS, TRACE, VERDICTS,
-                       VERIFICATION, VERIFY_METHODS, final_milestone, read_rows, requirement_scopes)
+from trace_lib import (
+    COLUMNS,
+    DRAFT_BY,
+    MILESTONE_ORDER,
+    REQUIREMENTS,
+    RISKS,
+    TIERS,
+    TRACE,
+    VERDICTS,
+    VERIFICATION,
+    VERIFY_METHODS,
+    final_milestone,
+    read_rows,
+    requirement_scopes,
+)
 
 COMMIT = re.compile(r"^[0-9a-f]{7,40}$")
 RISK_RANK = {"R1": 1, "R2": 2, "R3": 3}
@@ -33,7 +46,9 @@ def check(rows, fieldnames, scopes, gate=None):
     gate_index = MILESTONE_ORDER.index(gate) if gate else None
     for r in rows:
         ac = r["ac_id"]
-        err = lambda msg: errors.append(f"{ac}: {msg}")  # noqa: E731
+        def err(msg, ac=ac):
+            errors.append(f"{ac}: {msg}")
+
         if scopes and ac in scopes and r["scope"] != scopes[ac]:
             err(f"scope {r['scope']} khác Requirements ({scopes[ac]})")
         if r["tier"] not in TIERS:

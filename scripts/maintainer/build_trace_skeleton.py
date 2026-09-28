@@ -10,7 +10,8 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from trace_lib import COLUMNS, REQUIREMENTS, ROOT, TRACE as OUTPUT, write_rows  # noqa: E402
+from trace_lib import COLUMNS, REQUIREMENTS, ROOT, write_rows  # noqa: E402
+from trace_lib import TRACE as OUTPUT
 
 SRS = "docs/learner/02_SRS_InsightHub_v1.0.md"
 

@@ -24,4 +24,5 @@ Bản đồ Kit theo milestone: [docs/ai/README.md](docs/ai/README.md).
 - **Spec chain:** task lấy từ `specs/<feature>/tasks.md`; code khác plan thì cập nhật plan/tasks trong cùng PR và ghi lý do.
 - **PR:** dùng `.github/pull_request_template.md`, giữ diff khoảng 400 dòng trở xuống (không tính file sinh tự động) hoặc ghi lý do; điền mục AI usage và một dòng `docs/ai/delivery-log.csv` với số đo thật.
 - **Package mới:** kiểm package tồn tại trên registry chính thức, đúng tên và publisher, pin phiên bản trước khi thêm; không cài package chỉ vì AI đề xuất.
+- **Instructions lồng nhau:** `web/AGENTS.md` và `web/CLAUDE.md` do `next dev` của Next.js 16 sinh và tự thêm lại; giữ nguyên khối `nextjs-agent-rules`. Khi làm trong `web/`, đọc tài liệu Next.js đúng phiên bản tại `web/node_modules/next/dist/docs/` trước khi viết code.
 - **Migration và CI do agent sinh:** review theo [checklist](docs/ai/templates/Review_Checklist_Migration_CI.md) trước khi merge.

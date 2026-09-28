@@ -41,3 +41,6 @@ dist/
 
 # Archive receipt is provenance, not source for a rebuilt archive.
 PACKAGE_MANIFEST.json
+
+# Next.js regenerates this file on build/dev (content differs per mode)
+next-env.d.ts
