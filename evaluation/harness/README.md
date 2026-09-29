@@ -25,5 +25,5 @@ Sau khi thêm Auth, đặt session cookie của tài khoản test A trong shell:
 - Cố định nguồn, input và `expected_points` **trước** khi chạy; sửa expected thì tăng `version` của suite và ghi lý do.
 - Grader bằng code chỉ kiểm phần máy kiểm được. Report luôn có `semantic_review: pending`; người kiểm đối chiếu từng claim, câu hỏi, lựa chọn, đáp án, giải thích với nguồn và ghi verdict vào report đã review. Không dùng LLM-as-judge làm căn cứ duy nhất.
 - Lượt lặp báo pass^k (k = 2: đạt khi cả hai lần đạt). Giữ mọi lượt, kể cả lượt lỗi.
-- Fixture chỉ kiểm pipeline (`--allow-fixture`), không phải bằng chứng chất lượng nội dung.
+- Fixture chỉ kiểm pipeline (`--allow-fixture`), không phải evidence chất lượng nội dung.
 - Replay dùng được trong CI để chống regression của grader và parser trên output đã ghi.

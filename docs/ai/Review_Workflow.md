@@ -32,10 +32,10 @@ Claude Code GitHub Actions với token subscription (`claude setup-token`, secre
 
 ## Không dùng trong khóa
 
-Dịch vụ Code Review managed (`@claude review`) chỉ dành cho gói Team/Enterprise và tính phí theo lượt review. Học viên có thể nêu như phương án cấp tổ chức trong kế hoạch áp dụng 30 ngày.
+Dịch vụ managed Code Review của Anthropic chỉ dành cho gói Team/Enterprise, tính phí theo mức sử dụng và không chặn merge. Học viên có thể nêu như phương án cấp tổ chức trong kế hoạch áp dụng 30 ngày.
 
-## Mapping ChatGPT/Codex
+## Dùng công cụ AI khác
 
-Học viên dùng Codex thay Claude: chạy tính năng code review của Codex trên cùng PR, áp dụng nguyên các bước 1, 4, 5.
+Học viên dùng công cụ khác Claude (ví dụ Codex): chạy tính năng code review tương ứng của công cụ đó trên cùng PR, áp dụng nguyên các bước 1, 4, 5. Lệnh cụ thể theo Tool Profile của công cụ do giảng viên cung cấp.
 
 Tên lệnh và tùy chọn có thể thay đổi theo phiên bản Claude Code; phiên bản được kiểm cho lớp ghi trong Tool Readiness do giảng viên cung cấp.

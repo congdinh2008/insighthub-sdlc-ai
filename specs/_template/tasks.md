@@ -2,7 +2,7 @@
 
 Plan: [plan.md](plan.md) phiên bản <x.y>
 
-| # | Task | AC | File/thư mục được sửa | Test đã duyệt cần đạt | Lệnh kiểm | Điểm dừng | Trạng thái | PR |
+| # | Task | AC | File/thư mục được sửa | Test đã duyệt cần đạt | Lệnh kiểm | Stop condition | Trạng thái | PR |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | T1 | | | | | | | Todo | |
 

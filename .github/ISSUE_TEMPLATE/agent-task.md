@@ -11,8 +11,8 @@ labels: agent-task
 **Phạm vi được phép:** thư mục/file được sửa; lệnh được chạy; dữ liệu được dùng
 **Ngoài phạm vi:** không sửa test đã duyệt, migration cũ, cấu hình CI, `.env`
 
-**Lệnh kiểm và kết quả kỳ vọng:**
+**Lệnh kiểm và expected result (kết quả kỳ vọng):**
 
-**Điểm dừng:** dừng và hỏi khi cần đổi ngoài phạm vi, test đã duyệt thất bại vì spec hoặc cần quyền mới
+**Stop condition (điều kiện dừng):** dừng và hỏi khi cần đổi ngoài phạm vi, test đã duyệt thất bại vì spec hoặc cần quyền mới
 
 **Người review và hạn:**

@@ -2,9 +2,9 @@
 
 **Starter cho ứng dụng khai thác tài liệu bằng AI, phục vụ thực hành phát triển phần mềm xuyên suốt SDLC.**
 
-InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa và hỏi đáp có nguồn trích dẫn bằng Retrieval-Augmented Generation (RAG). Từ nền này, học viên phát triển sản phẩm cá nhân qua các giai đoạn phân tích yêu cầu, thiết kế, lập trình, kiểm thử, phát hành và bảo trì trong chương trình **B2B C07 - SDLC with AI**.
+InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa và hỏi đáp có nguồn trích dẫn bằng Retrieval-Augmented Generation (RAG). Từ nền này, học viên phát triển sản phẩm cá nhân qua các giai đoạn phân tích yêu cầu, thiết kế, lập trình, test, phát hành và bảo trì trong chương trình **B2B C07 - SDLC with AI**.
 
-**Runtime nền:** `v1.0.0-rc.3` · **Requirements:** `1.1 Draft`, revision 28/09/2026 (phát hành sau diễn tập M3) · **Starter revision:** 28/09/2026 (AI Engineering Kit, bảng trace, eval harness, hướng dẫn Auth) · **Chủ dự án:** Đinh Xuân Công
+**Runtime nền:** `v1.0.0-rc.3` · **Requirements:** `1.1 Draft`, revision 29/09/2026 (phát hành sau diễn tập M3) · **Starter revision:** 29/09/2026 (AI Engineering Kit, traceability matrix (bảng truy vết), eval harness, hướng dẫn Auth) · **Chủ dự án:** Đinh Xuân Công
 
 [Hướng dẫn cài đặt](GETTING_STARTED.md) · [Yêu cầu bài tập](docs/learner/01_Requirements_InsightHub.md) · [Kiến trúc](docs/Architecture_Starter_v1.md) · [API](docs/API_Contract_Starter_v1.md)
 
@@ -12,11 +12,11 @@ InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa v
 
 ### Chức năng có sẵn
 
-- **Quản lý tài liệu:** tải tệp TXT, Markdown và PDF; xem trạng thái xử lý, nội dung nguồn, lịch sử thử lại và xóa tài liệu.
-- **Xử lý và lập chỉ mục:** trích xuất văn bản, chia đoạn, tạo embedding và lưu vào PostgreSQL/pgvector; giữ tệp gốc, vị trí nguồn và mã băm SHA-256.
+- **Quản lý tài liệu:** tải file TXT, Markdown và PDF; xem trạng thái xử lý, nội dung nguồn, lịch sử thử lại và xóa tài liệu.
+- **Xử lý và lập chỉ mục:** trích xuất văn bản, chia đoạn, tạo embedding và lưu vào PostgreSQL/pgvector; giữ file gốc, vị trí nguồn và mã băm SHA-256.
 - **Hỏi đáp có căn cứ:** truy xuất trong tập tài liệu được chọn, tạo câu trả lời kèm trích dẫn và trả trạng thái `NoEvidence` khi không đủ căn cứ.
-- **Kiểm soát tác vụ:** idempotency cho upload, retry, delete và chat; giới hạn thời gian xử lý; đối soát kết quả khi trình duyệt mất phản hồi.
-- **Vận hành và kiểm chứng:** health check, readiness, log theo request, metrics, migration, bộ kiểm thử, công cụ đánh giá AI và diễn tập sao lưu/khôi phục.
+- **Kiểm soát operation:** idempotency cho upload, retry, delete và chat; giới hạn thời gian xử lý; đối soát kết quả khi trình duyệt mất phản hồi.
+- **Vận hành và kiểm chứng:** health check, readiness, log theo request, metrics, migration, bộ test, công cụ đánh giá AI và diễn tập sao lưu/khôi phục.
 
 ### Phần học viên phát triển
 
@@ -30,9 +30,9 @@ InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa v
 | Note | Tạo, xem, sửa, xóa; lưu câu trả lời hoặc Summary thành bản sao độc lập có provenance. |
 | Summary | Chọn nguồn/độ dài, tạo nội dung có căn cứ, lưu và mở lại, chuyển thành Note. |
 | Quiz | Tạo đề, làm/nộp bài, chấm tại server, bảo vệ đáp án và lưu lịch sử lần làm. |
-| AI Job và Output | Theo dõi tác vụ, xem/lọc/rename/regenerate/delete kết quả; kiểm quota, idempotency, deadline và nguồn bị xóa. |
+| AI Job và Output | Theo dõi AI job, xem/lọc/rename/regenerate/delete kết quả; kiểm quota, idempotency, deadline và nguồn bị xóa. |
 
-Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các chức năng dùng chung trong bảng trên. Mindmap, Slide và Báo cáo chỉ được triển khai ở giai đoạn mở rộng cuối khi mentor cho phép. Học viên còn thực hiện UI/UX, test, release local/sandbox và một thay đổi sau phát hành; phạm vi có 151 AC áp dụng trong [bảng truy vết](docs/learner/01_Requirements_InsightHub.md#pham-vi-truy-vet). AC được phân tầng Core (chấm) và Extended (Stretch, không trừ điểm); danh sách Core công bố trước M3, trước đó giữ trạng thái như Requirements 1.0 ([Core và Extended](docs/learner/01_Requirements_InsightHub.md#core-extended)).
+Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các chức năng dùng chung trong bảng trên. Mindmap, Slide và Báo cáo chỉ được triển khai ở giai đoạn mở rộng cuối khi mentor cho phép. Học viên còn thực hiện UI/UX, test, release local/sandbox và một thay đổi sau phát hành; phạm vi có 151 AC áp dụng trong [traceability matrix](docs/learner/01_Requirements_InsightHub.md#pham-vi-truy-vet). AC được phân tầng Core (chấm) và Extended (Stretch, không trừ điểm); danh sách Core công bố trước M3, trước đó giữ trạng thái như Requirements 1.0 ([Core và Extended](docs/learner/01_Requirements_InsightHub.md#core-extended)).
 
 [Requirements](docs/learner/01_Requirements_InsightHub.md) là tài liệu giao việc chính, gồm chức năng, 29 công việc, mười milestone, dữ liệu/API, rubric và evidence. [Ma trận tiến độ sản phẩm](docs/learner/01_Requirements_InsightHub.md#ma-tran-chuc-nang) chỉ rõ mức hoàn thành từng nhóm: M3.1 chạy hành trình Auth - Notebook - Document - Chat; M3 hoàn thiện phạm vi; M4 kiểm tổng hợp; M5 phát hành R1 rồi thực hiện thay đổi R1.1. Mỗi milestone nối kết quả sản phẩm với cách áp dụng SDLC và AI.
 
@@ -49,7 +49,7 @@ Repository có sẵn khung để dự án vận hành AI một cách có kiểm 
 | Quy tắc agent, quyền, hook | `AGENTS.md`, `CLAUDE.md`, `.claude/` |
 | Template context pack, Charter, skill, subagent, checklist review | `docs/ai/templates/` |
 | PR template (AI usage, DoD), issue template (tính năng, task giao agent, lỗi) | `.github/` |
-| Bảng truy vết 163 AC, mức rủi ro, lấy mẫu có seed | `trace/`, `scripts/trace_check.py`, `scripts/trace_sample.py` |
+| Traceability matrix 163 AC, mức rủi ro, lấy mẫu có seed | `trace/`, `scripts/trace_check.py`, `scripts/trace_sample.py` |
 | Spec chain Specify, Plan, Tasks | `specs/` |
 | Eval harness: golden set, grader bằng code, pass^k | `evaluation/harness/`, `make eval` |
 | AI Delivery Log, báo cáo KPI, AI-BOM | `docs/ai/delivery-log.csv`, `make delivery-report`, `make ai-bom` |
@@ -66,7 +66,7 @@ Starter hiện dành cho môi trường phát triển local, chưa có xác th�
 | Docker | Học viên tự chuẩn bị trên máy cá nhân: Docker Desktop, Docker Engine hoặc phương án tương thích (Colima, OrbStack, Podman) có Docker Compose v2; đang chạy trước khi khởi động ứng dụng. Windows dùng WSL2 theo [hướng dẫn Windows](GETTING_STARTED.md#windows-wsl2). |
 | Tài nguyên | Khoảng 3 GiB RAM trống (tổng `mem_limit` của các service khoảng 2,3 GiB, cộng thêm khi build); cổng `3107` và `8107` chưa được sử dụng. |
 | Kết nối mạng | Cần cho lần tải image và cài dependency đầu tiên. Luồng AI ở chế độ fixture không gọi dịch vụ bên ngoài. |
-| Công cụ kiểm tra | Python 3.11+ và Make để chạy script/kiểm thử; Node.js 24.20.0 khi chạy browser E2E trên máy. |
+| Công cụ kiểm tra | Python 3.11+ và Make để chạy script/test; Node.js 24.20.0 khi chạy browser E2E trên máy. |
 
 Chạy ứng dụng bằng Docker không yêu cầu cài riêng Python hoặc Node.js trên máy.
 
@@ -90,7 +90,7 @@ cp .env.example .env
 docker compose --env-file .env -p insighthub-c07-starter up --build -d --wait
 ```
 
-Mặc định `RAG_MODE=fixture`: không cần API key, dùng dữ liệu và phản hồi kiểm thử để xác nhận luồng ứng dụng.
+Mặc định `RAG_MODE=fixture`: không cần API key, dùng dữ liệu và phản hồi test để xác nhận luồng ứng dụng.
 
 | Địa chỉ | Mục đích |
 | --- | --- |
@@ -101,7 +101,7 @@ Mặc định `RAG_MODE=fixture`: không cần API key, dùng dữ liệu và ph
 
 ### 4. Thử luồng đầu tiên
 
-1. Mở giao diện Web, tải một tệp trong [`sample-docs/`](sample-docs/README.md).
+1. Mở giao diện Web, tải một file trong [`sample-docs/`](sample-docs/README.md).
 2. Chờ tài liệu chuyển sang trạng thái sẵn sàng và chọn tài liệu làm nguồn.
 3. Nhập câu hỏi, xem phản hồi và mở nguồn trích dẫn.
 4. Nếu đã cài Python, chạy smoke test:
@@ -125,10 +125,10 @@ Lệnh này giữ dữ liệu trong Docker volume. Không thêm `-v` khi cần g
 | Lớp | Công nghệ | Vai trò |
 | --- | --- | --- |
 | Web | Next.js, React, TypeScript | Giao diện tài liệu, hỏi đáp và xem nguồn; chuyển tiếp yêu cầu tới API. |
-| API | FastAPI, Python | Xử lý tài liệu, retrieval, giao tiếp AI và kiểm soát tác vụ. |
+| API | FastAPI, Python | Xử lý tài liệu, retrieval, giao tiếp AI và kiểm soát operation. |
 | Dữ liệu | PostgreSQL 16, pgvector | Lưu dữ liệu tài liệu, vector và trạng thái xử lý. |
 | AI thật | DeepSeek, Gemini | DeepSeek sinh câu trả lời; Gemini tạo embedding. Reranker mặc định tắt. |
-| Môi trường và kiểm thử | Docker Compose, unittest, Node test runner, Playwright, GitHub Actions | Chạy local và kiểm chứng các luồng kỹ thuật. |
+| Môi trường và test | Docker Compose, unittest, Node test runner, Playwright, GitHub Actions | Chạy local và kiểm chứng các luồng kỹ thuật. |
 
 Phiên bản dependency cụ thể được pin trong Dockerfile và các lockfile của repository.
 
@@ -141,7 +141,7 @@ flowchart LR
     API -. Chế độ real .-> Generation[DeepSeek: câu trả lời]
 ```
 
-Luồng nhập tài liệu xử lý đồng bộ: kiểm tra tệp, trích xuất, chia đoạn, tạo embedding và lưu dữ liệu. API trả `201 Created` sau khi xử lý thành công. Khi hỏi đáp, API truy xuất trong tập nguồn đã chọn, tạo câu trả lời và kiểm trích dẫn trước khi trả kết quả.
+Luồng nhập tài liệu xử lý đồng bộ: kiểm tra file, trích xuất, chia đoạn, tạo embedding và lưu dữ liệu. API trả `201 Created` sau khi xử lý thành công. Khi hỏi đáp, API truy xuất trong tập nguồn đã chọn, tạo câu trả lời và kiểm trích dẫn trước khi trả kết quả.
 
 Xem [kiến trúc chi tiết](docs/Architecture_Starter_v1.md), [hợp đồng API của Starter](docs/API_Contract_Starter_v1.md) và [các quyết định kiến trúc](docs/adr/).
 
@@ -191,10 +191,10 @@ Phần Auth/Email dùng mail catcher Mailpit chạy local (Compose profile `mail
 │   ├── ai/                      # AI Engineering Kit: bản đồ, review workflow, template, delivery log
 │   ├── learner/                 # Một Requirements, một SRS, một ZIP API/Schema
 │   ├── security/                # Template threat model
-│   └── release/                 # Checklist, SBOM, template release note và bằng chứng kiểm
+│   └── release/                 # Checklist, SBOM, template release note và evidence kiểm
 ├── evaluation/                  # Corpus, AEV-01 và eval harness (golden set, grader, pass^k)
 ├── specs/                       # Specify, Plan, Tasks theo tính năng
-├── trace/                       # Bảng truy vết AC xuyên khóa
+├── trace/                       # Traceability matrix AC xuyên khóa
 ├── sample-docs/                 # Tài liệu mẫu để thử ứng dụng
 ├── scripts/                     # Smoke, evaluation, backup/restore và đóng gói
 ├── .claude/                     # settings.json (deny, hook), hooks/, approved-tests.txt
@@ -206,11 +206,11 @@ Phần Auth/Email dùng mail catcher Mailpit chạy local (Compose profile `mail
 └── starter.manifest.json        # Metadata của phiên bản Starter
 ```
 
-## Kiểm thử và kiểm tra thay đổi
+## Test và kiểm tra thay đổi
 
 Chạy các lệnh từ thư mục gốc repository.
 
-**Backend, Web và công cụ hỗ trợ:** dùng Compose project kiểm thử riêng, giữ chế độ fixture.
+**Backend, Web và công cụ hỗ trợ:** dùng Compose project test riêng, giữ chế độ fixture.
 
 ```sh
 make COMPOSE="docker compose --env-file .env.example -p insighthub-c07-check" test
@@ -235,8 +235,8 @@ git diff --check
 
 ## Giới hạn và lưu ý khi mở rộng
 
-- Giới hạn mặc định: **10 MiB/tệp**, **100 trang PDF**, **200.000 ký tự trích xuất**; thời hạn xử lý ingestion **120 giây**, chat **60 giây**.
-- Idempotency mặc định lưu trong **24 giờ** để đối soát tác vụ. Học viên cần thiết kế riêng việc lưu hội thoại, ghi chú và kết quả AI theo yêu cầu nghiệp vụ.
+- Giới hạn mặc định: **10 MiB/file**, **100 trang PDF**, **200.000 ký tự trích xuất**; thời hạn xử lý ingestion **120 giây**, chat **60 giây**.
+- Idempotency mặc định lưu trong **24 giờ** để đối soát operation. Học viên cần thiết kế riêng việc lưu hội thoại, ghi chú và kết quả AI theo yêu cầu nghiệp vụ.
 - Quyền sở hữu dữ liệu phải do server xác lập. Không tin `owner_id` từ client hoặc tự gán dữ liệu Starter cho tài khoản đăng ký đầu tiên.
 - Thay đổi schema dùng forward migration. Khi thay model/dimension embedding, cần kế hoạch lập lại chỉ mục hoặc migration tương ứng.
 - Bộ fixture kiểm hành vi phần mềm; đánh giá chất lượng nội dung AI cần chạy với provider thật và kiểm từng kết quả theo nguồn.
@@ -247,7 +247,7 @@ git diff --check
 | --- | --- |
 | Cài đặt, fork repository và chạy ứng dụng | [Getting Started](GETTING_STARTED.md) |
 | Bắt đầu bài tập, xem lộ trình và cách nộp | [Requirements học viên 1.1 Draft](docs/learner/01_Requirements_InsightHub.md) |
-| Tra hành vi sản phẩm và tiêu chí chấp nhận | [SRS InsightHub v1.0](docs/learner/02_SRS_InsightHub_v1.0.md) |
+| Tra hành vi sản phẩm và acceptance criteria (AC) | [SRS InsightHub v1.0](docs/learner/02_SRS_InsightHub_v1.0.md) |
 | Thiết kế dữ liệu, API và tích hợp phần mở rộng | [Hướng dẫn tích hợp](docs/learner/01_Requirements_InsightHub.md#data-api) |
 | Hiểu mã nguồn nền và giao tiếp hiện có | [Kiến trúc](docs/Architecture_Starter_v1.md), [API Starter](docs/API_Contract_Starter_v1.md) |
 | Chọn cấu hình AI và kiểm chất lượng | [Model Profiles](docs/Model_Profiles_And_Reranking.md), [Evaluation](evaluation/README.md) |
@@ -256,7 +256,7 @@ git diff --check
 | Chọn module legacy cho characterization/refactor | [Module legacy](docs/Legacy_Modules.md) |
 | Thành phần AI Engineering Kit theo milestone | [AI Engineering Kit](docs/ai/README.md), [Review Workflow](docs/ai/Review_Workflow.md) |
 | Tích hợp Auth, Google và email | [Hướng dẫn Auth](docs/Auth_Integration_Guide.md) |
-| Bảng truy vết và kiểm chứng theo rủi ro | [trace/README](trace/README.md) |
+| Traceability matrix và kiểm chứng theo rủi ro | [trace/README](trace/README.md) |
 | Spec chain và eval harness | [specs/README](specs/README.md), [Eval harness](evaluation/harness/README.md) |
 | Template ADR, threat model, release note | [ADR](docs/adr/ADR-000-Template.md), [Threat model](docs/security/Threat_Model_Template.md), [Release note](docs/release/Release_Notes_Template.md) |
 

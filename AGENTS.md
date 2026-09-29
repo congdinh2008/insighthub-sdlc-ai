@@ -6,7 +6,7 @@
 - Giữ kiến trúc đồng bộ Web/API/PostgreSQL và HTTP 201 sau ingestion thành công, trừ khi có quyết định mới được ghi bằng ADR.
 - Không làm yếu checksum, embedding identity, idempotency, deadline, citation validation, locks hoặc transaction để test pass.
 - Mọi thay đổi schema dùng forward migration. Không yêu cầu xóa volume như cách nâng cấp.
-- Giữ fixture hoàn toàn offline. Không gọi provider trả phí, tải model hoặc gửi tài liệu ra ngoài khi chưa có chỉ dẫn phù hợp.
+- Giữ fixture hoàn toàn offline. Không gọi provider trả phí, tải model hoặc gửi tài liệu ra ngoài khi chưa có hướng dẫn phù hợp.
 - Auth/Notebook là extension của học viên. Policy ownership phải do server xác lập; không tin owner do client gửi và không tự nhận dữ liệu nền cho user đầu tiên.
 - Không log credentials, toàn văn tài liệu, prompt có nội dung nguồn hoặc provider body thô.
 - Dùng Compose namespace riêng. Không thao tác container hoặc volume của project khác.
@@ -19,7 +19,7 @@
 
 Bản đồ Kit theo milestone: [docs/ai/README.md](docs/ai/README.md).
 
-- **Truy vết:** `trace/ac-trace.csv` là bảng truy vết duy nhất. Chỉ triển khai AC đã `Human-verified`; bản nháp AI ghi `draft_by=AI`. Không ghi `Passed` khi thiếu commit và evidence. Chạy `python3 scripts/trace_check.py` trước khi báo xong.
+- **Truy vết:** `trace/ac-trace.csv` là traceability matrix duy nhất. Chỉ triển khai AC đã `Human-verified`; bản nháp AI ghi `draft_by=AI`. Không ghi `Passed` khi thiếu commit và evidence. Chạy `python3 scripts/trace_check.py` trước khi báo xong.
 - **Test-as-spec:** không sửa test liệt kê trong `.claude/approved-tests.txt`. Test đã duyệt chỉ được học viên sửa trong commit riêng có trailer `Test-Change-Approved: <lý do>`; CI kiểm bằng `scripts/check_approved_tests.py`.
 - **Spec chain:** task lấy từ `specs/<feature>/tasks.md`; code khác plan thì cập nhật plan/tasks trong cùng PR và ghi lý do.
 - **PR:** dùng `.github/pull_request_template.md`, giữ diff khoảng 400 dòng trở xuống (không tính file sinh tự động) hoặc ghi lý do; điền mục AI usage và một dòng `docs/ai/delivery-log.csv` với số đo thật.

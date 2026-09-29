@@ -47,7 +47,7 @@ Khi chưa làm liên kết Google, đăng nhập Google bằng email trùng tài
 ## 5. Chuẩn bị và dữ liệu
 
 - Tài khoản Google và email **test riêng** cho khóa học; OAuth client ở chế độ testing với danh sách test user; callback trên `localhost`.
-- Mailpit cho kiểm local (`make mail-up`); bằng chứng thư nhận thật gửi tới inbox test theo Requirements mục 14.
+- Mailpit cho kiểm local (`make mail-up`); evidence thư nhận thật gửi tới inbox test theo Requirements mục 14.
 - Client secret chỉ nằm trong `.env`; không dán vào Claude, log, issue hoặc ảnh chụp.
 
 ## 6. Điểm kiểm tối thiểu trước khi báo Auth đạt

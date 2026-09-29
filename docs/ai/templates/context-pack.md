@@ -24,7 +24,7 @@ Cập nhật: <ngày> | Commit: <SHA> | Người duy trì: <tên>
 
 ## 4. Phần loại khỏi ngữ cảnh và lý do
 
-- `.env`, API key, token: bí mật (Charter mức Confidential)
+- `.env`, API key, token: secret (Charter mức Confidential)
 - <tài liệu cũ, phần SRS ngoài phạm vi: Mindmap, Slide, Báo cáo>
 
 ## 5. A/B có đo
