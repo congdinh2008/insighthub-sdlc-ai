@@ -7,9 +7,9 @@
 1. **Tự review trước.** Tác giả rà 4 góc Correctness, Security, Convention, Design theo checklist trong PR template.
 2. **Tách writer và reviewer.** Mở **session Claude Code mới** (không dùng session đã viết code), chạy:
    ```text
-   /code-review <số PR> --comment
+   /code-review --comment <số PR>
    ```
-   Lệnh review chạy như subagent có context riêng và đăng finding thành inline comment trên PR qua GitHub CLI (`gh auth login` trước). Review đọc `CLAUDE.md`/`AGENTS.md`, vì vậy quy tắc review của dự án đặt trong các file này.
+   Cờ `--comment` đứng trước số PR: phần sau mức và cờ được đọc là đích review. Lệnh review chạy như subagent có context riêng và đăng finding thành inline comment trên PR qua GitHub CLI (`gh auth login` trước). Review đọc `CLAUDE.md`/`AGENTS.md`, vì vậy quy tắc review của dự án đặt trong các file này.
 3. **Review bảo mật khi cần.** PR chạm Auth, session, quyền, upload, prompt, log hoặc dữ liệu cá nhân: chạy thêm `/security-review` và đính kết quả vào PR.
 4. **Phân loại từng finding.**
 

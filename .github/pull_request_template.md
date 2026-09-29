@@ -27,7 +27,7 @@ Commit đã kiểm: <SHA>
 ## Review
 
 - [ ] Tự review 4 góc: Correctness, Security, Convention, Design (trước khi chạy AI reviewer)
-- [ ] `/code-review <số PR> --comment` chạy trong session mới; finding đã phân loại Fix / Reject / Defer
+- [ ] `/code-review --comment <số PR>` chạy trong session mới; finding đã phân loại Fix / Reject / Defer
 - [ ] `/security-review` nếu PR chạm Auth, quyền, upload, prompt, log hoặc dữ liệu cá nhân
 - [ ] Ít nhất một finding AI được xác minh bằng phép kiểm độc lập
 
