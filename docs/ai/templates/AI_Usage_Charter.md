@@ -28,4 +28,4 @@ Luật Trí tuệ nhân tạo 134/2025/QH15; Luật Bảo vệ dữ liệu cá n
 
 ## 6. Prompt injection
 
-Control nào trong Charter hoặc quyền công cụ chặn được chỉ dẫn trong `evaluation/corpus/04_injection_vi.md`.
+Control nào trong Charter hoặc quyền công cụ chặn được instruction (chỉ dẫn) độc hại trong `evaluation/corpus/04_injection_vi.md`.

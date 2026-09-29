@@ -1,6 +1,6 @@
-# Bảng truy vết AC và kiểm chứng theo rủi ro
+# Traceability matrix AC và kiểm chứng theo rủi ro
 
-`ac-trace.csv` là **một bảng truy vết xuyên khóa** cho 163 AC (151 áp dụng, 12 ngoài phạm vi), thay cho việc tự dựng bảng ở LR-08. Cột bên trái do giảng viên cấp; cột bên phải học viên điền dần từ M2.1 đến M5. Cách ghi theo [Requirements mục 16.1](../docs/learner/01_Requirements_InsightHub.md#bang-ket-qua).
+`ac-trace.csv` là **một traceability matrix (bảng truy vết) xuyên khóa** cho 163 AC (151 áp dụng, 12 ngoài phạm vi), thay cho việc tự dựng bảng ở LR-08. Cột bên trái do giảng viên cấp; cột bên phải học viên điền dần từ M2.1 đến M5. Cách ghi theo [Requirements mục 16.1](../docs/learner/01_Requirements_InsightHub.md#bang-ket-qua).
 
 ## Cột
 
@@ -10,7 +10,7 @@
 | Giảng viên cấp | `tier` | `Core` (chấm), `Extended` (Stretch), `Pending` (chờ công bố danh sách Core), `OutOfScope` |
 | Giảng viên cấp | `risk_suggested` | Mức rủi ro gợi ý R1/R2/R3 |
 | Học viên | `risk`, `risk_reason` | Mức rủi ro áp dụng; hạ mức so với gợi ý phải ghi lý do |
-| Học viên | `branches`, `expected` | Nhánh cần kiểm, input và kết quả kỳ vọng theo SRS |
+| Học viên | `branches`, `expected` | Nhánh cần kiểm, input và expected result theo SRS |
 | Học viên | `draft_by` | `AI` nếu AI viết nháp, `Human` nếu tự viết |
 | Học viên | `verification`, `verified_by`, `verify_method` | `Unverified` hoặc `Human-verified`; người kiểm; `SRS-crosscheck`, `Test`, `Sample`, `Review` |
 | Học viên | `design_ref`, `test_ids`, `actual`, `commit`, `evidence`, `verdict`, `notes` | Thiết kế, test, kết quả thực tế, commit đã kiểm, minh chứng, kết luận |
@@ -21,7 +21,7 @@
 
 | Mức | Tiêu chí | Cách kiểm |
 | --- | --- | --- |
-| R1 | Auth/session, ownership, lộ hoặc mất dữ liệu, lộ đáp án Quiz, grounding/NoEvidence, bí mật trong log | Kiểm sâu 100%; `Passed` cần evidence trực tiếp có `test_ids` |
+| R1 | Auth/session, ownership, lộ hoặc mất dữ liệu, lộ đáp án Quiz, grounding/NoEvidence, secret trong log | Kiểm sâu 100%; `Passed` cần evidence trực tiếp có `test_ids` |
 | R2 | Vòng đời, trạng thái, idempotency, CRUD, luồng UI chính, schema output | Kiểm đủ trước khi giao agent; evidence dùng chung được nếu có mapping |
 | R3 | Nội dung thông báo, avatar, tài liệu API, hồ sơ bàn giao | Checklist hoặc lấy mẫu |
 

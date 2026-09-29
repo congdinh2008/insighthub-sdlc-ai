@@ -1,6 +1,6 @@
 # AI Engineering Kit của InsightHub
 
-Kit là phần repository ghi lại **cách dự án làm việc với AI**: quy tắc, ngữ cảnh, quyền, skill, hook, subagent, quy trình review, đặc tả, đánh giá và số đo. Mỗi milestone thêm hoặc hoàn thiện một thành phần trong output của LR hiện có; không tạo bài nộp riêng. Đến Capstone, học viên trình bày Kit như một tài sản có thể mang sang dự án thật (với công cụ và dữ liệu được Samsung SDS phê duyệt).
+Kit là phần repository ghi lại **cách dự án làm việc với AI**: quy tắc, ngữ cảnh, quyền, skill, hook, subagent, quy trình review, spec, đánh giá và số đo. Mỗi milestone thêm hoặc hoàn thiện một thành phần trong output của LR hiện có; không tạo bài nộp riêng. Đến Capstone, học viên trình bày Kit như một tài sản có thể mang sang dự án thật (với công cụ và dữ liệu được Samsung SDS phê duyệt).
 
 ## Bản đồ theo milestone
 

@@ -1,6 +1,6 @@
 # Hướng dẫn lint và scan cho M1
 
-Rubric M1 chấm "kiểm thử và lint thực chạy" và "quét bí mật, kiểm thư viện". Starter chỉ có sẵn test, smoke, E2E và `npm audit` trong [App CI](../.github/workflows/app-ci.yml). **Lint và scan là phần học viên tự thêm** vào fork. Cấu hình dưới đây là gợi ý, chưa bật trong Starter.
+Rubric M1 chấm "test và lint thực chạy" và "secret scan, dependency scan". Starter chỉ có sẵn test, smoke, E2E và `npm audit` trong [App CI](../.github/workflows/app-ci.yml). **Lint và scan là phần học viên tự thêm** vào fork. Cấu hình dưới đây là gợi ý, chưa bật trong Starter.
 
 ## Baseline Starter có finding sẵn
 

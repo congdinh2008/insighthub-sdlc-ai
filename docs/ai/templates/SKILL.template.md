@@ -4,7 +4,7 @@ description: <Một câu: khi nào dùng skill này trong InsightHub, đầu và
 allowed-tools: Read, Grep, Glob
 ---
 
-<!-- Template K4. Đặt tại .claude/skills/<ten-skill>/SKILL.md. Chỉ cấp tool cần cho tác vụ; mở quyền sửa khi thật cần. -->
+<!-- Template K4. Đặt tại .claude/skills/<ten-skill>/SKILL.md. Chỉ cấp tool cần cho task; mở quyền sửa khi thật cần. -->
 
 # <Tên skill>
 
@@ -23,7 +23,7 @@ allowed-tools: Read, Grep, Glob
 
 - Định dạng, file đích, schema kiểm được
 
-## Điểm dừng
+## Stop condition (điều kiện dừng)
 
 - Dừng và hỏi học viên khi: <thiếu nguồn, cần quyền mới, xung đột với test đã duyệt>
 

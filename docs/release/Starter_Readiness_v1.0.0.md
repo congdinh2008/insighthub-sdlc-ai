@@ -2,7 +2,7 @@
 
 Ngày đánh giá: 19/09/2026. Technical candidate `v1.0.0-rc.3`. Phạm vi: nền RAG được cấp cho C07; chưa phải sản phẩm hoàn chỉnh hoặc quyết định phát hành lớp.
 
-| Gate | Kết quả | Bằng chứng và giới hạn |
+| Gate | Kết quả | Evidence và giới hạn |
 | --- | --- | --- |
 | Baseline/contract | Đạt kiểm kỹ thuật | [SRS v1.0 bản học viên](../learner/02_SRS_InsightHub_v1.0.md) nằm trong repo; 72 yêu cầu/163 AC được mapping; validator kiểm version/hash/link. SRS v1.0 phê duyệt làm baseline khóa học R1 ngày 27/09/2026 (D11), có banner phạm vi bài tập. |
 | Backend/data | Đạt | 86 backend tests: lỗi terminal, deadline cả SQL/lock, replay nguồn đã xóa, Markdown heading/table/code, failed/pending dedup; forward migration 002. |
@@ -13,7 +13,7 @@ Ngày đánh giá: 19/09/2026. Technical candidate `v1.0.0-rc.3`. Phạm vi: n�
 | Học liệu đầu khóa | Đã biên soạn Draft | Learning Contract, PRE B1-B2, B1-B10/milestones, mapping, rubric/evidence, desk spike Auth/email. |
 | Vận hành lớp | Chưa xác nhận | Pilot với Developer đại diện, Google OAuth bằng client/tài khoản lớp, lựa chọn email sandbox/hai tool và rubric calibration. Không thể thay bằng unit test hoặc agent timing. |
 
-## Bằng chứng kèm package
+## Evidence kèm package
 
 - [AEV thật và review từng claim](evidence/AEV-01_20260919.json).
 - [Chrome](evidence/chrome_20260919.json), [Edge](evidence/msedge_20260919.json).

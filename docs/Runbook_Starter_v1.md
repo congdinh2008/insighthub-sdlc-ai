@@ -57,7 +57,7 @@ python3 scripts/backup_restore_check.py --project insighthub-c07-recovery --env-
 docker compose --env-file .env.example -p insighthub-c07-recovery down
 ```
 
-Dừng mutation trong khi kiểm hash. Seed gồm TXT/MD/PDF, một failed attempt và chat, không dùng dữ liệu người thật. Cần giữ dump để diễn tập thủ công thì thêm `--keep-backup`: quyền file 600, thư mục riêng 700, chỉ instructor truy cập, không commit/gửi cùng starter. Đề xuất giữ tối đa 7 ngày trong sandbox rồi xóa sau khi đã kiểm restore; dữ liệu lớp thật áp dụng policy lớp đã xác nhận. Không dùng backup fixture làm bằng chứng semantic của real embedding.
+Dừng mutation trong khi kiểm hash. Seed gồm TXT/MD/PDF, một failed attempt và chat, không dùng dữ liệu người thật. Cần giữ dump để diễn tập thủ công thì thêm `--keep-backup`: quyền file 600, thư mục riêng 700, chỉ instructor truy cập, không commit/gửi cùng starter. Đề xuất giữ tối đa 7 ngày trong sandbox rồi xóa sau khi đã kiểm restore; dữ liệu lớp thật áp dụng policy lớp đã xác nhận. Không dùng backup fixture làm evidence semantic của real embedding.
 
 Backup production cần thêm retention, encryption, off-host storage, quyền truy cập và restore drill định kỳ. Starter chỉ cung cấp baseline có thể kiểm chứng tại local.
 
