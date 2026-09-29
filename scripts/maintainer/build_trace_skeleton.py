@@ -33,26 +33,29 @@ IH-AUTH-009-AC01 IH-AUTH-009-AC02 IH-UX-001-AC01 IH-UX-001-AC02 IH-MSG-001-AC01 
 IH-MSG-002-AC01 IH-MSG-002-AC02 IH-INT-001-AC01 IH-INT-003-AC02 IH-NFR-008-AC01 IH-REL-002-AC01
 IH-REL-002-AC02
 """.split())
-# QĐ3 (28/09/2026): Auth Core/Extended. Other AC stay Pending until the Core list is published (D7).
+# D7 công bố 29/09/2026: Core = Auth, Notebook (gồm Document, Chat/Conversation), Summary, Quiz,
+# nền AI Job/Output và các mục kiểm M4/M5; Extended = danh sách dưới (45 AC). Auth giữ quyết định QĐ3 28/09.
 EXTENDED = set("""
-IH-AUTH-002-AC02 IH-AUTH-003-AC02 IH-AUTH-005-AC01 IH-AUTH-005-AC03 IH-AUTH-005-AC04 IH-AUTH-006-AC02
-IH-AUTH-007-AC03 IH-AUTH-009-AC02 IH-MSG-003-AC03
+IH-AUTH-002-AC02 IH-AUTH-003-AC02 IH-AUTH-005-AC01 IH-AUTH-005-AC03 IH-AUTH-005-AC04 IH-AUTH-006-AC02 IH-AUTH-007-AC03 IH-AUTH-009-AC02 IH-MSG-003-AC03
+IH-NB-002-AC02 IH-NB-003-AC01 IH-DOC-003-AC02 IH-DOC-005-AC01 IH-DOC-006-AC02 IH-CHAT-004-AC03 IH-CHAT-004-AC04 IH-CHAT-004-AC05
+IH-NOTE-001-AC01 IH-NOTE-001-AC02 IH-NOTE-001-AC03 IH-NOTE-001-AC04 IH-NOTE-002-AC01 IH-NOTE-002-AC02 IH-SUM-002-AC01 IH-SUM-002-AC02
+IH-OUT-002-AC01 IH-OUT-002-AC02 IH-OUT-003-AC02 IH-AI-003-AC02 IH-DATA-001-AC01 IH-DATA-001-AC03 IH-DATA-001-AC05 IH-DATA-001-AC06
+IH-UX-001-AC02 IH-UX-002-AC02 IH-UX-003-AC01 IH-UX-003-AC02 IH-UX-004-AC01 IH-MSG-001-AC01 IH-MSG-001-AC02 IH-MSG-002-AC01 IH-MSG-002-AC02 IH-INT-001-AC01 IH-INT-001-AC02 IH-INT-004-AC01
 """.split())
-CORE_FIXED_PREFIXES = ("IH-AUTH-", "IH-MSG-003-")
 
-ROW = re.compile(r"^\| (IH-[A-Z]+-\d{3}) \| (IH-[A-Z]+-\d{3}-AC\d{2}) \| (A|D\d|N) \| ([^|]*)\| ([^|]*)\| ([^|]*)\|", re.M)
+ROW = re.compile(r"^\| (IH-[A-Z]+-\d{3}) \| (IH-[A-Z]+-\d{3}-AC\d{2}) \| (A|D\d|N) \| (Core|Extended|Ngoài phạm vi) \| ([^|]*)\| ([^|]*)\| ([^|]*)\|", re.M)
 
 
 def main():
     rows = []
-    for req, ac, scope, lr, due, uat in ROW.findall(REQUIREMENTS.read_text(encoding="utf-8")):
+    for req, ac, scope, listed_tier, lr, due, uat in ROW.findall(REQUIREMENTS.read_text(encoding="utf-8")):
         group = req.rsplit("-", 1)[0].replace("IH-", "")
         if scope == "N":
             tier = "OutOfScope"
-        elif ac.startswith(CORE_FIXED_PREFIXES):
-            tier = "Extended" if ac in EXTENDED else "Core"
         else:
-            tier = "Pending"
+            tier = "Extended" if ac in EXTENDED else "Core"
+        expected_label = {"OutOfScope": "Ngoài phạm vi"}.get(tier, tier)
+        assert listed_tier == expected_label, f"{ac}: Requirements 15.4 ghi {listed_tier}, bản đồ ghi {tier}"
         risk = "" if scope == "N" else ("R1" if ac in R1 else "R3" if ac in R3 else "R2")
         row = dict.fromkeys(COLUMNS, "")
         row.update(

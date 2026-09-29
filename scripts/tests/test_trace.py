@@ -36,6 +36,14 @@ class TraceTests(unittest.TestCase):
         self.assertEqual(self.row("IH-AUTH-003-AC02")["tier"], "Extended")
         self.assertEqual(self.row("IH-AUTH-005-AC02")["tier"], "Core")
 
+    def test_core_list_is_published(self):
+        applied = [r for r in self.rows if r["scope"] != "N"]
+        self.assertEqual(sum(r["tier"] == "Core" for r in applied), 106)
+        self.assertEqual(sum(r["tier"] == "Extended" for r in applied), 45)
+        self.assertFalse(any(r["tier"] == "Pending" for r in applied))
+        self.assertTrue(all(r["tier"] == "Extended" for r in applied if r["group"] == "NOTE"))
+        self.assertEqual(self.row("IH-QUIZ-002-AC01")["tier"], "Core")
+
     def test_passed_requires_commit_evidence_and_verification(self):
         self.row("IH-NB-004-AC01")["verdict"] = "Passed"
         messages = " ".join(self.errors())

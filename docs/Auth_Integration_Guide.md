@@ -33,14 +33,14 @@ SRS ghi rõ không coi giá trị mặc định của thư viện là đã đáp
 | Tài khoản `PendingVerification` không truy cập dữ liệu nghiệp vụ | Chế độ bắt buộc xác minh email thường chặn đăng nhập, không có phiên hạn chế | Core: chặn dữ liệu nghiệp vụ (IH-AUTH-001-AC01). Phiên hạn chế là Extended (IH-AUTH-002-AC02) |
 | LIM-09: đếm sai theo tài khoản và IP, sliding window | Rate limit của thư viện theo cửa sổ và đường dẫn | Extended (IH-AUTH-003-AC02, IH-AUTH-006-AC02): tự xây bộ đếm |
 | LIM-19: bằng chứng mật khẩu dùng một lần, tối đa 5 phút | Đổi mật khẩu nhận mật khẩu hiện tại trong cùng request | Ghi trong ADR cách đáp ứng IH-AUTH-010 và IH-NFR-011-AC02 |
-| EML-001..005 | Có callback cho xác minh và reset; không có sẵn thông báo đổi mật khẩu, hướng dẫn tài khoản chỉ dùng Google | Tự bắt sự kiện cho EML-004, EML-005; EML-003 thuộc Extended |
+| EML-001..005 | Có callback cho xác minh và reset; không có sẵn thông báo đổi mật khẩu, hướng dẫn tài khoản chỉ dùng Google | Tự bắt sự kiện cho EML-004 (Core); EML-003 và EML-005 thuộc Extended |
 
-## 4. Phạm vi chấm AUTH (quyết định 28/09/2026)
+## 4. Phạm vi chấm AUTH (quyết định 28/09/2026, cập nhật email 29/09/2026)
 
 | Tầng | AC |
 | --- | --- |
-| Core (chấm) | IH-AUTH-001-AC01/02, 002-AC01, 003-AC01, 004-AC01/02, 005-AC02, 006-AC01, 007-AC01/02, 008-AC01/02, 009-AC01, 010-AC01/02; IH-MSG-003-AC01 (D5: bốn email EML-001, 002, 004, 005), IH-MSG-003-AC02 |
-| Extended (Stretch, không trừ điểm) | IH-AUTH-002-AC02, 003-AC02, 005-AC01/03/04, 006-AC02, 007-AC03, 009-AC02; IH-MSG-003-AC03 |
+| Core (chấm) | IH-AUTH-001-AC01/02, 002-AC01, 003-AC01, 004-AC01/02, 005-AC02, 006-AC01, 007-AC01/02, 008-AC01/02, 009-AC01, 010-AC01/02; IH-MSG-003-AC01 (D5: ba email EML-001, 002, 004), IH-MSG-003-AC02 |
+| Extended (Stretch, không trừ điểm) | IH-AUTH-002-AC02, 003-AC02, 005-AC01/03/04, 006-AC02, 007-AC03, 009-AC02; IH-MSG-003-AC03 (gồm EML-005) |
 
 Khi chưa làm liên kết Google, đăng nhập Google bằng email trùng tài khoản mật khẩu phải **bị từ chối an toàn**, không tự liên kết và không cấp phiên. Nguồn đầy đủ: cột `tier` trong [trace/ac-trace.csv](../trace/ac-trace.csv).
 
