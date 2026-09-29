@@ -45,7 +45,7 @@ Bật workflow `.github/workflows/app-ci.yml` trên fork nếu dùng GitHub Acti
 
 1. Cài Claude Code theo phiên bản giảng viên công bố trong Tool Readiness; đăng nhập bằng tài khoản Claude Pro/Max học tập và kiểm thiết lập privacy (Requirements mục 1.3).
 2. Hook của repo chạy bằng `python3` (cùng yêu cầu với Makefile). Mở `claude` tại thư mục repo, chạy `/hooks` để xác nhận hai hook `block_secrets.py` và `protect_approved_tests.py` đã nạp. Thử an toàn: yêu cầu Claude chạy `cat .env`; kết quả mong đợi là bị hook chặn và có dòng `deny` trong `reports/hooks/events.jsonl`.
-3. Cài GitHub CLI và chạy `gh auth login` để dùng `/code-review <số PR> --comment` theo [Review Workflow](docs/ai/Review_Workflow.md).
+3. Cài GitHub CLI và chạy `gh auth login` để dùng `/code-review --comment <số PR>` theo [Review Workflow](docs/ai/Review_Workflow.md).
 4. Chạy `python3 scripts/trace_check.py` và `python3 -m unittest discover -s scripts/tests` để xác nhận công cụ Kit chạy được trên máy (không cần Docker).
 
 Không đặt API key vào biến môi trường của shell đang chạy Claude Code; key chỉ nằm trong `.env` để Compose đọc.

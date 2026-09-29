@@ -14,7 +14,7 @@
 
 ## Review và kiểm chứng
 
-- Review PR theo [docs/ai/Review_Workflow.md](docs/ai/Review_Workflow.md): tự review 4 góc trước, sau đó `/code-review <số PR> --comment` trong **session mới**; thêm `/security-review` khi PR chạm Auth, quyền, upload, prompt, log.
+- Review PR theo [docs/ai/Review_Workflow.md](docs/ai/Review_Workflow.md): tự review 4 góc trước, sau đó `/code-review --comment <số PR>` trong **session mới**; thêm `/security-review` khi PR chạm Auth, quyền, upload, prompt, log.
 - Khi review, ưu tiên finding có căn cứ (file:dòng, test, mục SRS). Không báo suy đoán như lỗi; ghi rõ phạm vi đã rà nếu không có finding.
 - Trước khi triển khai AC nào, kiểm dòng của AC đó trong `trace/ac-trace.csv` đã `Human-verified`; nếu chưa, dừng và báo học viên.
 - Không điền `verdict`, `actual`, `commit` trong bảng trace hoặc số đo trong `docs/ai/delivery-log.csv` khi chưa có kết quả chạy thật.
