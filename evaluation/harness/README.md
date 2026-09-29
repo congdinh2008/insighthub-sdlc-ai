@@ -1,6 +1,6 @@
 # Eval harness (Kit K9)
 
-Skeleton cho **eval-driven development** ở M4 (LR-23, C02-U05-T09): golden set có version, grader bằng code, pass^k, báo cáo có commit và hash nguồn. Starter cấp khung và adapter Chat; học viên viết case, adapter Summary/Quiz và grader bổ sung.
+Skeleton cho **eval-driven development** ở M4 (LR-23, C02-U05-T04): golden set có version, grader bằng code, pass^k, báo cáo có commit và hash nguồn. Starter cấp khung và adapter Chat; học viên viết case, adapter Summary/Quiz và grader bổ sung.
 
 | File | Vai trò | Ai hoàn thiện |
 | --- | --- | --- |

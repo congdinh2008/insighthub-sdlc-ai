@@ -1,6 +1,6 @@
 # Plan: <feature>
 
-Spec: [spec.md](spec.md) phiên bản <x.y> | Thiết kế: <link OpenAPI, ERD, Figma, ADR>
+Spec: [spec.md](spec.md) phiên bản <x.y> | Thiết kế: <link OpenAPI, ERD, prototype (Figma hoặc design/prototype/), ADR>
 
 ## Thiết kế áp dụng
 

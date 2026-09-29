@@ -52,7 +52,7 @@ Học viên hoàn thiện mỗi nhóm chức năng qua các phần UI, API và d
 
 ### 1.2. Yêu cầu áp dụng xuyên các chức năng
 
-- **UI/UX:** thiết kế và triển khai theo Figma trong phạm vi bài tập; có trạng thái loading, empty, success, error, hết session và conflict, cùng thao tác bàn phím theo SRS.
+- **UI/UX:** thiết kế và triển khai theo prototype thiết kế đã chốt phiên bản (Figma hoặc HTML, học viên chọn một ở [LR-10](#lr-10)) trong phạm vi bài tập; có trạng thái loading, empty, success, error, hết session và conflict, cùng thao tác bàn phím theo SRS.
 - **Quyền và dữ liệu:** server xác định người dùng từ session, kiểm ownership của đúng đối tượng trước mọi thao tác; dữ liệu còn sau reload/restart theo vòng đời quy định. Không dùng `owner_id` do client gửi để cấp quyền.
 - **Chất lượng và tích hợp:** validation, API contract, lỗi an toàn, giới hạn xử lý và cấu hình provider phải nhất quán giữa UI, API và dữ liệu. Kết quả fixture, tích hợp thật và đánh giá nội dung AI được ghi riêng.
 - **Bàn giao:** bản R1 của bài tập có test, CI, migration, hướng dẫn cài/chạy, backup/restore và một thay đổi sau phát hành thành R1.1. Học viên thực hiện trên local hoặc sandbox.
@@ -94,7 +94,7 @@ Phần [thiết kế dữ liệu và API](#data-api) xác định đầu ra cầ
 | 2 | M0.2 | Agent workflow trên InsightHub có giới hạn quyền, xử lý lỗi và chạy lại được | 4 giờ | Trước buổi 3 ít nhất 12 giờ |
 | 3 | M1 | Backlog chín nhóm chức năng, dependency, kế hoạch cá nhân và Git/CI | 4 giờ | Trước buổi 4 ít nhất 12 giờ |
 | 4 | M2.1 | Yêu cầu và test case theo chức năng; kết quả spike Google, email và AI | 5 giờ | Trước buổi 5 ít nhất 12 giờ |
-| 5 | M2 | Figma, API, schema, ADR và threat model sơ bộ cho các chức năng bài tập | 4 giờ | Trước buổi 6 ít nhất 12 giờ |
+| 5 | M2 | Prototype thiết kế (Figma hoặc HTML), API, schema, ADR và threat model sơ bộ cho các chức năng bài tập | 4 giờ | Trước buổi 6 ít nhất 12 giờ |
 | 6 | M3.1 | Đăng nhập → Notebook → upload → hỏi đáp → citation → mở lại conversation | 5 giờ | Trước buổi 7 ít nhất 12 giờ |
 | 7 | M3 | Auth và email theo tầng Core/Extended, Notebook/Document/Conversation/Note, Summary, Quiz và AI Output theo tầng Core/Extended; refactor | 6 giờ | Chức năng: trước buổi 8 ít nhất 12 giờ; bài refactor: trước buổi 9 ít nhất 12 giờ |
 | 8 | M4 | Kết quả kiểm từng chức năng, quyền, eval AI, threat model cập nhật và lỗi đã sửa | 6 giờ | Trước buổi 9 ít nhất 12 giờ |
@@ -160,7 +160,7 @@ Dùng bảng này để trình bày kết quả trong PR/bản nộp hiện có,
 | **M0.2 / B2 / LR-04..05** | Thiết lập cách làm việc với agent. Repo chạy được, sandbox/tool được cấp quyền. | AI Usage Charter và workflow cho một task project thực chạy; chỉ ra success, lỗi công cụ, thao tác vượt quyền bị môi trường từ chối và cách chạy lại. | Có workflow/quy tắc dùng tiếp xuyên khóa. Chưa yêu cầu feature mới hoặc tự xây một nền tảng agent. |
 | **M1 / B3 / LR-06..07** | Khởi tạo, lập kế hoạch và kiểm soát thay đổi. Baseline M0 và chín nhóm chức năng. | Mở backlog để giải thích phần kế thừa/phải xây, dependency, AC, estimate; mở PR theo PR template có tự review và AI review (`/code-review`), kết quả CI (test, lint, scan) đúng commit; dòng đầu tiên của AI Delivery Log. | Backlog và quy trình Git/CI làm đầu vào M2.1. Kế hoạch được cập nhật theo phân tích/spike; chưa kết luận chức năng đã hoàn thành. |
 | **M2.1 / B4 / LR-08..09** | Phân tích yêu cầu, thiết kế test và giảm rủi ro. Backlog, SRS, quyền Google/email/AI. | Bảng trace 163 AC (151 áp dụng/12 ngoài phạm vi) từ khung giảng viên cấp: AI viết nháp, hành trình M3.1 được kiểm 100%, phần còn lại lấy mẫu có seed và tỷ lệ lỗi; `spec.md` của Quiz; giải thích 1-2 yêu cầu rủi ro; trình bày kết quả spike và quyết định có căn cứ. | Bàn giao yêu cầu, test design, khả năng/giới hạn giải pháp và việc còn mở cho M2. Code giới hạn ở spike; chưa cần UI sản phẩm hoặc toàn bộ test tự động. |
-| **M2 / B5 / LR-10..11** | Thiết kế giải pháp. Yêu cầu/test design, spike và hợp đồng tham khảo. | Đi xuyên Figma → flow/state → AC → API → dữ liệu; kiểm hai viewport/keyboard; giải thích ADR, migration và module cần characterization; threat model sơ bộ có trust boundary và luồng dữ liệu ra nước ngoài; `plan.md`/`tasks.md` của Quiz; finding của subagent `design-reviewer` đã xác minh. | Thiết kế đủ để triển khai hành trình M3.1 và phần còn lại M3. Prototype Figma chưa phải chức năng đã chạy trên ứng dụng. |
+| **M2 / B5 / LR-10..11** | Thiết kế giải pháp. Yêu cầu/test design, spike và hợp đồng tham khảo. | Đi xuyên prototype (Figma hoặc HTML) → flow/state → AC → API → dữ liệu; kiểm hai viewport/keyboard; giải thích ADR, migration và module cần characterization; threat model sơ bộ có trust boundary và luồng dữ liệu ra nước ngoài; `plan.md`/`tasks.md` của Quiz; finding của subagent `design-reviewer` đã xác minh. | Thiết kế đủ để triển khai hành trình M3.1 và phần còn lại M3. Prototype thiết kế, kể cả prototype HTML, chưa phải chức năng đã chạy trên ứng dụng. |
 | **M3.1 / B6 / LR-12..13** | Triển khai và test hành trình đầu tiên. Thiết kế M2; characterization trước lần sửa nền. | A đăng nhập thật → Notebook → upload → Chat/citation → mở lại conversation sau reload/restart; API chặn B; trình bày TDD red-green-regression; test đã duyệt được hook và CI bảo vệ. | Có hành trình mới chạy qua UI/API/DB, gồm quy tắc operation áp dụng cho Chat. Full Auth, các email còn lại, Note/Summary/Quiz hoàn thiện tại M3. |
 | **M3 / B7 / LR-14..19** | Hoàn thiện chức năng, tích hợp và refactor. Hành trình M3.1 và thiết kế phần dùng chung. | Chín nhóm chức năng hoạt động theo tầng Core/Extended, Auth và email theo tầng đã chốt, Summary/Quiz, Output/lifecycle; test theo nhánh; refactor có baseline/diff/regression; review một PR do agent tạo. | Bản tích hợp và evidence cho M4. ASG01 vẫn hoàn thiện trước B9; có đủ tính năng chưa đồng nghĩa đã nghiệm thu mọi AC. |
 | **M4 / B8 / LR-20..24** | Kiểm tổng hợp, chất lượng và bảo mật. Bản M3, test tích lũy, corpus/oracle. | Kết luận từng AC đến hạn (`trace_check --gate M4`), nối 21 UAT; 12 lượt nội dung AI chạy qua eval harness cùng ngoại lệ; threat model cập nhật, `/security-review`, AI-BOM sinh tự động, UI/performance/security, defect và retest có căn cứ. | Candidate cùng kết luận đủ/chưa đủ điều kiện phát hành. AC release/restore thuộc M5 còn ghi chưa kiểm/chưa đến hạn nếu chưa có evidence. |
@@ -276,7 +276,7 @@ Mỗi milestone có một bản ghi ngắn, gợi ý đặt tại `evidence/M0.1
 Milestone: M0.1
 Link Pull Request:
 Phiên bản mã nguồn đã kiểm tra: <link commit trên Git>
-Đã hoàn thành: <việc và đường dẫn file/Figma/kết quả>
+Đã hoàn thành: <việc và đường dẫn file/prototype/kết quả>
 Output milestone: <đạt/chưa đạt, phạm vi đến hạn và lý do>
 Đã kiểm tra: <lệnh hoặc bước chạy, kỳ vọng, thực tế, link log>
 Quyết định với AI: <đề xuất đã giữ/sửa/bác bỏ và lý do; chi tiết trong mục AI usage của PR>
@@ -292,7 +292,7 @@ Lấy link commit từ mục Commits của PR. Kiểm tra đúng phiên bản đ
 
 Mỗi milestone có **rubric 100 điểm để phản hồi tiến độ**. Cột cách chấm chia điểm thành các phần cụ thể: có kết quả và minh chứng đúng thì nhận điểm phần đó; phần chưa làm, chưa đúng hoặc chưa kiểm được nhận 0. Các điểm này không tạo thêm thành phần điểm khóa.
 
-Tài liệu kiến thức (KC) và hướng dẫn công cụ (TG) theo từng buổi được giảng viên cấp qua kênh học liệu lớp. Các liên kết ở từng milestone trỏ tới spec, hướng dẫn thiết kế và tài liệu kỹ thuật cần dùng. Dùng [mẫu minh chứng tích lũy](#evidence) trong hồ sơ hiện có, không lập lại thông tin ở nhiều bảng. Chọn module dự kiến refactor và giữ test trước lần sửa đầu tại M3.1; buổi 8 tổng hợp kiểm chứng đã tích lũy và bổ sung phần còn thiếu. Bản thiết kế Figma do học viên tạo tại M2 và dùng tiếp cho triển khai, test.
+Tài liệu kiến thức (KC) và hướng dẫn công cụ (TG) theo từng buổi được giảng viên cấp qua kênh học liệu lớp. Các liên kết ở từng milestone trỏ tới spec, hướng dẫn thiết kế và tài liệu kỹ thuật cần dùng. Dùng [mẫu minh chứng tích lũy](#evidence) trong hồ sơ hiện có, không lập lại thông tin ở nhiều bảng. Chọn module dự kiến refactor và giữ test trước lần sửa đầu tại M3.1; buổi 8 tổng hợp kiểm chứng đã tích lũy và bổ sung phần còn thiếu. Prototype thiết kế (Figma hoặc HTML) do học viên tạo tại M2 và dùng tiếp cho triển khai, test.
 
 ### 2.5. Cơ cấu điểm khóa
 
@@ -490,7 +490,7 @@ Có kế hoạch cá nhân cho đầy đủ chín nhóm chức năng tại mục
 
 <a id="lr-07"></a>
 
-2. **Thiết lập quy trình phát triển.** Tạo issue theo [issue template](../../.github/ISSUE_TEMPLATE/feature.md) và Pull Request theo [PR template](../../.github/pull_request_template.md) (tự rà soát bốn góc tính đúng, bảo mật, quy ước mã nguồn, thiết kế; mục AI usage; Definition of Done). Giữ mỗi PR khoảng 400 dòng diff trở xuống, không tính file sinh tự động, để vừa khả năng review; PR lớn hơn phải tách hoặc ghi lý do. Chạy Continuous Integration (CI) trên repository cá nhân, gồm test, lint, secret scan và dependency scan cho cả Web và API theo công nghệ thực tế. Workflow [`app-ci.yml`](../../.github/workflows/app-ci.yml) của Starter đã chạy test, smoke, E2E và `npm audit`; học viên tự thêm lint, secret scan và dependency scan theo [hướng dẫn lint và scan M1](../M1_Lint_Scan_Guide.md), khoanh phạm vi vào file thay đổi và triage finding có sẵn của Starter. Lưu liên kết lần chạy và đúng commit được kiểm; phân biệt lỗi quy trình CI với lỗi ứng dụng. Chạy AI reviewer theo [Review Workflow](../ai/Review_Workflow.md): tự review trước, sau đó `/code-review <số PR> --comment` trong session Claude Code mới (tách writer và reviewer); phân loại finding Fix, Reject hoặc Defer; tự xác minh một finding bằng phép kiểm độc lập. Không yêu cầu tìm đủ một lỗi cho mỗi góc rà soát. Với dependency mới do AI đề xuất, kiểm package tồn tại thật theo [hướng dẫn](../M1_Lint_Scan_Guide.md). Từ PR này, ghi mỗi PR một dòng vào `docs/ai/delivery-log.csv` với số đo thật (thời gian, finding AI, vòng sửa, kết quả CI lần đầu).
+2. **Thiết lập quy trình phát triển.** Tạo issue theo [issue template](../../.github/ISSUE_TEMPLATE/feature.md) và Pull Request theo [PR template](../../.github/pull_request_template.md) (tự rà soát bốn góc tính đúng, bảo mật, quy ước mã nguồn, thiết kế; mục AI usage; Definition of Done). Giữ mỗi PR khoảng 400 dòng diff trở xuống, không tính file sinh tự động, để vừa khả năng review; PR lớn hơn phải tách hoặc ghi lý do. Chạy Continuous Integration (CI) trên repository cá nhân, gồm test, lint, secret scan và dependency scan cho cả Web và API theo công nghệ thực tế. Workflow [`app-ci.yml`](../../.github/workflows/app-ci.yml) của Starter đã chạy test, smoke, E2E và `npm audit`; học viên tự thêm lint, secret scan và dependency scan theo [hướng dẫn lint và scan M1](../M1_Lint_Scan_Guide.md), khoanh phạm vi vào file thay đổi và triage finding có sẵn của Starter. Lưu liên kết lần chạy và đúng commit được kiểm; phân biệt lỗi quy trình CI với lỗi ứng dụng. Chạy AI reviewer theo [Review Workflow](../ai/Review_Workflow.md): tự review trước, sau đó `/code-review --comment <số PR>` trong session Claude Code mới (tách writer và reviewer); phân loại finding Fix, Reject hoặc Defer; tự xác minh một finding bằng phép kiểm độc lập. Không yêu cầu tìm đủ một lỗi cho mỗi góc rà soát. Với dependency mới do AI đề xuất, kiểm package tồn tại thật theo [hướng dẫn](../M1_Lint_Scan_Guide.md). Từ PR này, ghi mỗi PR một dòng vào `docs/ai/delivery-log.csv` với số đo thật (thời gian, finding AI, vòng sửa, kết quả CI lần đầu).
 
 ### 5.3 Điều kiện hoàn thành
 
@@ -633,7 +633,12 @@ Có thiết kế nối được từ hành trình người dùng đến UI, API,
 
 <a id="lr-10"></a>
 
-1. **Thiết kế Figma.** Hoàn thiện màn hình UI-01 đến UI-08 trong phạm vi Tóm tắt và Quiz; nối prototype cho các hành trình chính. Thiết kế tại 1440 × 900 và 390 × 844 pixel CSS. Thể hiện đủ bảy trạng thái (đang xử lý, chưa có dữ liệu, lỗi, không đủ căn cứ `NoEvidence`, hết phiên, xung đột, nguồn đã xóa) cho **một hành trình hoàn chỉnh**, gợi ý hành trình M3.1 Notebook - Document - Chat; các màn còn lại thể hiện trạng thái áp dụng chính và dùng component, trạng thái dùng chung thay vì nhân bản frame. Bắt đầu từ UI kit hoặc wireframe giảng viên cấp qua kênh học liệu nếu có, hoặc một thư viện component công khai; ghi nguồn đã dùng. Giảng viên review Figma qua link có quyền xem. Ghi hành vi Tab, Shift+Tab, Enter, Space và phím mũi tên theo loại điều khiển; thể hiện thứ tự focus, giữ focus trong dialog và trả lại khi đóng. Gắn nhãn, thông báo lỗi đúng trường. Thiết kế thông tin nhà cung cấp và phạm vi dữ liệu gửi dịch vụ AI trước thao tác tương ứng theo IH-INT-002-AC03. Liên kết trạng thái giao diện với yêu cầu, API và dữ liệu; cấp quyền xem cho giảng viên.
+1. **Prototype thiết kế (chọn Figma hoặc HTML).** Hoàn thiện màn hình UI-01 đến UI-08 trong phạm vi Tóm tắt và Quiz; nối prototype cho các hành trình chính. Chọn **một** trong hai hình thức, ghi lựa chọn và lý do trong bản ghi nộp bài; hai hình thức chấm cùng rubric, không cộng điểm vì chọn công cụ:
+
+   - **Figma:** file có quyền xem cho giảng viên, ghi phiên bản đã chốt trong version history. Figma MCP là tùy chọn, không bắt buộc; tài khoản miễn phí có hạn mức lượt gọi MCP rất thấp mỗi tháng, xem hướng dẫn công cụ trước khi dùng.
+   - **HTML:** prototype tĩnh có tương tác (HTML, CSS, JavaScript tối thiểu, dữ liệu giả) đặt trong thư mục `design/prototype/` của repository, mở được bằng trình duyệt mà không cần backend; điều hướng giữa các màn thể hiện hành trình chính; phiên bản là commit hoặc tag ghi trong bản ghi nộp bài. Được dùng AI dựng bản nháp từ SRS và AC, nhưng học viên phải tự đối chiếu từng màn và trạng thái với AC, ghi phần đã sửa sau review. Prototype HTML là artifact thiết kế: không import vào `web/`, không gọi API thật, không chứa secret hoặc dữ liệu thật; không merge nguyên prototype thành code production ở M3, phần markup hoặc style tái dùng được review như code mới.
+
+   Yêu cầu chung cho cả hai hình thức: Thiết kế tại 1440 × 900 và 390 × 844 pixel CSS. Thể hiện đủ bảy trạng thái (đang xử lý, chưa có dữ liệu, lỗi, không đủ căn cứ `NoEvidence`, hết phiên, xung đột, nguồn đã xóa) cho **một hành trình hoàn chỉnh**, gợi ý hành trình M3.1 Notebook - Document - Chat; các màn còn lại thể hiện trạng thái áp dụng chính và dùng component, trạng thái dùng chung thay vì nhân bản frame. Bắt đầu từ UI kit hoặc wireframe giảng viên cấp qua kênh học liệu nếu có, hoặc một thư viện component công khai; ghi nguồn đã dùng. Giảng viên review prototype qua link Figma có quyền xem hoặc thư mục HTML trong PR. Ghi hành vi Tab, Shift+Tab, Enter, Space và phím mũi tên theo loại điều khiển; thể hiện thứ tự focus, giữ focus trong dialog và trả lại khi đóng. Gắn nhãn, thông báo lỗi đúng trường. Thiết kế thông tin nhà cung cấp và phạm vi dữ liệu gửi dịch vụ AI trước thao tác tương ứng theo IH-INT-002-AC03. Liên kết trạng thái giao diện với yêu cầu, API và dữ liệu; với Figma, cấp quyền xem cho giảng viên.
 
 <a id="lr-11"></a>
 
@@ -651,11 +656,11 @@ Có thiết kế nối được từ hành trình người dùng đến UI, API,
 
 ### 7.3 Điều kiện hoàn thành
 
-- Figma bao phủ các Auth flow, Notebook/workspace, Document, Conversation, Note, Summary, Quiz và quản lý Output trong UI-01 đến UI-08, với các trạng thái áp dụng.
+- Prototype (Figma hoặc HTML) bao phủ các Auth flow, Notebook/workspace, Document, Conversation, Note, Summary, Quiz và quản lý Output trong UI-01 đến UI-08, với các trạng thái áp dụng.
 - API và schema thể hiện input/output, lỗi, session, ownership, pagination, version và dữ liệu nội bộ; không lộ đáp án Quiz trước khi nộp.
 - Thiết kế thể hiện quan hệ, transaction, persistence, xóa, gửi lặp và dữ liệu qua restart/migration; các lựa chọn giữ đúng hành vi SRS.
 - Có threat model sơ bộ với trust boundary, STRIDE trên API/dữ liệu và luồng dữ liệu ra nước ngoài.
-- Có ADR so sánh phương án và một nhận xét review có căn cứ; khác biệt giữa Figma, API và dữ liệu được xử lý trước code phần liên quan.
+- Có ADR so sánh phương án và một nhận xét review có căn cứ; khác biệt giữa prototype, API và dữ liệu được xử lý trước code phần liên quan.
 - `specs/quiz/plan.md`, `tasks.md` nối thiết kế với task; subagent `design-reviewer` có một finding đã xác minh.
 
 ### 7.4 Áp dụng SDLC và AI
@@ -674,23 +679,23 @@ Có thiết kế nối được từ hành trình người dùng đến UI, API,
 | Summary và Quiz | Cấu hình người dùng, schema output, nguồn, bản sao Note, QuizAttempt và dữ liệu công khai trước/sau nộp. |
 | AI Job và Output | State machine, deadline, quota, idempotency, version và thời điểm công bố kết quả. |
 
-Chọn một hành trình, đi từ Figma → request/response → transaction/data → test case. Dùng Claude phản biện điểm không nhất quán; học viên quyết định giải pháp và cập nhật đồng thời các phần bị ảnh hưởng. Đây là cách áp dụng thiết kế domain và contract vào sản phẩm, không chỉ vẽ ERD.
+Chọn một hành trình, đi từ prototype → request/response → transaction/data → test case. Dùng Claude phản biện điểm không nhất quán; học viên quyết định giải pháp và cập nhật đồng thời các phần bị ảnh hưởng. Đây là cách áp dụng thiết kế domain và contract vào sản phẩm, không chỉ vẽ ERD.
 
-Nhờ Claude đóng vai người dùng và reviewer API để tìm hành trình chưa xử lý. Tự đối chiếu Figma, API và dữ liệu trên cùng một tình huống. Nếu nhập dữ liệu nền chưa có chủ sở hữu, người vận hành phải chọn tài khoản và Notebook đích, kiểm quan hệ và quyền trước khi đưa vào sử dụng. Không tự gán cho người đăng ký đầu tiên; R1 không có chức năng chuyển chủ sở hữu Notebook. Review bất đồng bộ một thiết kế của bạn học hoặc mẫu lớp và ghi nhận xét có căn cứ; không phải chờ bạn học để tiếp tục.
+Nhờ Claude đóng vai người dùng và reviewer API để tìm hành trình chưa xử lý. Tự đối chiếu prototype, API và dữ liệu trên cùng một tình huống. Nếu nhập dữ liệu nền chưa có chủ sở hữu, người vận hành phải chọn tài khoản và Notebook đích, kiểm quan hệ và quyền trước khi đưa vào sử dụng. Không tự gán cho người đăng ký đầu tiên; R1 không có chức năng chuyển chủ sở hữu Notebook. Review bất đồng bộ một thiết kế của bạn học hoặc mẫu lớp và ghi nhận xét có căn cứ; không phải chờ bạn học để tiếp tục.
 
 **Tài liệu dùng cho milestone:** [SRS: dữ liệu](02_SRS_InsightHub_v1.0.md#sec-3-7); [SRS: giao diện](02_SRS_InsightHub_v1.0.md#sec-3-5); [API starter](../API_Contract_Starter_v1.md); [tích hợp xác thực và Notebook](#data-api).
 
 ### 7.5 Evidence, cách nộp bài và thời hạn
 
-**Hạn hoàn thiện:** trước buổi 6 ít nhất 12 giờ. Gửi link PR nhánh `milestone/m2`, bản ghi nộp bài và link Figma có quyền xem. Trong repository lưu API, sơ đồ quan hệ, từ điển dữ liệu, ví dụ hợp lệ và không hợp lệ, migration dự kiến, quyết định kiến trúc, threat model sơ bộ và nhận xét review. Có thể gộp các phần trong cùng hồ sơ thiết kế; không tạo bài nộp riêng cho từng loại minh chứng.
+**Hạn hoàn thiện:** trước buổi 6 ít nhất 12 giờ. Gửi link PR nhánh `milestone/m2`, bản ghi nộp bài và link prototype: link Figma có quyền xem kèm phiên bản, hoặc đường dẫn `design/prototype/` kèm commit. Trong repository lưu API, sơ đồ quan hệ, từ điển dữ liệu, ví dụ hợp lệ và không hợp lệ, migration dự kiến, quyết định kiến trúc, threat model sơ bộ và nhận xét review. Có thể gộp các phần trong cùng hồ sơ thiết kế; không tạo bài nộp riêng cho từng loại minh chứng.
 
-Dùng cùng hồ sơ thiết kế để liên kết flow - state - AC - API - data. Một liên kết đến đúng phần thiết kế đủ thay cho việc chép lại nội dung vào nhiều file; vẫn giữ link Figma có quyền xem.
+Dùng cùng hồ sơ thiết kế để liên kết flow - state - AC - API - data. Một liên kết đến đúng phần thiết kế đủ thay cho việc chép lại nội dung vào nhiều file; vẫn giữ link tới prototype đã chốt.
 
 ### 7.6 Rubric đánh giá
 
 | Tiêu chí | Điểm tối đa | Cách chấm điểm |
 | --- | --- | --- |
-| Figma và hành trình | 30 | Đủ màn hình và hành trình: 10; trạng thái chính và ngoại lệ: 10; hai kích thước cùng bàn phím và quản lý focus: 10. |
+| Prototype thiết kế và hành trình | 30 | Đủ màn hình và hành trình: 10; trạng thái chính và ngoại lệ: 10; hai kích thước cùng bàn phím và quản lý focus: 10. |
 | API và mô hình dữ liệu | 30 | API nhất quán với UI và cách tích hợp Starter đã chọn: 10; từ điển dữ liệu, quan hệ, trạng thái và phiên bản rõ: 10; quyền sở hữu và dữ liệu Quiz trước/sau nộp đúng: 10. |
 | Độ an toàn của thiết kế | 25 | Migration có kiểm soát: 10; gửi lặp, xử lý đồng thời và phản hồi muộn: 10; phương án xử lý lỗi, khôi phục, threat model sơ bộ và finding `design-reviewer` đã xác minh: 5. |
 | Quyết định và review | 15 | So sánh hai phương án có căn cứ: 5; rà soát mẫu hoặc bài bạn học có đối chiếu: 5; `plan.md`/`tasks.md` Quiz có link phiên bản thiết kế kiểm được: 5. |
@@ -755,7 +760,7 @@ Khi không chỉ định nguồn, lưu tập tài liệu `Ready` tại lần ti�
 
 Yêu cầu Claude đề xuất test từ AC trước khi sửa code. Kiểm rằng test thất bại vì hành vi cần xây, không vì môi trường hỏng. Cho AI thực hiện từng thay đổi nhỏ và review phần truy vấn và quyền; không chỉ kiểm nút trên UI. Giao việc cho agent bằng agent task brief theo mẫu mục 16.4 (mục tiêu, phạm vi file, expected, lệnh kiểm, stop condition); mỗi PR có checklist DoD: test đạt, lint/scan, kiểm quyền A/B, migration, evidence và traceability matrix được cập nhật.
 
-**Tài liệu dùng cho milestone:** [Tích hợp xác thực và Notebook](#data-api); [quyết định về nguồn](../adr/ADR-002-Source-Provenance.md); [xử lý gửi lặp](../adr/ADR-003-Operation-Idempotency.md); Figma và API đã thiết kế tại M2.
+**Tài liệu dùng cho milestone:** [Tích hợp xác thực và Notebook](#data-api); [quyết định về nguồn](../adr/ADR-002-Source-Provenance.md); [xử lý gửi lặp](../adr/ADR-003-Operation-Idempotency.md); prototype và API đã thiết kế tại M2.
 
 ### 8.5 Evidence, cách nộp bài và thời hạn
 
@@ -878,9 +883,9 @@ Server kiểm quyền đối tượng thực sự được truy cập, không ti
 | Tích hợp | Chạy lại hành trình M3.1, nối thêm Note, Summary, Quiz và quản lý Output. | Dùng AI phân tích lỗi; giữ căn cứ độc lập và regression test. |
 | Refactor | Cải thiện một module đã có hành vi được characterization test ghi nhận. | So sánh trước/sau, giữ quy tắc nghiệp vụ và tự động hóa task đã kiểm. |
 
-Dùng Claude triển khai theo từng hành vi và review diff nhỏ. Với refactor, yêu cầu chỉ ra vấn đề có evidence trước khi đề xuất thay cấu trúc; đổi tên hoặc định dạng đơn thuần chưa đủ. Script có thể chạy test, lint và các bước kiểm tra trong terminal hoặc CI, không bắt buộc dùng agent tự động. UI cần trạng thái đang xử lý, rỗng, lỗi và khôi phục; ghi khác biệt hợp lý so với Figma.
+Dùng Claude triển khai theo từng hành vi và review diff nhỏ. Với refactor, yêu cầu chỉ ra vấn đề có evidence trước khi đề xuất thay cấu trúc; đổi tên hoặc định dạng đơn thuần chưa đủ. Script có thể chạy test, lint và các bước kiểm tra trong terminal hoặc CI, không bắt buộc dùng agent tự động. UI cần trạng thái đang xử lý, rỗng, lỗi và khôi phục; ghi khác biệt hợp lý so với prototype thiết kế.
 
-**Tài liệu dùng cho milestone:** [SRS: yêu cầu chức năng](02_SRS_InsightHub_v1.0.md#sec-3-4); [SRS: dữ liệu và giới hạn](02_SRS_InsightHub_v1.0.md#sec-3-7); [danh mục email](02_SRS_InsightHub_v1.0.md#email-catalog); Figma và API của bài làm tại M2.
+**Tài liệu dùng cho milestone:** [SRS: yêu cầu chức năng](02_SRS_InsightHub_v1.0.md#sec-3-4); [SRS: dữ liệu và giới hạn](02_SRS_InsightHub_v1.0.md#sec-3-7); [danh mục email](02_SRS_InsightHub_v1.0.md#email-catalog); prototype và API của bài làm tại M2.
 
 ### 9.5 Evidence, cách nộp bài và thời hạn
 
@@ -1111,17 +1116,17 @@ Học viên tự demo bản phát hành đã nộp và giải thích được c�
 | Phần bảo vệ | Kết quả ứng dụng vào Running Project |
 | --- | --- |
 | Demo sản phẩm | Chứng minh các chức năng nối thành hành trình người dùng, giữ quyền và dữ liệu. |
-| Giải thích một yêu cầu | Mở AC → Figma/API/schema → code → test → bản phát hành; giải thích quyết định và trade-off. |
+| Giải thích một yêu cầu | Mở AC → prototype/API/schema → code → test → bản phát hành; giải thích quyết định và trade-off. |
 | Phản biện việc dùng AI | Chỉ ra đề xuất đã giữ/sửa/bác bỏ, căn cứ kiểm độc lập và ảnh hưởng tới sản phẩm. |
 | Xử lý thay đổi | Phân tích tác động của yêu cầu mới trên chức năng đã có, chọn test và cách bảo toàn dữ liệu. |
 
 Dùng Claude đóng vai reviewer để luyện phản biện và tìm điểm chưa có minh chứng. Học viên tự demo, giải thích và quyết định; không đọc lại câu trả lời AI để thay vấn đáp. Chuẩn bị dữ liệu mẫu và đường dẫn mở nhanh trong repository.
 
-**Tài liệu dùng cho milestone:** [SRS: tiêu chí nghiệm thu](02_SRS_InsightHub_v1.0.md#sec-4-3); [SRS: bàn giao](02_SRS_InsightHub_v1.0.md#sec-4-4); Figma, API, hướng dẫn vận hành và hồ sơ đã xây dựng trong dự án.
+**Tài liệu dùng cho milestone:** [SRS: tiêu chí nghiệm thu](02_SRS_InsightHub_v1.0.md#sec-4-3); [SRS: bàn giao](02_SRS_InsightHub_v1.0.md#sec-4-4); prototype, API, hướng dẫn vận hành và hồ sơ đã xây dựng trong dự án.
 
 ### 12.5 Evidence, cách nộp bài và thời hạn
 
-**Hạn hồ sơ:** trước buổi 10 ít nhất 12 giờ. Gửi link PR `milestone/capstone`, bản ghi nộp bài, tag phát hành đã kiểm, link Figma, hướng dẫn demo, bảng kết quả yêu cầu, test, AI và bảo mật và kế hoạch 30 ngày. **Hạn sửa sau bảo vệ:** trong 24 giờ sau khi buổi 10 kết thúc; gửi link cập nhật và danh sách phản hồi đã xử lý. Nếu sửa code, kiểm lại và tạo tag phát hành mới, giữ bản đã bảo vệ.
+**Hạn hồ sơ:** trước buổi 10 ít nhất 12 giờ. Gửi link PR `milestone/capstone`, bản ghi nộp bài, tag phát hành đã kiểm, link prototype (Figma hoặc HTML), hướng dẫn demo, bảng kết quả yêu cầu, test, AI và bảo mật và kế hoạch 30 ngày. **Hạn sửa sau bảo vệ:** trong 24 giờ sau khi buổi 10 kết thúc; gửi link cập nhật và danh sách phản hồi đã xử lý. Nếu sửa code, kiểm lại và tạo tag phát hành mới, giữ bản đã bảo vệ.
 
 Chuẩn bị đường dẫn mở nhanh đến evidence đã tích lũy và dữ liệu demo, không biên soạn lại toàn bộ hồ sơ. Demo dùng đúng tag được nộp; phần sửa sau bảo vệ có phiên bản và kết quả kiểm mới theo hạn quy định.
 
@@ -1133,7 +1138,7 @@ Chuẩn bị đường dẫn mở nhanh đến evidence đã tích lũy và dữ
 | --- | --- | --- | --- |
 | Phạm vi và kế hoạch | 5 | Mục tiêu, phạm vi và backlog nhất quán với phần cần bổ sung vào starter; PR đã tự review, CI đúng phiên bản; trách nhiệm với AI rõ | Ưu tiên và phụ thuộc hợp lý; kế hoạch cập nhật theo kết quả thực tế; giải thích được cách xử lý phát hiện review |
 | Spec và truy vết yêu cầu | 10 | AC có luồng chính và ngoại lệ; yêu cầu phi chức năng có cách đo; công việc, ước lượng và test case liên kết được; thử tích hợp ghi rõ phần đã/chưa kiểm | Truy từ yêu cầu đến test và từ test về yêu cầu; xử lý giả định quan trọng; cập nhật traceability matrix sau thay đổi |
-| Thiết kế giao diện, API và dữ liệu | 10 | Figma, API, từ điển dữ liệu, phiên bản cấu trúc và quyền sở hữu nhất quán; quyết định kiến trúc có phương án và căn cứ; có thiết kế migration và trạng thái lỗi | Triển khai khớp thiết kế hoặc giải thích khác biệt; kiểm hai kích thước/bàn phím; liên kết quyết định thiết kế với yêu cầu và test |
+| Thiết kế giao diện, API và dữ liệu | 10 | Prototype, API, từ điển dữ liệu, phiên bản cấu trúc và quyền sở hữu nhất quán; quyết định kiến trúc có phương án và căn cứ; có thiết kế migration và trạng thái lỗi | Triển khai khớp thiết kế hoặc giải thích khác biệt; kiểm hai kích thước/bàn phím; liên kết quyết định thiết kế với yêu cầu và test |
 | Chức năng và TDD | 12 | Auth và transactional email tầng Core, Notebook, Document/Chat, Note, Summary, Quiz và AI Output hoạt động qua các lớp tích hợp tương ứng; tiêu chí bắt buộc đạt; có test thất bại trước sửa rồi đạt sau sửa; xử lý trạng thái và lỗi | Tái chạy được bản nộp; mọi tiêu chí áp dụng có minh chứng; giải thích ranh giới mô phỏng; dữ liệu còn sau khởi động lại, thao tác lặp đúng |
 | Refactor và tự động hóa | 8 | Có test ghi nhận hành vi module trước thay đổi; diff đúng phạm vi, regression giữ quy tắc nghiệp vụ; task tự động thực chạy và giới hạn rõ; AI Engineering Kit (hook, skill, subagent, bảo vệ test) được dùng thật | So sánh trước/sau chứng minh cải thiện; chạy lại từ checkpoint hoặc khôi phục; mọi thay đổi hành vi có căn cứ yêu cầu |
 | Test và nghiệm thu | 8 | Chọn tầng test theo yêu cầu/rủi ro; nghiệm thu có kỳ vọng và thực tế; lỗi quan trọng được kiểm lại; điều kiện đo rõ | Người khác chạy lại được; phân tích thiếu sót và test không ổn định; chứng minh test bắt lỗi và truy vết đầy đủ trên bản nộp |
@@ -1350,7 +1355,7 @@ Có **72 mã yêu cầu gốc hoặc nhóm yêu cầu và 163 acceptance criteri
 | --- | --- |
 | A | Giữ hành vi, giới hạn và ngoại lệ đối với các đối tượng thuộc bài tập. Có 136 tiêu chí thuộc nhóm này. |
 | D1 | Danh mục công cụ, cấu hình, schema, nguồn, API và lọc theo loại chỉ áp dụng Tóm tắt và Quiz. Bỏ nhánh riêng của Mindmap, Slide và Báo cáo; giữ yêu cầu về dữ liệu, nguồn, trạng thái và an toàn. |
-| D2 | Thiết kế Figma và màn hình UI-01 đến UI-08 có đầy đủ hành trình Tóm tắt và Quiz; không phải triển khai ba công cụ mở rộng. Giữ trạng thái, kích thước hiển thị, thao tác bàn phím và các tiêu chí trải nghiệm khác. |
+| D2 | Prototype thiết kế (Figma hoặc HTML, theo [LR-10](#lr-10)) và màn hình UI-01 đến UI-08 có đầy đủ hành trình Tóm tắt và Quiz. Trong phạm vi bài tập, yêu cầu "thiết kế Figma" của SRS (OBJ-04, IH-UX-001, IH-REL-002-R07, UAT-15, REF-06) được đáp ứng bằng prototype đã chốt phiên bản: link Figma và phiên bản, hoặc đường dẫn HTML trong repository và commit/tag; không phải triển khai ba công cụ mở rộng. Giữ trạng thái, kích thước hiển thị, thao tác bàn phím và các tiêu chí trải nghiệm khác. |
 | D3 | Kiểm tích hợp và nội dung AI thật cho hỏi đáp, Tóm tắt và Quiz: AEV-01, AEV-03, AEV-05 cùng hai lượt lặp, tổng 12 lượt nội dung. Google và email vẫn kiểm bằng dịch vụ thật. |
 | D4 | Nghiệm thu R1 của bài tập hai công cụ, với 151 AC áp dụng và phần tương ứng trong UAT-01 đến UAT-21. Không kết luận đạt toàn bộ sản phẩm năm công cụ. |
 | D5 | IH-MSG-003-AC01 kiểm bằng dịch vụ thật bốn email EML-001, EML-002, EML-004, EML-005 trong tầng Core; EML-003 phụ thuộc liên kết Google (IH-AUTH-005-AC04) nên thuộc Extended. Giữ yêu cầu về liên kết, thời hạn, dùng một lần và lỗi gửi. |
@@ -1374,13 +1379,13 @@ Mã khóa học, đơn vị và chủ đề có tiền tố B2BC07. PLO là chu�
 | LR-04..05 | PLO-1 / C01-CLO-3,4 | C01-U02 T01-T04 | Hướng dẫn AI và quy trình agent | Quy trình agent và kiểm soát quyền |
 | LR-06..07 | PLO-1 / C02-CLO-1 | C02-U01 T01-T04 | Hồ sơ dự án, backlog và CI | Phạm vi và kế hoạch |
 | LR-08..09 | PLO-2 / C02-CLO-2 | C02-U02 T01-T04 | Yêu cầu, test case và thử tích hợp | Spec và truy vết yêu cầu |
-| LR-10..11 | PLO-3 / C02-CLO-3 | C02-U03 T01-T05 | Figma, API, dữ liệu, quyết định kiến trúc và threat model sơ bộ | Thiết kế giao diện, API và dữ liệu |
-| LR-12..13 | PLO-4 / C02-CLO-4 | C02-U04 T01-T04 | Hành trình Auth - Notebook - Document - Chat và TDD | Chức năng và TDD |
+| LR-10..11 | PLO-3 / C02-CLO-3 | C02-U03 T01-T05 | Prototype (Figma hoặc HTML), API, dữ liệu, quyết định kiến trúc và threat model sơ bộ | Thiết kế giao diện, API và dữ liệu |
+| LR-12..13 | PLO-4 / C02-CLO-4 | C02-U04 T01-T03 | Hành trình Auth - Notebook - Document - Chat và TDD | Chức năng và TDD |
 | LR-14..18 | PLO-4 / C02-CLO-4 | C02-U04 T01-T04; C02-U03-T02 | Đủ Auth, Email, Notebook/Document/Conversation/Note, Summary, Quiz và AI Output | Chức năng sản phẩm |
 | LR-19 | PLO-4 / C02-CLO-4 | C02-U04 T05-T08 | Module refactor và task tự động | Refactor, tự động hóa và Assignment |
-| LR-20..22 | PLO-5 / C02-CLO-5 | C02-U05 T01, T02, T04 | Kết quả test và nghiệm thu | Test, nghiệm thu và phân quyền |
-| LR-23 | PLO-5 / C02-CLO-5 | C02-U05-T09 | Golden set, grader và kết quả eval AI | Chất lượng nội dung AI |
-| LR-24 | PLO-1,5 / C01-CLO-4, C02-CLO-5 | C02-U05 T06-T07; C02-U03-T05; C01-U02-T04 | Threat model cập nhật, scan, SBOM/AI-BOM và kiểm bảo mật | Bảo mật ứng dụng và quy trình AI |
+| LR-20..22 | PLO-5 / C02-CLO-5 | C02-U05 T01-T03 | Kết quả test và nghiệm thu | Test, nghiệm thu và phân quyền |
+| LR-23 | PLO-5 / C02-CLO-5 | C02-U05-T04 | Golden set, grader và kết quả eval AI | Chất lượng nội dung AI |
+| LR-24 | PLO-1,5 / C01-CLO-4, C02-CLO-5 | C02-U05 T05-T06; C02-U03-T05; C01-U02-T04 | Threat model cập nhật, scan, SBOM/AI-BOM và kiểm bảo mật | Bảo mật ứng dụng và quy trình AI |
 | LR-25..26 | PLO-6 / C02-CLO-6 | C02-U06 T01-T04 | Bản phát hành, runbook và restore | Phát hành và khôi phục |
 | LR-27 | PLO-6 / C02-CLO-6 | C02-U06 T01-T04 | Hồ sơ thay đổi và regression | Thay đổi sau phát hành |
 | LR-28 | PLO-1..6 / C02-CLO-1..6 | C02-U07 T01-T04 | Demo và vấn đáp | Demo và vấn đáp |
@@ -1403,7 +1408,7 @@ Mã LR là công việc học tập; mã IH là yêu cầu sản phẩm; AC là 
 | LR-07 | M1 | [Thiết lập quy trình phát triển](#lr-07) |
 | LR-08 | M2.1 | [Lập bảng yêu cầu và test case](#lr-08) |
 | LR-09 | M2.1 | [Thử tích hợp trước khi chốt thiết kế](#lr-09) |
-| LR-10 | M2 | [Thiết kế Figma](#lr-10) |
+| LR-10 | M2 | [Prototype thiết kế (Figma hoặc HTML)](#lr-10) |
 | LR-11 | M2 | [Thiết kế API và dữ liệu](#lr-11) |
 | LR-12 | M3.1 | [Triển khai Auth - Notebook - Document - Chat](#lr-12) |
 | LR-13 | M3.1 | [Thực hiện TDD cho một hành vi có rủi ro](#lr-13) |
@@ -1682,7 +1687,7 @@ Mỗi lựa chọn thiết kế cần chỉ ra yêu cầu chi phối, API, dữ 
 | --- | --- | --- | --- | --- | --- |
 | Tên hành trình hoặc trạng thái | Mã IH/AC | Phản hồi thành công, lỗi và quyền | Đối tượng, trạng thái và phiên bản | Thứ tự focus và phím | Kỳ vọng, test case và minh chứng |
 
-Dùng thành phần giao diện tái sử dụng và chú thích cho trạng thái dùng chung. Liên kết Figma phải là file và phiên bản thực có quyền xem; khi triển khai khác thiết kế, cập nhật và giải thích.
+Dùng thành phần giao diện tái sử dụng và chú thích cho trạng thái dùng chung. Liên kết Figma phải là file và phiên bản thực có quyền xem; prototype HTML phải nằm trong repository, mở được bằng trình duyệt không cần backend và gắn commit hoặc tag. Khi triển khai khác thiết kế, cập nhật và giải thích.
 
 ### 16.6. TDD, characterization test trước refactor và kiểm hành trình
 
