@@ -22,17 +22,17 @@ InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa v
 
 | Nhóm chức năng | Kết quả cần xây dựng |
 | --- | --- |
-| Auth và Account | Đăng ký, xác minh email, đăng nhập mật khẩu/Google, liên kết danh tính, quản lý session, recovery, đổi mật khẩu và profile. |
-| Transactional Email | Tích hợp năm email: xác minh, reset mật khẩu, thông báo liên kết Google, hướng dẫn tài khoản Google và thông báo thay đổi mật khẩu. Starter cấp Mailpit và adapter SMTP tối thiểu; phần chấm theo tầng Core/Extended. |
-| Notebook | Tạo, liệt kê, mở, cập nhật và xóa; áp dụng ownership, giới hạn, pagination và version conflict. |
+| Auth và Account | **Core:** đăng ký, xác minh email, đăng nhập mật khẩu/Google, quản lý session, recovery, đổi mật khẩu và profile. **Extended:** liên kết danh tính, phiên chờ xác minh, giới hạn thử. |
+| Transactional Email | **Core:** xác minh (EML-001), reset mật khẩu (EML-002), hướng dẫn tài khoản chỉ dùng Google (EML-004). **Extended:** thông báo liên kết Google (EML-003), thông báo thay đổi mật khẩu (EML-005). Starter cấp Mailpit và adapter SMTP tối thiểu. |
+| Notebook | **Core:** tạo, liệt kê, mở, cập nhật và xóa; ownership, giới hạn, pagination. **Extended:** version conflict. |
 | Document | Tích hợp upload, trạng thái, retry, citation và xóa của Starter với Notebook, quyền và vòng đời dữ liệu. |
-| Chat và Conversation | Hỏi đáp theo nguồn được phép; quản lý conversation và giữ lịch sử độc lập với operation TTL. |
-| Note | Tạo, xem, sửa, xóa; lưu câu trả lời hoặc Summary thành bản sao độc lập có provenance. |
-| Summary | Chọn nguồn/độ dài, tạo nội dung có căn cứ, lưu và mở lại, chuyển thành Note. |
+| Chat và Conversation | **Core:** hỏi đáp theo nguồn được phép; giữ lịch sử conversation độc lập với operation TTL. **Extended:** đổi tên, xóa conversation. |
+| Note (Extended) | Tạo, xem, sửa, xóa; lưu câu trả lời hoặc Summary thành bản sao độc lập có provenance. |
+| Summary | Chọn nguồn/độ dài, tạo nội dung có căn cứ, lưu và mở lại. Chuyển thành Note là Extended. |
 | Quiz | Tạo đề, làm/nộp bài, chấm tại server, bảo vệ đáp án và lưu lịch sử lần làm. |
-| AI Job và Output | Theo dõi AI job, xem/lọc/rename/regenerate/delete kết quả; kiểm quota, idempotency, deadline và nguồn bị xóa. |
+| AI Job và Output | **Core:** theo dõi AI job, xem, mở lại, xóa kết quả; quota, idempotency, deadline và nguồn bị xóa. **Extended:** lọc, rename, regenerate. |
 
-Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các chức năng dùng chung trong bảng trên. Mindmap, Slide và Báo cáo chỉ được triển khai ở giai đoạn mở rộng cuối khi mentor cho phép. Học viên còn thực hiện UI/UX, test, release local/sandbox và một thay đổi sau phát hành; phạm vi có 151 AC áp dụng trong [traceability matrix](docs/learner/01_Requirements_InsightHub.md#pham-vi-truy-vet). AC được phân tầng Core (chấm) và Extended (Stretch, không trừ điểm); danh sách Core công bố trước M3, trước đó giữ trạng thái như Requirements 1.0 ([Core và Extended](docs/learner/01_Requirements_InsightHub.md#core-extended)).
+Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các chức năng dùng chung trong bảng trên. Mindmap, Slide và Báo cáo chỉ được triển khai ở giai đoạn mở rộng cuối khi mentor cho phép. Học viên còn thực hiện UI/UX, test, release local/sandbox và một thay đổi sau phát hành; phạm vi có 151 AC áp dụng trong [traceability matrix](docs/learner/01_Requirements_InsightHub.md#pham-vi-truy-vet). AC được phân tầng **106 Core** (chấm) và **45 Extended** (Stretch, không trừ điểm), công bố ngày 29/09/2026 ([Core và Extended](docs/learner/01_Requirements_InsightHub.md#core-extended)). Học viên tập trung hoàn thiện Auth, Notebook (gồm Document và Chat) và hai AI Tools; phần Extended làm khi Core đã đạt.
 
 [Requirements](docs/learner/01_Requirements_InsightHub.md) là tài liệu giao việc chính, gồm chức năng, 29 công việc, mười milestone, dữ liệu/API, rubric và evidence. [Ma trận tiến độ sản phẩm](docs/learner/01_Requirements_InsightHub.md#ma-tran-chuc-nang) chỉ rõ mức hoàn thành từng nhóm: M3.1 chạy hành trình Auth - Notebook - Document - Chat; M3 hoàn thiện phạm vi; M4 kiểm tổng hợp; M5 phát hành R1 rồi thực hiện thay đổi R1.1. Mỗi milestone nối kết quả sản phẩm với cách áp dụng SDLC và AI.
 

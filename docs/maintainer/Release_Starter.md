@@ -56,5 +56,5 @@ Script dùng `git archive` (chỉ file đã track), bỏ `scripts/maintainer/`, 
 - Đổi SRS phải cập nhật `sha256` trong `API_Schema_Reference/Manifest_Reference.json` của ZIP API/Schema, nếu không `check_project.py` báo `Reference SRS hash drift`.
 - `.gitattributes` giữ SRS, `evaluation/corpus/` và `sample-docs/` ở dạng byte-exact (`-text`) để hash không đổi trên Windows.
 - Tài liệu học viên nằm tại `docs/learner/` (không gắn version vào tên thư mục). Đổi vị trí phải cập nhật `starter.manifest.json` (`requirements_baseline`, `learner_requirements`, `api_schema_reference`, `documentation_revision`).
-- Đổi mức rủi ro gợi ý hoặc danh sách Core/Extended: sửa bản đồ trong `scripts/maintainer/build_trace_skeleton.py`, chạy lại script và công bố cho lớp trước milestone liên quan.
+- Đổi mức rủi ro gợi ý hoặc danh sách Core/Extended: sửa bản đồ trong `scripts/maintainer/build_trace_skeleton.py` và cột Tầng ở Requirements mục 15.4 (script dừng nếu hai nơi lệch), chạy lại script và công bố cho lớp trước milestone liên quan.
 - Giữ nhãn version cho tới khi Academic Owner quyết định baseline lớp.
