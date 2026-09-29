@@ -7,7 +7,7 @@
 | Nhóm | Cột | Ý nghĩa |
 | --- | --- | --- |
 | Giảng viên cấp | `ac_id`, `req_id`, `group`, `scope`, `lr`, `due`, `uat`, `srs_ref` | Lấy từ Requirements mục 15.4; không sửa |
-| Giảng viên cấp | `tier` | `Core` (chấm), `Extended` (Stretch), `Pending` (chờ công bố danh sách Core), `OutOfScope` |
+| Giảng viên cấp | `tier` | `Core` (chấm, 106 AC), `Extended` (Stretch, 45 AC, công bố 29/09/2026), `OutOfScope` (12 AC). `Pending` chỉ dùng khi giảng viên chưa công bố tầng |
 | Giảng viên cấp | `risk_suggested` | Mức rủi ro gợi ý R1/R2/R3 |
 | Học viên | `risk`, `risk_reason` | Mức rủi ro áp dụng; hạ mức so với gợi ý phải ghi lý do |
 | Học viên | `branches`, `expected` | Nhánh cần kiểm, input và expected result theo SRS |

@@ -1,6 +1,6 @@
 # Requirements - Dự án cá nhân InsightHub
 
-B2B C07 - SDLC with AI | Phiên bản 1.1 Draft, revision 29/09/2026, phát hành sau diễn tập M3 (D5)
+B2B C07 - SDLC with AI | Phiên bản 1.1 Draft, revision 29/09/2026 (công bố Core/Extended D7), phát hành sau diễn tập M3 (D5)
 Học trực tuyến, thực hiện cá nhân | 10 buổi, 25 giờ trên lớp và 45 giờ tự học
 
 Tài liệu xác định các chức năng InsightHub học viên phải xây, cách áp dụng SDLC và AI vào 29 công việc, cùng kết quả cần đạt qua 10 buổi. Phạm vi, thiết kế và tích hợp, rubric, cách nộp bài và mẫu evidence được trình bày trong cùng tài liệu. Học viên bắt đầu tại mục 1-2, thực hiện milestone tương ứng và tra các mục chuyên đề ngay trong tài liệu.
@@ -34,21 +34,23 @@ Tài liệu xác định các chức năng InsightHub học viên phải xây, c
 
 Mỗi học viên xây dựng sản phẩm InsightHub hoàn chỉnh trong phạm vi bài tập từ Starter do giảng viên cung cấp. Người dùng có thể đăng nhập, quản lý Notebook và tài liệu, hỏi đáp có nguồn, lưu hội thoại và ghi chú, tạo bản Tóm tắt và làm Quiz từ tài liệu.
 
-### 1.1. Chức năng bắt buộc của sản phẩm bài tập
+### 1.1. Chức năng của sản phẩm bài tập: Core và Extended
+
+**Bắt buộc (Core):** Auth, Notebook (gồm Document và Chat/Conversation trong Notebook), hai AI Tools Summary và Quiz, cùng phần AI Job/Output đủ để hai công cụ chạy, kiểm chứng ở M4 và phát hành ở M5. **Làm thêm (Extended):** Note, quản lý kết quả AI (đổi tên, tạo lại, lọc), liên kết Google và các nhánh nâng cao. Extended không trừ điểm khi chưa làm; danh sách từng AC tại [mục 2.1.5](#core-extended).
 
 Học viên hoàn thiện mỗi nhóm chức năng qua các phần UI, API và dữ liệu liên quan theo SRS, sử dụng thư viện và phần nền được cung cấp. Các nhóm là cách tổ chức đề bài, không bắt buộc tách thành service, module hoặc màn hình quản trị riêng.
 
-| Nhóm chức năng | Người dùng phải làm được gì trong bản hoàn thiện | Trách nhiệm của học viên | Yêu cầu và công việc liên quan |
-| --- | --- | --- | --- |
-| **Auth và Account** | Đăng ký, xác minh email, đăng nhập bằng mật khẩu và Google, liên kết danh tính, khôi phục/đổi mật khẩu, quản lý profile, session và logout. | Xây nghiệp vụ tài khoản và tích hợp thư viện hoặc dịch vụ Auth; kiểm quyền tại server. Starter chưa có chức năng này. | IH-AUTH-001 đến IH-AUTH-010; [LR-09](#lr-09), [LR-12](#lr-12), [LR-14](#lr-14). |
-| **Transactional Email** | Nhận email xác minh, reset mật khẩu, thông báo liên kết Google, hướng dẫn tài khoản chỉ dùng Google và thông báo đổi/reset mật khẩu. | Tạo đúng sự kiện EML-001 đến EML-005, nội dung, link và trạng thái gửi; kiểm thư nhận thật và lỗi chuyển giao. | IH-MSG-003; [LR-09](#lr-09), [LR-14](#lr-14), [danh mục email](#auth-email). |
-| **Notebook** | Tạo, xem danh sách, mở, đổi tên/mô tả và xóa Notebook thuộc quyền; nhận thông báo khi vượt giới hạn hoặc có version conflict. | Xây UI/API/data cho Notebook, ownership, pagination, giới hạn và quy tắc xóa tài nguyên con. | IH-NB-001 đến IH-NB-004; [LR-12](#lr-12), [LR-15](#lr-15). |
-| **Document** | Upload TXT, Markdown và PDF có văn bản; xem trạng thái, retry khi lỗi, mở nội dung/citation và xóa tài liệu. | Tái sử dụng ingestion, extraction và index của Starter; tích hợp Notebook, quyền, quota, chống trùng, trạng thái và vòng đời. | IH-DOC-001 đến IH-DOC-006; [LR-12](#lr-12), [LR-15](#lr-15). |
-| **Chat và Conversation** | Hỏi đáp theo nguồn, mở citation, phân biệt thiếu căn cứ với lỗi; tạo, xem, đổi tên và xóa conversation; đọc lại lịch sử. | Tích hợp RAG nền với quyền và phạm vi nguồn; xây persistence và quản lý conversation độc lập với operation TTL. | IH-CHAT-001 đến IH-CHAT-005; [LR-12](#lr-12), [LR-15](#lr-15). |
-| **Note** | Tạo, mở, sửa, xóa Note; lưu câu trả lời hoặc Summary hợp lệ thành bản sao độc lập. | Xây UI/API/data, validation, version conflict và provenance; bảo toàn Note theo quy tắc xóa của SRS. | IH-NOTE-001, IH-NOTE-002, IH-SUM-002; [LR-15](#lr-15), [LR-16](#lr-16). |
-| **Summary (Tóm tắt)** | Chọn nguồn và độ dài, tạo Summary có căn cứ, xem nguồn, mở lại và lưu thành Note. | Xây cấu hình, prompt/schema/parser, UI, persistence và kiểm chất lượng nội dung trên kết nối model đã có. | IH-SUM-001, IH-SUM-002; [LR-16](#lr-16). |
-| **Quiz** | Tạo đề, chọn câu trả lời, nộp bài, xem điểm/giải thích, mở lại lần đã nộp và làm lại. | Xây schema công khai/nội bộ, UI và chấm tại server; bảo vệ đáp án, lưu QuizAttempt, xử lý nộp lặp. | IH-QUIZ-001, IH-QUIZ-002, IH-DATA-002; [LR-17](#lr-17). |
-| **AI Job và Output** | Theo dõi AI job (tác vụ AI), xem/lọc kết quả, đổi tên, regenerate và xóa kết quả thuộc quyền. | Tích hợp trạng thái, schema validation, citation, shared quota, idempotency, deadline và xử lý nguồn bị xóa cho Chat, Summary, Quiz. | IH-AI-001 đến IH-AI-004, IH-OUT-001 đến IH-OUT-003, IH-INT-004; [LR-18](#lr-18). |
+| Nhóm chức năng | Người dùng phải làm được gì trong bản hoàn thiện | Trách nhiệm của học viên | Yêu cầu và công việc liên quan | Tầng |
+| --- | --- | --- | --- | --- |
+| **Auth và Account** | Đăng ký, xác minh email, đăng nhập bằng mật khẩu và Google, liên kết danh tính, khôi phục/đổi mật khẩu, quản lý profile, session và logout. | Xây nghiệp vụ tài khoản và tích hợp thư viện hoặc dịch vụ Auth; kiểm quyền tại server. Starter chưa có chức năng này. | IH-AUTH-001 đến IH-AUTH-010; [LR-09](#lr-09), [LR-12](#lr-12), [LR-14](#lr-14). | Core; Extended: liên kết Google cùng email, phiên chờ xác minh, giới hạn thử, avatar |
+| **Transactional Email** | Nhận email xác minh, reset mật khẩu, thông báo liên kết Google, hướng dẫn tài khoản chỉ dùng Google và thông báo đổi/reset mật khẩu. | Tạo đúng sự kiện EML-001 đến EML-005, nội dung, link và trạng thái gửi; kiểm thư nhận thật và lỗi chuyển giao. | IH-MSG-003; [LR-09](#lr-09), [LR-14](#lr-14), [danh mục email](#auth-email). | Core: EML-001, EML-002, EML-004; Extended: EML-003, EML-005 |
+| **Notebook** | Tạo, xem danh sách, mở, đổi tên/mô tả và xóa Notebook thuộc quyền; nhận thông báo khi vượt giới hạn hoặc có version conflict. | Xây UI/API/data cho Notebook, ownership, pagination, giới hạn và quy tắc xóa tài nguyên con. | IH-NB-001 đến IH-NB-004; [LR-12](#lr-12), [LR-15](#lr-15). | Core; Extended: version conflict khi sửa, hộp xác nhận xóa chi tiết |
+| **Document** | Upload TXT, Markdown và PDF có văn bản; xem trạng thái, retry khi lỗi, mở nội dung/citation và xóa tài liệu. | Tái sử dụng ingestion, extraction và index của Starter; tích hợp Notebook, quyền, quota, chống trùng, trạng thái và vòng đời. | IH-DOC-001 đến IH-DOC-006; [LR-12](#lr-12), [LR-15](#lr-15). | Core (phần lớn Starter đã có, kiểm lại sau tích hợp); Extended: retry trên UI, trang chi tiết, dọn dữ liệu sau xóa |
+| **Chat và Conversation** | Hỏi đáp theo nguồn, mở citation, phân biệt thiếu căn cứ với lỗi; tạo, xem, đổi tên và xóa conversation; đọc lại lịch sử. | Tích hợp RAG nền với quyền và phạm vi nguồn; xây persistence và quản lý conversation độc lập với operation TTL. | IH-CHAT-001 đến IH-CHAT-005; [LR-12](#lr-12), [LR-15](#lr-15). | Core; Extended: đổi tên, xóa conversation, conversation mất nguồn cuối |
+| **Note** | Tạo, mở, sửa, xóa Note; lưu câu trả lời hoặc Summary hợp lệ thành bản sao độc lập. | Xây UI/API/data, validation, version conflict và provenance; bảo toàn Note theo quy tắc xóa của SRS. | IH-NOTE-001, IH-NOTE-002, IH-SUM-002; [LR-15](#lr-15), [LR-16](#lr-16). | **Extended** |
+| **Summary (Tóm tắt)** | Chọn nguồn và độ dài, tạo Summary có căn cứ, xem nguồn, mở lại và lưu thành Note. | Xây cấu hình, prompt/schema/parser, UI, persistence và kiểm chất lượng nội dung trên kết nối model đã có. | IH-SUM-001, IH-SUM-002; [LR-16](#lr-16). | Core; Extended: lưu thành Note |
+| **Quiz** | Tạo đề, chọn câu trả lời, nộp bài, xem điểm/giải thích, mở lại lần đã nộp và làm lại. | Xây schema công khai/nội bộ, UI và chấm tại server; bảo vệ đáp án, lưu QuizAttempt, xử lý nộp lặp. | IH-QUIZ-001, IH-QUIZ-002, IH-DATA-002; [LR-17](#lr-17). | Core |
+| **AI Job và Output** | Theo dõi AI job (tác vụ AI), xem/lọc kết quả, đổi tên, regenerate và xóa kết quả thuộc quyền. | Tích hợp trạng thái, schema validation, citation, shared quota, idempotency, deadline và xử lý nguồn bị xóa cho Chat, Summary, Quiz. | IH-AI-001 đến IH-AI-004, IH-OUT-001 đến IH-OUT-003, IH-INT-004; [LR-18](#lr-18). | Core: trạng thái, schema, quota, idempotency, deadline, danh sách, mở lại, xóa; Extended: đổi tên, tạo lại |
 
 ### 1.2. Yêu cầu áp dụng xuyên các chức năng
 
@@ -59,7 +61,7 @@ Học viên hoàn thiện mỗi nhóm chức năng qua các phần UI, API và d
 
 Starter cung cấp Next.js, FastAPI, PostgreSQL/pgvector, Docker Compose, ingestion, embedding/index, RAG cơ bản, dữ liệu mẫu và công cụ kiểm. Học viên kiểm lại các phần này sau khi tích hợp; kết quả của Starter không tự xác nhận phần mở rộng đã đạt.
 
-[SRS InsightHub v1.0](02_SRS_InsightHub_v1.0.md) là spec (đặc tả) hành vi sản phẩm. Bài tập áp dụng **151 AC** cho phạm vi trên; [bảng phạm vi](#pham-vi-truy-vet) chỉ rõ 12 tiêu chí ngoài phạm vi bắt buộc. Các AC áp dụng được phân tầng Core và Extended theo [mục 2.1.5](#core-extended). Mindmap, Slide và Báo cáo không bắt buộc. Không yêu cầu triển khai hạ tầng cloud cho vận hành thực tế hoặc Kubernetes.
+[SRS InsightHub v1.0](02_SRS_InsightHub_v1.0.md) là spec (đặc tả) hành vi sản phẩm. Bài tập áp dụng **151 AC** cho phạm vi trên, gồm **106 AC Core** và **45 AC Extended**; [bảng phạm vi](#pham-vi-truy-vet) chỉ rõ 12 tiêu chí ngoài phạm vi bắt buộc. Các AC áp dụng được phân tầng Core và Extended theo [mục 2.1.5](#core-extended). Mindmap, Slide và Báo cáo không bắt buộc. Không yêu cầu triển khai hạ tầng cloud cho vận hành thực tế hoặc Kubernetes.
 
 Phần [thiết kế dữ liệu và API](#data-api) xác định đầu ra cần thực hiện và cách tích hợp Starter. Tra [glossary](#glossary) để phân biệt các thuật ngữ như test case, test scenario, schema và migration.
 
@@ -96,7 +98,7 @@ Phần [thiết kế dữ liệu và API](#data-api) xác định đầu ra cầ
 | 4 | M2.1 | Yêu cầu và test case theo chức năng; kết quả spike Google, email và AI | 5 giờ | Trước buổi 5 ít nhất 12 giờ |
 | 5 | M2 | Prototype thiết kế (Figma hoặc HTML), API, schema, ADR và threat model sơ bộ cho các chức năng bài tập | 4 giờ | Trước buổi 6 ít nhất 12 giờ |
 | 6 | M3.1 | Đăng nhập → Notebook → upload → hỏi đáp → citation → mở lại conversation | 5 giờ | Trước buổi 7 ít nhất 12 giờ |
-| 7 | M3 | Auth và email theo tầng Core/Extended, Notebook/Document/Conversation/Note, Summary, Quiz và AI Output theo tầng Core/Extended; refactor | 6 giờ | Chức năng: trước buổi 8 ít nhất 12 giờ; bài refactor: trước buổi 9 ít nhất 12 giờ |
+| 7 | M3 | Auth và email tầng Core, Notebook/Document/Conversation, Summary, Quiz và AI Output tầng Core; refactor. Extended (Note, quản lý Output, liên kết Google) khi Core đã đạt | 6 giờ | Chức năng: trước buổi 8 ít nhất 12 giờ; bài refactor: trước buổi 9 ít nhất 12 giờ |
 | 8 | M4 | Kết quả kiểm từng chức năng, quyền, eval AI, threat model cập nhật và lỗi đã sửa | 6 giờ | Trước buổi 9 ít nhất 12 giờ |
 | 9 | M5 | R1 cài được, dữ liệu khôi phục được và thay đổi R1.1 có regression test | 4 giờ | Trước buổi 10 ít nhất 12 giờ |
 | 10 | Capstone | Demo sản phẩm hoàn chỉnh, truy vết quyết định và kế hoạch áp dụng 30 ngày | 4 giờ | Hồ sơ trước buổi 10 ít nhất 12 giờ; sửa theo review trong 24 giờ sau khi kết thúc buổi 10 |
@@ -131,14 +133,14 @@ M1 lập backlog cho tất cả nhóm; M2.1 phân tích yêu cầu và spike r�
 | Nhóm | Chuẩn bị tại M2.1 và M2 | Phần phải chạy tại M3.1 | Phần phải hoàn thiện tại M3 | Kết quả tại M4 và M5 |
 | --- | --- | --- | --- | --- |
 | Auth và Account | Phân tích các Auth flow, thử Google, linking và session; thiết kế UI/API/data. | Một Auth flow hợp lệ của SRS tạo session thực cho hai tài khoản A/B. | Cả mật khẩu và Google, linking, profile, recovery, đổi mật khẩu, session và logout. | Kiểm đủ nhánh, rate limit, session và lỗi; kiểm đăng nhập/quyền sau cài mới và restore. |
-| Transactional Email | Thử gửi/nhận thật; xác định trigger, nội dung, link và trạng thái của năm email. | Nếu chọn email/mật khẩu để đăng nhập, phải có EML-001 và xác minh hợp lệ. Nếu chọn Google, chưa yêu cầu tích hợp đủ email vào sản phẩm ở mốc này. | Tích hợp EML-001, EML-002, EML-004, EML-005 (Core) với đúng Auth flow; EML-003 cùng liên kết Google (Extended). | Có thư nhận thật, kết quả hành động và kiểm lỗi gửi; cấu hình bàn giao không chứa secret. |
-| Notebook | Spec thao tác, quyền, giới hạn; thiết kế trang danh sách và workspace. | Tạo, liệt kê và mở Notebook đúng owner trong hành trình đầu tiên. | Hoàn thiện cập nhật, pagination, giới hạn, version conflict và xóa cùng tài nguyên con. | Test quyền A/B, thao tác và vòng đời; kiểm dữ liệu/quyền sau restore. |
+| Transactional Email | Thử gửi/nhận thật; xác định trigger, nội dung, link và trạng thái của email tầng Core (EML-001, EML-002, EML-004). | Nếu chọn email/mật khẩu để đăng nhập, phải có EML-001 và xác minh hợp lệ. Nếu chọn Google, chưa yêu cầu tích hợp đủ email vào sản phẩm ở mốc này. | Tích hợp EML-001, EML-002, EML-004 (Core) với đúng Auth flow; EML-003 cùng liên kết Google và EML-005 (Extended). | Có thư nhận thật, kết quả hành động và kiểm lỗi gửi; cấu hình bàn giao không chứa secret. |
+| Notebook | Spec thao tác, quyền, giới hạn; thiết kế trang danh sách và workspace. | Tạo, liệt kê và mở Notebook đúng owner trong hành trình đầu tiên. | Hoàn thiện cập nhật, pagination, giới hạn và xóa cùng tài nguyên con (version conflict là Extended). | Test quyền A/B, thao tác và vòng đời; kiểm dữ liệu/quyền sau restore. |
 | Document | Đối chiếu ingestion có sẵn, định dạng và trạng thái; thiết kế tích hợp Notebook. | Upload tài liệu hợp lệ vào đúng Notebook, xử lý `Ready`, đọc nội dung và mở citation. | Đủ định dạng, lỗi, retry, chống trùng, quota, xóa và ảnh hưởng tới nguồn. | Test đầu vào hợp lệ/lỗi, quyền, deadline và xóa khi đang xử lý; kiểm dữ liệu/index sau restore. |
-| Chat và Conversation | Spec nguồn, citation, trạng thái và persistence; thiết kế API/lịch sử. | Hỏi đáp có nguồn, lưu lượt và mở lại conversation sau reload/restart; chặn tài khoản B. | Quản lý danh sách, đổi tên, xóa; `NoEvidence`, retry và quy tắc nguồn/lịch sử đầy đủ. | Kiểm UAT, nguồn bị xóa, idempotency và chất lượng câu trả lời; kiểm lịch sử sau restore. |
-| Note | Thiết kế nội dung, version và liên kết xuất xứ. | Chưa yêu cầu Note hoạt động trong hành trình đầu tiên. | Tạo, đọc, sửa, xóa; lưu câu trả lời/Summary thành bản sao độc lập. | Kiểm conflict, quyền và quan hệ sau xóa; kiểm nội dung sau restore. |
-| Summary | Xác định input, output schema, nội dung kỳ vọng và giao diện. | Thiết kế đã có; chưa yêu cầu Summary chạy ở mốc này. | Tạo Summary ngắn/chi tiết, citation, xem lại và lưu Note. | Kiểm schema, độ dài, từng claim và nguồn; giữ kết quả hợp lệ qua phát hành/restore. |
+| Chat và Conversation | Spec nguồn, citation, trạng thái và persistence; thiết kế API/lịch sử. | Hỏi đáp có nguồn, lưu lượt và mở lại conversation sau reload/restart; chặn tài khoản B. | Danh sách, `NoEvidence`, retry và quy tắc nguồn/lịch sử (Core); đổi tên, xóa conversation (Extended). | Kiểm UAT, nguồn bị xóa, idempotency và chất lượng câu trả lời; kiểm lịch sử sau restore. |
+| Note (Extended) | Không bắt buộc thiết kế. | Không yêu cầu. | Extended: tạo, đọc, sửa, xóa; lưu câu trả lời/Summary thành bản sao độc lập. | Nếu đã làm: kiểm conflict, quyền và quan hệ sau xóa. |
+| Summary | Xác định input, output schema, nội dung kỳ vọng và giao diện. | Thiết kế đã có; chưa yêu cầu Summary chạy ở mốc này. | Tạo Summary ngắn/chi tiết, citation, xem lại (lưu thành Note là Extended). | Kiểm schema, độ dài, từng claim và nguồn; giữ kết quả hợp lệ qua phát hành/restore. |
 | Quiz | Thiết kế đề, nội dung công khai/nội bộ, QuizAttempt và cách chấm. | Thiết kế đã có; chưa yêu cầu Quiz chạy ở mốc này. | Sinh đề, làm/nộp/chấm, xem kết quả, nộp lặp và làm lại. | Kiểm không lộ đáp án, nội dung câu hỏi và chấm điểm; giữ lịch sử sau restart/restore. |
-| AI Job và Output | Thiết kế trạng thái, shared quota, idempotency, deadline và schema version. | Tích hợp cơ chế áp dụng cho luồng Chat của hành trình đầu tiên. | Hoàn thiện cho Summary/Quiz, danh sách, lọc, rename, regenerate và delete. | Kiểm concurrency, restart, ba thứ tự xóa/công bố và phản hồi muộn; kiểm bản phát hành. |
+| AI Job và Output | Thiết kế trạng thái, shared quota, idempotency, deadline và schema version. | Tích hợp cơ chế áp dụng cho luồng Chat của hành trình đầu tiên. | Hoàn thiện cho Summary/Quiz, danh sách, mở lại và delete (Core); lọc, rename, regenerate (Extended). | Kiểm concurrency, restart, ba thứ tự xóa/công bố và phản hồi muộn; kiểm bản phát hành. |
 
 Mỗi ô là mức hoàn thành được yêu cầu, không phải kết quả đã đạt. Nếu một AC có nhiều nhánh, phần kiểm tại M3.1 chỉ ghi kết quả nhánh đã chạy; chỉ kết luận AC đạt khi toàn bộ điều kiện áp dụng đều đạt. Checklist chức năng dẫn tới cùng [traceability matrix](#bang-ket-qua), không tạo bảng kết luận thứ hai.
 
@@ -178,7 +180,7 @@ Milestone là điểm kiểm tiến độ học tập và sản phẩm. Trong m�
 - **Yêu cầu và test phát triển cùng sản phẩm:** M2.1 xác định đủ hành vi/nhánh/input/expected và cách đo; M2 bổ sung chi tiết API/data; M3.1-M3 bổ sung test thực chạy theo thay đổi; M4 tổng hợp và kiểm phần còn thiếu. Không chờ M4 mới test hoặc kiểm quyền.
 - **Thiết kế phục vụ triển khai:** spike được dùng thiết kế tối thiểu để kiểm giả định; M2 hoàn thiện thiết kế tích hợp. Khi code khác thiết kế đã chọn, giải thích lý do và cập nhật các phần liên quan trong cùng PR.
 - **Chuyển tiếp theo dependency:** phần độc lập có đầu vào đủ được tiếp tục. Phần bị chặn ghi yêu cầu bị ảnh hưởng, cách đã thử, vai trò cần hỗ trợ và mốc/bước kiểm tiếp theo trong bản nộp; chưa được ghi hoàn thành hoặc tích hợp Pass. Không tự miễn AC.
-- **Thời gian có AI:** estimate gồm đọc/hiểu, giao việc cho agent, kiểm/review, sửa/retest và chờ/hỗ trợ. Tái dùng kết quả đã làm trên lớp trong POST; ghi chênh lệch và việc còn lại để giảng viên hỗ trợ trong ngân sách tại mục 2.1. Tốc độ sinh code hoặc thời gian chạy test không đại diện thời gian hoàn thành của học viên.
+- **Thời gian có AI (estimate theo công kiểm chứng):** agent rút ngắn thời gian viết code, không rút ngắn thời gian học viên xác lập expected và review. Ước lượng mỗi công việc bằng tổng: xác lập và kiểm expected của AC (gợi ý R1 6 phút, R2 3 phút, R3 1 phút mỗi AC; AC Starter đã có chỉ cần kiểm lại 1 phút), viết brief và duyệt plan (khoảng 8 phút), theo dõi agent (khoảng 5 phút, chỉ tính lúc cần chú ý), review diff (khoảng 15 phút cho PR 300 dòng, nhân 1,5 với rủi ro R1), sửa lại (khoảng 30% thời gian review) và ghi evidence (khoảng 5 phút). Các tham số là mặc định để hiệu chỉnh bằng số đo trong AI Delivery Log, không phải định mức. Tái dùng kết quả đã làm trên lớp; ghi chênh lệch và việc còn lại để giảng viên hỗ trợ trong ngân sách tại mục 2.1. Tốc độ sinh code hoặc thời gian chạy test không đại diện thời gian hoàn thành của học viên.
 
 Khi review, dùng hồ sơ hiện có để trả lời: yêu cầu nào chi phối; expected lấy từ đâu; kết quả được kiểm bằng gì; vì sao chọn hoặc sửa giải pháp; phần còn mở ảnh hưởng bước tiếp theo thế nào. Đây là cách giải thích công việc theo SDLC, không thêm bài nộp, trọng số hoặc thủ tục phê duyệt cho mọi bước.
 
@@ -186,25 +188,35 @@ Khi review, dùng hồ sơ hiện có để trả lời: yêu cầu nào chi ph�
 
 #### 2.1.5. Phân tầng AC Core và Extended (D7)
 
-AC áp dụng được chia hai tầng để khối lượng M3 và M4 vừa ngân sách tự học:
+AC áp dụng được chia hai tầng để học viên tập trung vào sản phẩm cốt lõi và vừa ngân sách tự học. **Danh sách công bố ngày 29/09/2026**, có hiệu lực từ M1; cột `tier` trong `trace/ac-trace.csv` và cột Tầng tại [mục 15.4](#pham-vi-truy-vet) ghi tầng của từng AC.
 
 | Tầng | Ý nghĩa | Cách chấm |
 | --- | --- | --- |
-| **Core** | AC bắt buộc, phủ đủ chín nhóm chức năng và các nội dung thực hành của khóa. | Được chấm trong rubric chức năng M3, M4 và Capstone. |
-| **Extended** | AC làm thêm (Stretch) khi còn thời gian, sau khi phần Core đã đạt. | Không trừ điểm khi chưa làm. Nếu làm, ghi evidence như Core; nếu chưa làm, traceability matrix ghi "Extended, chưa làm", không ghi đạt. |
+| **Core (106 AC)** | Auth, Notebook (gồm Document, Chat/Conversation), Summary, Quiz, phần AI Job/Output để hai công cụ chạy, cùng yêu cầu bảo mật, dữ liệu, kiểm chứng và phát hành cần cho M4, M5. Trong đó khoảng 20 AC Starter đã có sẵn, học viên chỉ cần kiểm lại sau khi tích hợp. | Được chấm trong rubric chức năng M3, M4 và Capstone. |
+| **Extended (45 AC)** | Note, quản lý kết quả AI (đổi tên, tạo lại, lọc), liên kết Google và các nhánh tài khoản nâng cao, EML-003 và EML-005, version conflict, các yêu cầu UX, thông báo và contract test mở rộng. Làm khi phần Core đã đạt. | Không trừ điểm khi chưa làm. Nếu làm, ghi evidence như Core; nếu chưa làm, traceability matrix ghi `Extended-NotDone`, không ghi đạt. |
 
-- Danh sách Core được công bố trước khi phát tài liệu M3, sau khi lớp diễn tập M3.1 và M3 có đo thời gian thực tế. Khi công bố, mỗi AC trong [danh mục từng AC](#pham-vi-truy-vet) được gắn thêm tầng Core hoặc Extended.
-- Cho đến khi công bố, mọi AC giữ trạng thái như Requirements 1.0: 151 AC áp dụng và 12 AC ngoài phạm vi theo mã A/D1-D4/N tại mục 15. M2.1 và M2 vẫn phân tích và thiết kế đủ 151 AC.
-- Phân tầng không đổi quy tắc kết luận AC tại mục 16.1. Riêng IH-MSG-003-AC01 chuyển sang mã điều chỉnh D5 (mục 15.1).
+**Danh sách AC Extended:**
 
-**Đã chốt ngày 28/09/2026 cho Auth và email (không chờ diễn tập):**
-
-| Tầng | AC |
+| Nhóm | AC |
 | --- | --- |
-| Core | IH-AUTH-001-AC01/02, 002-AC01, 003-AC01, 004-AC01/02, 005-AC02, 006-AC01, 007-AC01/02, 008-AC01/02, 009-AC01, 010-AC01/02; IH-MSG-003-AC01 (D5), IH-MSG-003-AC02 |
-| Extended | IH-AUTH-002-AC02 (phiên hạn chế, gửi lại xác minh), 003-AC02 (giới hạn thử mật khẩu), 005-AC01/03/04 (liên kết Google đầy đủ, tài khoản chờ xác minh, EML-003), 006-AC02, 007-AC03, 009-AC02 (avatar); IH-MSG-003-AC03 |
+| AUTH | AUTH-002-AC02, AUTH-003-AC02, AUTH-005-AC01, AUTH-005-AC03, AUTH-005-AC04, AUTH-006-AC02, AUTH-007-AC03, AUTH-009-AC02 |
+| MSG | MSG-001-AC01, MSG-001-AC02, MSG-002-AC01, MSG-002-AC02, MSG-003-AC03 |
+| NB | NB-002-AC02, NB-003-AC01 |
+| DOC | DOC-003-AC02, DOC-005-AC01, DOC-006-AC02 |
+| CHAT | CHAT-004-AC03, CHAT-004-AC04, CHAT-004-AC05 |
+| NOTE | NOTE-001-AC01, NOTE-001-AC02, NOTE-001-AC03, NOTE-001-AC04, NOTE-002-AC01, NOTE-002-AC02 |
+| SUM | SUM-002-AC01, SUM-002-AC02 |
+| AI | AI-003-AC02 |
+| OUT | OUT-002-AC01, OUT-002-AC02, OUT-003-AC02 |
+| DATA | DATA-001-AC01, DATA-001-AC03, DATA-001-AC05, DATA-001-AC06 |
+| UX | UX-001-AC02, UX-002-AC02, UX-003-AC01, UX-003-AC02, UX-004-AC01 |
+| INT | INT-001-AC01, INT-001-AC02, INT-004-AC01 |
 
-Khi chưa làm liên kết Google, đăng nhập Google bằng email trùng tài khoản có mật khẩu phải bị từ chối an toàn, không tự liên kết và không cấp phiên (IH-AUTH-005-AC02, Core). Các nhóm còn lại giữ `Pending` trong `trace/ac-trace.csv` đến khi danh sách Core được công bố. Hướng dẫn thư viện và fit-gap tại [Auth Integration Guide](../Auth_Integration_Guide.md).
+- Mọi AC áp dụng không có trong bảng trên thuộc Core. Khi checklist ở các milestone mô tả một phần thuộc Extended, bảng này có hiệu lực.
+- M2.1 và M2 phân tích và thiết kế phần Core; phần Extended chỉ cần ghi giả định và điểm mở rộng. Không thiết kế chi tiết Note hay quản lý Output nếu không làm.
+- Khi chưa làm liên kết Google, đăng nhập Google bằng email trùng tài khoản có mật khẩu phải bị từ chối an toàn, không tự liên kết và không cấp phiên (IH-AUTH-005-AC02, Core). Hướng dẫn thư viện và fit-gap tại [Auth Integration Guide](../Auth_Integration_Guide.md).
+- Email tầng Core là EML-001, EML-002 và EML-004 (mã D5, mục 15.1). EML-004 giữ ở Core vì gắn với IH-AUTH-006-AC01: phản hồi khôi phục không được tiết lộ tài khoản chỉ dùng Google.
+- Phân tầng không đổi quy tắc kết luận AC tại mục 16.1. Backlog M1 nên có khoảng 12-16 issue theo hành trình (xem [LR-06](#lr-06)), không tách mỗi AC thành một issue.
 
 <a id="ai-kit"></a>
 
@@ -486,7 +498,7 @@ Có kế hoạch cá nhân cho đầy đủ chín nhóm chức năng tại mục
 
 <a id="lr-06"></a>
 
-1. **Lập hồ sơ dự án và backlog.** Ghi người dùng, hành trình chính và phần cần bổ sung vào Starter cho cả chín nhóm chức năng tại mục 1.1. Phạm vi AI Tools bắt buộc là Summary và Quiz; Auth, Email, Notebook, Document, Chat/Conversation, Note và AI Job/Output vẫn thuộc bài tập. Chia công việc theo kết quả chức năng rồi gắn các bước phân tích, thiết kế, code, test và release tương ứng. Mỗi công việc có kết quả cần đạt, AC, phụ thuộc, ước lượng và cách kiểm. Đối chiếu ước lượng với ngân sách 45 giờ tự học, bao gồm đọc tài liệu, phát triển, test, sửa lỗi và chuẩn bị bảo vệ. Ghi phần vượt ngân sách và căn cứ để trao đổi với giảng viên; không giảm ước lượng hoặc bỏ tiêu chí để làm kế hoạch có vẻ vừa thời gian. Ưu tiên xác thực và quyền trước luồng nhiều người dùng.
+1. **Lập hồ sơ dự án và backlog.** Ghi người dùng, hành trình chính và phần cần bổ sung vào Starter cho các nhóm chức năng tại mục 1.1, tách phần Core và Extended theo mục 2.1.5. Chia công việc theo **hành trình và kết quả chức năng**, khoảng 12-16 issue cho toàn dự án (ví dụ: Auth cơ bản; Notebook và quyền A/B; Document và Chat trong Notebook; Auth hoàn thiện; Summary; Quiz; kiểm M4; phát hành M5), mỗi issue có checklist AC bên trong; không tạo mỗi AC một issue. Phần Extended gom vào vài issue có nhãn `extended`. Gắn các bước phân tích, thiết kế, code, test và release tương ứng. Mỗi công việc có kết quả cần đạt, AC, phụ thuộc, ước lượng theo công kiểm chứng (mục 2.1.4) và cách kiểm. Đối chiếu ước lượng với ngân sách 45 giờ tự học, bao gồm đọc tài liệu, phát triển, test, sửa lỗi và chuẩn bị bảo vệ. Ghi phần vượt ngân sách và căn cứ để trao đổi với giảng viên; không giảm ước lượng hoặc bỏ tiêu chí để làm kế hoạch có vẻ vừa thời gian. Ưu tiên xác thực và quyền trước luồng nhiều người dùng.
 
 <a id="lr-07"></a>
 
@@ -794,18 +806,18 @@ Bản phát triển có đầy đủ chín nhóm chức năng bắt buộc, tíc
 
 Các mã LR dùng để truy vết, không phải thứ tự coding cứng. Thiết kế và tích hợp cơ chế dùng chung LR-18 trước hoặc cùng LR-16/17: trạng thái, quyền nguồn, quota/idempotency, deadline, schema validation và lưu kết quả. Tái dùng phần đã kiểm cho Chat ở M3.1; không chờ hai tool xong mới bổ sung quyền hoặc persistence.
 
-Các checklist dưới đây làm rõ phần chức năng phải hoàn thiện, không thay AC chi tiết và giới hạn của SRS. Đối chiếu mã yêu cầu tại mục 1.1 và [mapping từng AC](#pham-vi-truy-vet), cập nhật kết quả trong cùng traceability matrix. Phần được chấm theo tầng Core/Extended tại [mục 2.1.5](#core-extended); trước khi danh sách Core được công bố, mọi AC giữ trạng thái như Requirements 1.0.
+Các checklist dưới đây làm rõ phần chức năng phải hoàn thiện, không thay AC chi tiết và giới hạn của SRS. Đối chiếu mã yêu cầu tại mục 1.1 và [mapping từng AC](#pham-vi-truy-vet), cập nhật kết quả trong cùng traceability matrix. Phần được chấm theo tầng Core/Extended tại [mục 2.1.5](#core-extended) (đã công bố 29/09/2026).
 
 <a id="lr-14"></a>
 
-1. **Hoàn thiện Auth và năm transactional email.** Bổ sung các nhánh chưa làm ở M3.1, tích hợp với dữ liệu Notebook và kiểm qua UI/API. Phạm vi chấm theo tầng Auth đã chốt tại [mục 2.1.5](#core-extended); nhánh Extended làm khi Core đã đạt. Thư viện mặc định và fit-gap theo [Auth Integration Guide](../Auth_Integration_Guide.md). Starter cấp hạ tầng email tối thiểu: mail catcher Mailpit (Compose profile `mail`) và adapter SMTP `api/app/core/mailer.py` theo [hướng dẫn Mailpit](../../GETTING_STARTED.md#email-local-với-mailpit-tùy-chọn). Trigger, nội dung, link/token và trạng thái gửi của năm email vẫn do học viên xây; evidence thư nhận thật theo mục 14.
+1. **Hoàn thiện Auth và transactional email tầng Core.** Bổ sung các nhánh chưa làm ở M3.1, tích hợp với dữ liệu Notebook và kiểm qua UI/API. Phạm vi chấm theo tầng Auth đã chốt tại [mục 2.1.5](#core-extended); nhánh Extended làm khi Core đã đạt. Thư viện mặc định và fit-gap theo [Auth Integration Guide](../Auth_Integration_Guide.md). Starter cấp hạ tầng email tối thiểu: mail catcher Mailpit (Compose profile `mail`) và adapter SMTP `api/app/core/mailer.py` theo [hướng dẫn Mailpit](../../GETTING_STARTED.md#email-local-với-mailpit-tùy-chọn). Trigger, nội dung, link/token và trạng thái gửi của email tầng Core (EML-001, EML-002, EML-004) do học viên xây; evidence thư nhận thật theo mục 14. Các phần Extended trong bảng dưới: gửi lại xác minh và phiên chờ xác minh (AUTH-002-AC02), rate limit (AUTH-003-AC02, AUTH-006-AC02), liên kết Google cùng email (AUTH-005-AC01/03/04), reset tài khoản chờ xác minh (AUTH-007-AC03), avatar (AUTH-009-AC02).
 
 | Chức năng Auth | Công việc và kết quả cần hoàn thiện |
 | --- | --- |
 | Đăng ký và xác minh email | Kiểm input, tạo `PendingVerification`, gửi EML-001; link hợp lệ chuyển `Active`, link sai/hết hạn/đã dùng không kích hoạt. Gửi lại tuân rate limit. Session chờ xác minh chỉ cho xem trạng thái, gửi lại email và logout; luồng recovery công khai vẫn được phép theo UC-02.A4. |
 | Đăng nhập email/mật khẩu | Tài khoản `Active` đăng nhập và mở danh sách Notebook của mình; email hoặc mật khẩu sai có cùng thông báo. Kiểm rate limit cả qua UI và API. |
 | Đăng nhập Google | Danh tính mới có email được Google xác minh tạo tài khoản `Active`; lần sau vào đúng tài khoản/dữ liệu. Hủy đăng nhập hoặc phản hồi/token/email không hợp lệ không tạo session hay hoàn tất tài khoản. |
-| Liên kết Google cùng email | Với tài khoản `Active`, kiểm phản hồi Google và mật khẩu hiện tại trong cùng giao dịch theo LIM-19. Với `PendingVerification`, hoàn tất UC-02.A4 để vô hiệu mật khẩu, session và link cũ trước khi cấp quyền nghiệp vụ; sau đó bắt đầu lại Google và xác nhận mật khẩu mới. Không tự liên kết chỉ vì trùng email. |
+| Liên kết Google cùng email (Extended) | Với tài khoản `Active`, kiểm phản hồi Google và mật khẩu hiện tại trong cùng giao dịch theo LIM-19. Với `PendingVerification`, hoàn tất UC-02.A4 để vô hiệu mật khẩu, session và link cũ trước khi cấp quyền nghiệp vụ; sau đó bắt đầu lại Google và xác nhận mật khẩu mới. Không tự liên kết chỉ vì trùng email. |
 | Quên/reset mật khẩu | Phản hồi công khai không tiết lộ tài khoản. Tài khoản có mật khẩu nhận EML-002; tài khoản chỉ dùng Google nhận EML-004. Link hợp lệ đổi mật khẩu và thu hồi session cũ; sai/hết hạn/đã dùng không đổi dữ liệu. Reset tài khoản chờ xác minh không tự cấp session hoặc liên kết Google. |
 | Profile và đổi mật khẩu | Xem email, tên, phương thức và trạng thái xác minh; sửa tên, dùng avatar mặc định hoặc Google theo SRS. Đổi mật khẩu có tái xác thực và thu hồi session cũ; tài khoản chỉ dùng Google không có chức năng đổi mật khẩu ứng dụng. R1 không đổi email hoặc upload avatar. |
 | Session và logout | Reload vẫn đúng người dùng khi session hợp lệ; logout/hết hạn/thu hồi chặn request cũ và dọn dữ liệu riêng trên client. Kiểm lại session, quyền và trạng thái trước khi hiển thị phản hồi AI muộn. |
@@ -816,28 +828,28 @@ Kiểm giới hạn theo tài khoản và IP trong cửa sổ trượt tại LIM
 | --- | --- |
 | EML-001 - Xác minh email | Đăng ký hoặc gửi lại xác minh; người dùng nhận thư, mở link đúng account và xác minh theo thời hạn/quy tắc dùng một lần. |
 | EML-002 - Reset mật khẩu | Yêu cầu recovery hợp lệ cho tài khoản có mật khẩu; nhận thư và dùng link để reset, kiểm link sai/hết hạn/đã dùng. |
-| EML-003 - Thông báo liên kết Google | Liên kết thành công; thư thông báo đúng sự kiện, không dùng thư này để cấp quyền liên kết. Lỗi chuyển giao không làm mất liên kết đã hoàn tất. |
+| EML-003 - Thông báo liên kết Google (Extended) | Liên kết thành công; thư thông báo đúng sự kiện, không dùng thư này để cấp quyền liên kết. Lỗi chuyển giao không làm mất liên kết đã hoàn tất. |
 | EML-004 - Hướng dẫn tài khoản Google | Yêu cầu recovery cho tài khoản chỉ dùng Google; thư hướng dẫn đúng phương thức, không tự tạo mật khẩu ứng dụng. |
-| EML-005 - Thông báo thay đổi mật khẩu | Reset hoặc đổi mật khẩu thành công; thư thông báo đúng sự kiện. Lỗi gửi không hoàn tác mật khẩu hoặc khôi phục session đã thu hồi. |
+| EML-005 - Thông báo thay đổi mật khẩu (Extended) | Reset hoặc đổi mật khẩu thành công; thư thông báo đúng sự kiện. Lỗi gửi không hoàn tác mật khẩu hoặc khôi phục session đã thu hồi. |
 
 Kiểm các email tầng Core (và Extended nếu làm) bằng cấu hình thật và hộp thư nhận theo [hướng dẫn Auth/Email](#auth-email), gồm nội dung, link, lỗi, thời hạn và rate limit áp dụng. Provider chấp nhận gửi chưa chứng minh đã nhận thư; fixture chỉ bổ sung kiểm lỗi, không thay evidence tích hợp thật.
 
 <a id="lr-15"></a>
 
-2. **Hoàn thiện Notebook, Document, Conversation và Note.** Triển khai các thao tác được quy định riêng cho từng đối tượng, cùng UI, API và persistence tương ứng.
+2. **Hoàn thiện Notebook, Document, Conversation (Core) và Note (Extended).** Triển khai các thao tác được quy định riêng cho từng đối tượng, cùng UI, API và persistence tương ứng. Phần Extended trong bảng dưới: version conflict và hộp xác nhận xóa Notebook (NB-002-AC02, NB-003-AC01); retry trên UI, trang chi tiết và dọn dữ liệu sau xóa Document (DOC-003-AC02, DOC-005-AC01, DOC-006-AC02); đổi tên, xóa và conversation mất nguồn cuối (CHAT-004-AC03..05); toàn bộ Note.
 
 | Đối tượng | Checklist chức năng | Kết quả cần kiểm |
 | --- | --- | --- |
 | **Notebook** | Tạo, liệt kê/phân trang, mở; đổi tên/mô tả có validation/version conflict; xóa có xác nhận và hủy; áp dụng quota. | Owner lấy từ session; dữ liệu, thứ tự và thời điểm đúng SRS. Xóa Notebook chặn mọi tài nguyên con, lịch sử và job đang chạy; thực hiện chính sách xóa vật lý theo LIM-13. |
 | **Document** | Upload TXT, Markdown và PDF có văn bản; xem `Processing`, `Ready`, `Failed`; retry lỗi, xem metadata/nội dung, mở citation và xóa. | Kiểm nội dung thực, định dạng và giới hạn; xử lý file rỗng, PDF ảnh/mã hóa và byte trùng theo SRS. Retry tạo lần xử lý mới cho cùng Document, không nhân bản Document/chunk; chống trùng trong đúng Notebook. Không tự thêm chức năng sửa nội dung file gốc. |
 | **Chat và Conversation** | Hỏi trên nguồn hợp lệ; phân biệt `Answered`, `NoEvidence`, `Failed`; tạo, liệt kê, mở lịch sử, đổi tên có version và xóa có xác nhận. | Lượt lưu câu hỏi, kết quả, trạng thái, nguồn và thời điểm; thứ tự đúng, còn sau reload/restart. Mỗi câu hỏi được xử lý độc lập, UI làm rõ giới hạn ngữ cảnh. Retry/gửi lặp đúng SRS; mất nguồn không cấm xem/đổi tên/xóa lịch sử hợp lệ, nhưng không cho hỏi trên tập nguồn rỗng. |
-| **Note** | Tạo, liệt kê, mở, sửa tiêu đề/nội dung có version conflict; xóa có xác nhận/hủy; lưu câu trả lời hoặc Summary hợp lệ thành Note. | Không lưu `NoEvidence`/`Failed` thành câu trả lời thành công. Bản sao độc lập có provenance, sửa Note không sửa nội dung gốc; xóa conversation/output không xóa Note đã sao chép. Xóa Note không xóa nguồn, nhưng xóa Notebook vẫn chặn Note. |
+| **Note (Extended)** | Tạo, liệt kê, mở, sửa tiêu đề/nội dung có version conflict; xóa có xác nhận/hủy; lưu câu trả lời hoặc Summary hợp lệ thành Note. | Không lưu `NoEvidence`/`Failed` thành câu trả lời thành công. Bản sao độc lập có provenance, sửa Note không sửa nội dung gốc; xóa conversation/output không xóa Note đã sao chép. Xóa Note không xóa nguồn, nhưng xóa Notebook vẫn chặn Note. |
 
 Server kiểm quyền đối tượng thực sự được truy cập, không tin `owner_id` hoặc Notebook do client gửi. Kiểm tài khoản B thay ID để đọc/sửa/xóa tài nguyên của A. Giữ persistence, thứ tự danh sách, pagination ở nơi SRS quy định và thời điểm cập nhật theo mục 3.7.3. Nguồn đã xóa không được đọc lại qua citation hoặc cache; lịch sử hợp lệ được giữ với trạng thái nguồn không còn khả dụng theo BR-08. Kiểm ảnh hưởng xóa khi AI đang chạy theo LR-18.
 
 <a id="lr-16"></a>
 
-3. **Xây dựng Tóm tắt.** Cho chọn bản ngắn 150-250 từ hoặc chi tiết 400-600 từ, mặc định ngắn. Nội dung có tổng quan, ý chính gắn nguồn và điểm cần chú ý; phản ánh các tài liệu đã chọn và nêu mâu thuẫn nếu có. Nếu không ghi nhận điểm đặc biệt, nêu rõ thay vì tạo mâu thuẫn giả. Kiểm cấu trúc, độ dài và tham chiếu trước khi lưu; đánh giá tính đúng của nội dung riêng theo bộ dữ liệu nghiệm thu. Prompt và schema output đặt trong file hoặc hằng có phiên bản (theo mẫu `PROMPT_VERSION` của Starter) và lưu phiên bản vào kết quả để AI-BOM và eval truy được. Lưu thành ghi chú tạo bản sao độc lập; nếu vượt giới hạn ghi chú, cho người dùng sửa trước khi lưu, không cắt ngầm.
+3. **Xây dựng Tóm tắt.** Cho chọn bản ngắn 150-250 từ hoặc chi tiết 400-600 từ, mặc định ngắn. Nội dung có tổng quan, ý chính gắn nguồn và điểm cần chú ý; phản ánh các tài liệu đã chọn và nêu mâu thuẫn nếu có. Nếu không ghi nhận điểm đặc biệt, nêu rõ thay vì tạo mâu thuẫn giả. Kiểm cấu trúc, độ dài và tham chiếu trước khi lưu; đánh giá tính đúng của nội dung riêng theo bộ dữ liệu nghiệm thu. Prompt và schema output đặt trong file hoặc hằng có phiên bản (theo mẫu `PROMPT_VERSION` của Starter) và lưu phiên bản vào kết quả để AI-BOM và eval truy được. Extended (SUM-002): lưu thành ghi chú tạo bản sao độc lập; nếu vượt giới hạn ghi chú, cho người dùng sửa trước khi lưu, không cắt ngầm.
 
 <a id="lr-17"></a>
 
@@ -847,7 +859,7 @@ Server kiểm quyền đối tượng thực sự được truy cập, không ti
 
 <a id="lr-18"></a>
 
-5. **Hoàn thiện vòng đời công cụ AI.** Chọn 1-3 nguồn `Ready` cùng Notebook, tổng tối đa 60.000 ký tự; kiểm cấu trúc, định danh, nguồn, quyền và thời hạn trước khi công bố. Có danh sách, lọc theo loại, xem, đổi tên, tạo lại và xóa. Tạo lại sinh bản độc lập liên kết bản gốc; đổi tên chỉ đổi `display_name` và phiên bản thông tin mô tả, giữ nội dung AI đã lưu.
+5. **Hoàn thiện vòng đời công cụ AI.** Chọn 1-3 nguồn `Ready` cùng Notebook, tổng tối đa 60.000 ký tự; kiểm cấu trúc, định danh, nguồn, quyền và thời hạn trước khi công bố. Có danh sách, xem và xóa (Core). Extended (OUT-002): lọc theo loại, đổi tên và tạo lại; tạo lại sinh bản độc lập liên kết bản gốc, đổi tên chỉ đổi `display_name` và phiên bản thông tin mô tả, giữ nội dung AI đã lưu.
 
    Hỏi đáp, Tóm tắt và Quiz dùng chung quota theo người dùng: tối đa một AI job đang chạy và 10 yêu cầu mới được tiếp nhận trong 60 giây. Đối soát mã thao tác trước khi tính lượt mới. Gửi lại cùng mã sử dụng nguồn, cấu hình và giá trị mặc định đã lưu từ lần đầu; không tính lại theo dữ liệu hiện tại. Cùng mã với dữ liệu khác trả xung đột, đổi thứ tự cùng tập nguồn không tạo yêu cầu khác, ID nguồn lặp bị từ chối. Kiểm và lưu quota phải nhất quán khi yêu cầu đến đồng thời.
 
@@ -861,10 +873,10 @@ Server kiểm quyền đối tượng thực sự được truy cập, không ti
 
 ### 9.3 Điều kiện hoàn thành
 
-- Auth và email theo tầng Core/Extended (EML-003 thuộc Extended) hoạt động theo LR-14; có kết quả tích hợp thật, sai/hết hạn link, giới hạn và session liên quan.
-- Notebook, Document, Conversation và Note có các thao tác, trạng thái, quyền và vòng đời tại LR-15.
+- Auth và email tầng Core (EML-001, EML-002, EML-004) hoạt động theo LR-14; có kết quả tích hợp thật, sai/hết hạn link, giới hạn và session liên quan.
+- Notebook, Document và Conversation có các thao tác, trạng thái, quyền và vòng đời tầng Core tại LR-15; Note nếu làm (Extended).
 - Summary và Quiz chạy từ chọn nguồn đến lưu/xem lại; Quiz được chấm tại server, bảo vệ đáp án và xử lý nộp lặp đúng.
-- AI Job/Output có trạng thái, quota, idempotency, deadline, version, regenerate và xóa; UI xử lý lỗi tương ứng.
+- AI Job/Output có trạng thái, quota, idempotency, deadline, danh sách, mở lại và xóa; UI xử lý lỗi tương ứng. Đổi tên và tạo lại là Extended.
 - Code, test, migration và CI được cập nhật; phần chưa đạt được ghi rõ. Refactor có characterization test, diff và regression test, tiếp tục hoàn thiện đến hạn Assignment; có một PR do agent tạo đã được review và ghi quyết định.
 
 ### 9.4 Áp dụng SDLC và AI
@@ -897,8 +909,8 @@ Trong cùng traceability matrix, dẫn tới test hoặc demo của từng nhóm
 
 | Tiêu chí | Điểm tối đa | Cách chấm điểm |
 | --- | --- | --- |
-| Tài khoản và dữ liệu nghiệp vụ | 25 | Auth và transactional email tầng Core: 10; thao tác Notebook/Document/Conversation/Note, quota và pagination theo SRS: 10; persistence và ownership: 5. |
-| Tóm tắt và Quiz | 25 | Tóm tắt đúng độ dài, nội dung và nguồn: 10; Quiz đúng cấu trúc và chấm tại server: 10; ghi chú độc lập và lịch sử lần làm: 5. |
+| Tài khoản và dữ liệu nghiệp vụ | 25 | Auth và transactional email tầng Core: 10; thao tác Notebook/Document/Conversation tầng Core, quota và pagination theo SRS: 10; persistence và ownership: 5. |
+| Tóm tắt và Quiz | 25 | Tóm tắt đúng độ dài, nội dung và nguồn: 10; Quiz đúng cấu trúc và chấm tại server: 10; lịch sử lần làm Quiz và mở lại kết quả đã lưu: 5. |
 | Vòng đời và ngoại lệ | 25 | Trạng thái, quota và giới hạn: 10; gửi lặp, đồng thời, xóa và phản hồi muộn: 10; UI và khôi phục: 5. |
 | Refactor và tự động hóa | 15 | Có test trước thay đổi và regression: 5; cải thiện có căn cứ: 5; script hoặc skill thực chạy: 5. |
 | Chất lượng bài nộp | 10 | Mã nguồn, test, migration và CI được cập nhật, phần chưa hoàn tất được ghi: 5; review PR do agent tạo có finding và quyết định: 5. |
@@ -914,7 +926,7 @@ Trong cùng traceability matrix, dẫn tới test hoặc demo của từng nhóm
 | Minh chứng và giải thích | 20 | Kế hoạch, diff, test, review và quyết định với AI liên kết được | Truy từ yêu cầu đến test, phản biện được đề xuất AI không phù hợp |
 | **Tổng** | **100** | | |
 
-Dòng tài khoản/dữ liệu đối chiếu riêng checklist Auth, email theo tầng và bốn đối tượng LR-15. Dòng AI đối chiếu cả nội dung Summary, quy trình Quiz và vòng đời Output; màn hình có dữ liệu mẫu chưa chứng minh chức năng đạt. Dòng Refactor và tự động hóa chấm tiến độ tại hạn M3 (trước buổi 8): characterization test, kế hoạch và các bước refactor đã có; bài refactor hoàn chỉnh chấm theo rubric Assignment trước buổi 9. Các dòng chức năng chấm theo AC Core khi danh sách được công bố.
+Dòng tài khoản/dữ liệu đối chiếu riêng checklist Auth, email theo tầng và ba đối tượng Core của LR-15. Dòng AI đối chiếu cả nội dung Summary, quy trình Quiz và vòng đời Output; màn hình có dữ liệu mẫu chưa chứng minh chức năng đạt. Dòng Refactor và tự động hóa chấm tiến độ tại hạn M3 (trước buổi 8): characterization test, kế hoạch và các bước refactor đã có; bài refactor hoàn chỉnh chấm theo rubric Assignment trước buổi 9. Các dòng chức năng chấm theo AC Core (mục 2.1.5); phần Extended đã làm được ghi nhận trong nhận xét, không cộng thêm điểm.
 
 <a id="m4"></a>
 
@@ -983,7 +995,7 @@ Một lượt có nội dung đạt khi đủ ý kỳ vọng, các dữ kiện �
 | --- | --- |
 | Auth và Email | Các nhánh tài khoản theo tầng Core/Extended, linking/recovery, email, session, tái xác thực và rate limit. |
 | Notebook và Document | Thao tác, upload/duplicate/retry, ownership, quota, trạng thái, xóa và deadline. |
-| Conversation và Note | Persistence, nguồn/citation, version conflict, xóa và bản sao độc lập. |
+| Conversation (Note nếu làm) | Persistence, nguồn/citation, xóa; version conflict và bản sao độc lập nếu đã làm Extended. |
 | Summary và Quiz | Schema, nội dung/nguồn, độ dài/số câu, không lộ đáp án, chấm và nộp lặp/làm lại. |
 | AI Job và Output | Shared quota, idempotency, restart, regenerate, ba thứ tự xóa/công bố và phản hồi muộn. |
 
@@ -1092,7 +1104,7 @@ Học viên tự demo bản phát hành đã nộp và giải thích được c�
 
 <a id="lr-28"></a>
 
-1. **Demo và bảo vệ cá nhân.** Chạy bản đã nộp: đăng nhập, Notebook, Document, Chat có citation, Note, Summary, Quiz và một tình huống lỗi/quyền. Mở lại conversation/output/QuizAttempt đã lưu, chỉ ra evidence cho các Auth flow và transactional email tầng Core (Extended nếu đã làm). Giải thích một yêu cầu xuyên qua thiết kế, mã nguồn và test, refactor đã làm, kết quả đánh giá AI và cách khôi phục dữ liệu. Thực hiện hoặc phân tích chính xác thay đổi nhỏ giảng viên đưa; chỉ rõ phần AI hỗ trợ và quyết định của bản thân. Trình bày AI Engineering Kit của dự án: quy tắc, quyền, hook, skill, subagent, quy trình review, spec, eval và số đo đã dùng thật.
+1. **Demo và bảo vệ cá nhân.** Chạy bản đã nộp: đăng nhập, Notebook, Document, Chat có citation, Summary, Quiz và một tình huống lỗi/quyền (Note và phần Extended nếu đã làm). Mở lại conversation/output/QuizAttempt đã lưu, chỉ ra evidence cho các Auth flow và transactional email tầng Core (Extended nếu đã làm). Giải thích một yêu cầu xuyên qua thiết kế, mã nguồn và test, refactor đã làm, kết quả đánh giá AI và cách khôi phục dữ liệu. Thực hiện hoặc phân tích chính xác thay đổi nhỏ giảng viên đưa; chỉ rõ phần AI hỗ trợ và quyết định của bản thân. Trình bày AI Engineering Kit của dự án: quy tắc, quyền, hook, skill, subagent, quy trình review, spec, eval và số đo đã dùng thật.
 
 <a id="lr-29"></a>
 
@@ -1100,8 +1112,8 @@ Học viên tự demo bản phát hành đã nộp và giải thích được c�
 
 ### 12.3 Điều kiện hoàn thành
 
-- Demo hành trình có Auth, Notebook, Document/Chat, Note, Summary và Quiz; mở kết quả đã lưu và kiểm một tình huống lỗi/quyền.
-- Chỉ ra evidence của các email và nhánh Auth tầng Core, quản lý Output, lifecycle và bảo mật; không cần chạy lại mọi test trong thời gian bảo vệ.
+- Demo hành trình có Auth, Notebook, Document/Chat, Summary và Quiz; mở kết quả đã lưu và kiểm một tình huống lỗi/quyền.
+- Chỉ ra evidence của các email và nhánh Auth tầng Core, vòng đời Output tầng Core, lifecycle và bảo mật; không cần chạy lại mọi test trong thời gian bảo vệ.
 - Truy được yêu cầu đến thiết kế/code/test/tag; giải thích refactor, đánh giá AI, restore và CR R1.1, cùng giới hạn đã ghi.
 - Tự xử lý hoặc phân tích chính xác thay đổi nhỏ được giao; có kế hoạch áp dụng AI 30 ngày với baseline, KPI, điều kiện kiểm và công cụ, dữ liệu được phép.
 
@@ -1138,8 +1150,13 @@ Chuẩn bị đường dẫn mở nhanh đến evidence đã tích lũy và dữ
 | --- | --- | --- | --- |
 | Phạm vi và kế hoạch | 5 | Mục tiêu, phạm vi và backlog nhất quán với phần cần bổ sung vào starter; PR đã tự review, CI đúng phiên bản; trách nhiệm với AI rõ | Ưu tiên và phụ thuộc hợp lý; kế hoạch cập nhật theo kết quả thực tế; giải thích được cách xử lý phát hiện review |
 | Spec và truy vết yêu cầu | 10 | AC có luồng chính và ngoại lệ; yêu cầu phi chức năng có cách đo; công việc, ước lượng và test case liên kết được; thử tích hợp ghi rõ phần đã/chưa kiểm | Truy từ yêu cầu đến test và từ test về yêu cầu; xử lý giả định quan trọng; cập nhật traceability matrix sau thay đổi |
+<<<<<<< HEAD
 | Thiết kế giao diện, API và dữ liệu | 10 | Prototype, API, từ điển dữ liệu, phiên bản cấu trúc và quyền sở hữu nhất quán; quyết định kiến trúc có phương án và căn cứ; có thiết kế migration và trạng thái lỗi | Triển khai khớp thiết kế hoặc giải thích khác biệt; kiểm hai kích thước/bàn phím; liên kết quyết định thiết kế với yêu cầu và test |
 | Chức năng và TDD | 12 | Auth và transactional email tầng Core, Notebook, Document/Chat, Note, Summary, Quiz và AI Output hoạt động qua các lớp tích hợp tương ứng; tiêu chí bắt buộc đạt; có test thất bại trước sửa rồi đạt sau sửa; xử lý trạng thái và lỗi | Tái chạy được bản nộp; mọi tiêu chí áp dụng có minh chứng; giải thích ranh giới mô phỏng; dữ liệu còn sau khởi động lại, thao tác lặp đúng |
+=======
+| Thiết kế giao diện, API và dữ liệu | 10 | Figma, API, từ điển dữ liệu, phiên bản cấu trúc và quyền sở hữu nhất quán; quyết định kiến trúc có phương án và căn cứ; có thiết kế migration và trạng thái lỗi | Triển khai khớp thiết kế hoặc giải thích khác biệt; kiểm hai kích thước/bàn phím; liên kết quyết định thiết kế với yêu cầu và test |
+| Chức năng và TDD | 12 | Auth và transactional email tầng Core, Notebook, Document/Chat, Summary, Quiz và AI Output tầng Core hoạt động qua các lớp tích hợp tương ứng; tiêu chí bắt buộc đạt; có test thất bại trước sửa rồi đạt sau sửa; xử lý trạng thái và lỗi | Tái chạy được bản nộp; mọi AC Core có minh chứng; giải thích ranh giới mô phỏng; dữ liệu còn sau khởi động lại, thao tác lặp đúng |
+>>>>>>> 31e4c73 (docs: publish Core/Extended AC list (D7) and verification-based estimate)
 | Refactor và tự động hóa | 8 | Có test ghi nhận hành vi module trước thay đổi; diff đúng phạm vi, regression giữ quy tắc nghiệp vụ; task tự động thực chạy và giới hạn rõ; AI Engineering Kit (hook, skill, subagent, bảo vệ test) được dùng thật | So sánh trước/sau chứng minh cải thiện; chạy lại từ checkpoint hoặc khôi phục; mọi thay đổi hành vi có căn cứ yêu cầu |
 | Test và nghiệm thu | 8 | Chọn tầng test theo yêu cầu/rủi ro; nghiệm thu có kỳ vọng và thực tế; lỗi quan trọng được kiểm lại; điều kiện đo rõ | Người khác chạy lại được; phân tích thiếu sót và test không ổn định; chứng minh test bắt lỗi và truy vết đầy đủ trên bản nộp |
 | Chất lượng nội dung AI | 7 | Đủ 12 lượt nội dung cho hỏi đáp/Tóm tắt và Quiz; đối chiếu ý và nguồn; ghi mô hình, dữ liệu, phiên bản và cả lượt lỗi; thiếu căn cứ/instruction gây nhiễu/ngoại lệ được xử lý đúng | Tái lập cấu hình và nguồn; đánh giá cả lượt lặp; giải thích sai lệch, kết luận và kiểm lại; không dùng AI tự chấm làm căn cứ duy nhất |
@@ -1295,7 +1312,7 @@ Chọn thành phần xác thực đã có thay vì tự viết thuật toán m�
 | M2.1 | Spike độc lập theo mục 6.2: Google và gửi/nhận/hành động email thật, thử policy linking/Pending/session. Ghi capability, actual, giới hạn và quyết định. Chưa yêu cầu ghép vào UI/API/DB nghiệp vụ chính. |
 | M2 | Chọn phương án qua ADR, ghi ít nhất hai phương án và căn cứ. Thiết kế phiên, danh tính, dữ liệu điều khiển và quyền phù hợp kết quả thử. |
 | M3.1 | Tích hợp một Auth flow hợp lệ và session thực cho hành trình Notebook - Document - Chat. Nếu chọn email/mật khẩu, phải có EML-001 và xác minh email; hoàn thiện cả hai phương thức và các email còn lại ở M3. |
-| M3 | Hoàn thiện các luồng tài khoản cùng email giao dịch theo tầng Core/Extended; tích hợp với Notebook và giao diện. Ghi kiểm chứng cùng chức năng. |
+| M3 | Hoàn thiện các luồng tài khoản cùng email giao dịch tầng Core (EML-001, EML-002, EML-004); tích hợp với Notebook và giao diện. Ghi kiểm chứng cùng chức năng. |
 | M4 | Kiểm đủ điều kiện áp dụng, các trường hợp lỗi, biên thời gian, API trực tiếp, trình duyệt và tích hợp thật. Kiểm lại phần thay đổi sau thử sớm. |
 
 ### 14.3. Ma trận hành vi cần kiểm
@@ -1321,9 +1338,9 @@ M2.1 chọn phép thử đại diện trong các nhóm Google, email, linking, P
 
 Các dòng liên kết Google với tài khoản có mật khẩu hoặc chờ xác minh, phiên chờ xác minh, giới hạn thử mật khẩu và giới hạn yêu cầu gửi email thuộc AC tầng Extended (mục 2.1.5); khi chưa làm, ghi `Extended-NotDone` và kiểm nhánh từ chối an toàn. Có thể mô phỏng lỗi provider và thời gian để kiểm ngoại lệ; phải ghi rõ chế độ chạy. Không đánh dấu đăng nhập Google hoặc email thật đã đạt chỉ từ kết quả mô phỏng.
 
-### 14.4. Kiểm năm email giao dịch
+### 14.4. Kiểm email giao dịch theo tầng
 
-M2.1 dùng luồng verify/reset đại diện để kiểm dịch vụ và hành động trong spike. M3 tích hợp các loại dưới đây vào đúng nghiệp vụ ứng dụng theo tầng (EML-003 thuộc Extended); M4 tổng hợp kết quả các nhánh, lỗi và giới hạn. Giữ evidence spike riêng với evidence của chức năng đã tích hợp.
+M2.1 dùng luồng verify/reset đại diện để kiểm dịch vụ và hành động trong spike. M3 tích hợp các loại dưới đây vào đúng nghiệp vụ ứng dụng theo tầng (EML-003 và EML-005 thuộc Extended); M4 tổng hợp kết quả các nhánh, lỗi và giới hạn. Giữ evidence spike riêng với evidence của chức năng đã tích hợp.
 
 | Mã | Tình huống | Kết quả cần quan sát |
 | --- | --- | --- |
@@ -1331,7 +1348,7 @@ M2.1 dùng luồng verify/reset đại diện để kiểm dịch vụ và hành
 | EML-002 | Khôi phục tài khoản có mật khẩu | Nhận liên kết đặt lại dùng một lần; mật khẩu chỉ thay sau khi hoàn tất thao tác hợp lệ. |
 | EML-003 | Liên kết Google thành công (Extended) | Nhận thông báo và hướng dẫn hỗ trợ; thư không có liên kết cấp quyền. |
 | EML-004 | Khôi phục tài khoản chỉ dùng Google | Nhận hướng dẫn đăng nhập Google, không có liên kết tạo mật khẩu. |
-| EML-005 | Đặt lại hoặc đổi mật khẩu thành công | Nhận thông báo và hướng dẫn đăng nhập lại; không chứa mật khẩu hoặc liên kết cấp phiên. |
+| EML-005 | Đặt lại hoặc đổi mật khẩu thành công (Extended) | Nhận thông báo và hướng dẫn đăng nhập lại; không chứa mật khẩu hoặc liên kết cấp phiên. |
 
 Minh chứng ghi loại thư, tài khoản đã che địa chỉ, thời điểm, mã chuyển giao an toàn, thư thực nhận và kết quả hành động. Nhật ký “dịch vụ đã nhận yêu cầu” chưa chứng minh thư tới hộp thư. Che liên kết và token còn hiệu lực trong ảnh hoặc log.
 
@@ -1358,10 +1375,10 @@ Có **72 mã yêu cầu gốc hoặc nhóm yêu cầu và 163 acceptance criteri
 | D2 | Prototype thiết kế (Figma hoặc HTML, theo [LR-10](#lr-10)) và màn hình UI-01 đến UI-08 có đầy đủ hành trình Tóm tắt và Quiz. Trong phạm vi bài tập, yêu cầu "thiết kế Figma" của SRS (OBJ-04, IH-UX-001, IH-REL-002-R07, UAT-15, REF-06) được đáp ứng bằng prototype đã chốt phiên bản: link Figma và phiên bản, hoặc đường dẫn HTML trong repository và commit/tag; không phải triển khai ba công cụ mở rộng. Giữ trạng thái, kích thước hiển thị, thao tác bàn phím và các tiêu chí trải nghiệm khác. |
 | D3 | Kiểm tích hợp và nội dung AI thật cho hỏi đáp, Tóm tắt và Quiz: AEV-01, AEV-03, AEV-05 cùng hai lượt lặp, tổng 12 lượt nội dung. Google và email vẫn kiểm bằng dịch vụ thật. |
 | D4 | Nghiệm thu R1 của bài tập hai công cụ, với 151 AC áp dụng và phần tương ứng trong UAT-01 đến UAT-21. Không kết luận đạt toàn bộ sản phẩm năm công cụ. |
-| D5 | IH-MSG-003-AC01 kiểm bằng dịch vụ thật bốn email EML-001, EML-002, EML-004, EML-005 trong tầng Core; EML-003 phụ thuộc liên kết Google (IH-AUTH-005-AC04) nên thuộc Extended. Giữ yêu cầu về liên kết, thời hạn, dùng một lần và lỗi gửi. |
+| D5 | IH-MSG-003-AC01 kiểm bằng dịch vụ thật ba email tầng Core: EML-001, EML-002 và EML-004 (gắn IH-AUTH-006-AC01). EML-003 phụ thuộc liên kết Google (IH-AUTH-005-AC04) và EML-005 (IH-MSG-003-AC03) thuộc Extended. Giữ yêu cầu về liên kết, thời hạn, dùng một lần và lỗi gửi. |
 | N | Ngoài bài tập bắt buộc: Mindmap, Slide và Báo cáo. Ghi ngoài phạm vi (`OutOfScope`), không ghi đạt. Nếu tự làm thêm, bổ sung test và đánh giá AI riêng. |
 
-Các nhóm D1-D5 gồm 16 tiêu chí và đã nằm trong tổng 151 tiêu chí áp dụng; không phải phần được miễn kiểm. Các quy tắc nghiệp vụ, giới hạn, use case, dữ liệu, yêu cầu phi chức năng và thông báo vẫn áp dụng cho phần được giao. Giữ yêu cầu của năm email EML-001 đến EML-005 theo tầng tại mục 2.1.5 và mã D5, xác thực, quyền, các lần làm Quiz và ngoại lệ.
+Các nhóm D1-D5 gồm 16 tiêu chí và đã nằm trong tổng 151 tiêu chí áp dụng; không phải phần được miễn kiểm. Các quy tắc nghiệp vụ, giới hạn, use case, dữ liệu, yêu cầu phi chức năng và thông báo vẫn áp dụng cho phần được giao. Giữ yêu cầu của email EML-001 đến EML-005 theo tầng tại mục 2.1.5 và mã D5, xác thực, quyền, các lần làm Quiz và ngoại lệ.
 
 - UAT-11 kiểm Tóm tắt, Quiz và vòng đời kết quả; không yêu cầu ba công cụ mở rộng.
 - UAT-15 kiểm màn hình UI-01 đến UI-08 trong phạm vi D2. UAT-14, UAT-20 và AEV-07 kiểm cấu trúc Tóm tắt và Quiz cùng các ngoại lệ liên quan.
@@ -1379,9 +1396,15 @@ Mã khóa học, đơn vị và chủ đề có tiền tố B2BC07. PLO là chu�
 | LR-04..05 | PLO-1 / C01-CLO-3,4 | C01-U02 T01-T04 | Hướng dẫn AI và quy trình agent | Quy trình agent và kiểm soát quyền |
 | LR-06..07 | PLO-1 / C02-CLO-1 | C02-U01 T01-T04 | Hồ sơ dự án, backlog và CI | Phạm vi và kế hoạch |
 | LR-08..09 | PLO-2 / C02-CLO-2 | C02-U02 T01-T04 | Yêu cầu, test case và thử tích hợp | Spec và truy vết yêu cầu |
+<<<<<<< HEAD
 | LR-10..11 | PLO-3 / C02-CLO-3 | C02-U03 T01-T05 | Prototype (Figma hoặc HTML), API, dữ liệu, quyết định kiến trúc và threat model sơ bộ | Thiết kế giao diện, API và dữ liệu |
 | LR-12..13 | PLO-4 / C02-CLO-4 | C02-U04 T01-T03 | Hành trình Auth - Notebook - Document - Chat và TDD | Chức năng và TDD |
 | LR-14..18 | PLO-4 / C02-CLO-4 | C02-U04 T01-T04; C02-U03-T02 | Đủ Auth, Email, Notebook/Document/Conversation/Note, Summary, Quiz và AI Output | Chức năng sản phẩm |
+=======
+| LR-10..11 | PLO-3 / C02-CLO-3 | C02-U03 T01-T05 | Figma, API, dữ liệu, quyết định kiến trúc và threat model sơ bộ | Thiết kế giao diện, API và dữ liệu |
+| LR-12..13 | PLO-4 / C02-CLO-4 | C02-U04 T01-T04 | Hành trình Auth - Notebook - Document - Chat và TDD | Chức năng và TDD |
+| LR-14..18 | PLO-4 / C02-CLO-4 | C02-U04 T01-T04; C02-U03-T02 | Auth, Email, Notebook/Document/Conversation, Summary, Quiz và AI Output tầng Core; Extended khi còn thời gian | Chức năng sản phẩm |
+>>>>>>> 31e4c73 (docs: publish Core/Extended AC list (D7) and verification-based estimate)
 | LR-19 | PLO-4 / C02-CLO-4 | C02-U04 T05-T08 | Module refactor và task tự động | Refactor, tự động hóa và Assignment |
 | LR-20..22 | PLO-5 / C02-CLO-5 | C02-U05 T01-T03 | Kết quả test và nghiệm thu | Test, nghiệm thu và phân quyền |
 | LR-23 | PLO-5 / C02-CLO-5 | C02-U05-T04 | Golden set, grader và kết quả eval AI | Chất lượng nội dung AI |
@@ -1412,8 +1435,8 @@ Mã LR là công việc học tập; mã IH là yêu cầu sản phẩm; AC là 
 | LR-11 | M2 | [Thiết kế API và dữ liệu](#lr-11) |
 | LR-12 | M3.1 | [Triển khai Auth - Notebook - Document - Chat](#lr-12) |
 | LR-13 | M3.1 | [Thực hiện TDD cho một hành vi có rủi ro](#lr-13) |
-| LR-14 | M3 | [Hoàn thiện Auth và năm transactional email](#lr-14) |
-| LR-15 | M3 | [Hoàn thiện Notebook, Document, Conversation và Note](#lr-15) |
+| LR-14 | M3 | [Hoàn thiện Auth và transactional email tầng Core](#lr-14) |
+| LR-15 | M3 | [Hoàn thiện Notebook, Document, Conversation (Core) và Note (Extended)](#lr-15) |
 | LR-16 | M3 | [Xây dựng Tóm tắt](#lr-16) |
 | LR-17 | M3 | [Xây dựng Quiz](#lr-17) |
 | LR-18 | M3 | [Hoàn thiện vòng đời công cụ AI](#lr-18) |
@@ -1443,171 +1466,171 @@ Mã LR là công việc học tập; mã IH là yêu cầu sản phẩm; AC là 
 
 Cột mốc ghi thời điểm hoàn thiện và kiểm tổng hợp của AC. Phần triển khai trước đó, gồm hành trình M3.1, được xác định tại [ma trận chức năng](#ma-tran-chuc-nang); các bước chuẩn bị không bị bỏ qua chỉ vì không xuất hiện trong cột mốc. Tại M2.1, rà đầy đủ phạm vi và phân tích sâu yêu cầu đại diện; tại M2, hoàn thiện thiết kế; khi phát triển và xử lý thay đổi, cập nhật cùng traceability matrix. Dùng danh mục dưới đây làm khung, thêm mã yêu cầu thành phần, điều kiện kiểm và liên kết kết quả theo [mẫu kết quả](#bang-ket-qua). Mỗi AC có kết luận tổng hợp riêng, chỉ đạt khi mọi điều kiện áp dụng đều đạt. Không ghi đạt cho điều kiện chưa chạy.
 
-| Mã yêu cầu gốc | AC | Phạm vi | Công việc hoàn thiện | Mốc hoàn thiện/kiểm tổng hợp | Nghiệm thu liên quan |
-| --- | --- | --- | --- | --- | --- |
-| IH-AUTH-001 | IH-AUTH-001-AC01 | A | LR-14 | M3 → M4 | UAT-01 |
-| IH-AUTH-001 | IH-AUTH-001-AC02 | A | LR-14 | M3 → M4 | UAT-01 |
-| IH-AUTH-002 | IH-AUTH-002-AC01 | A | LR-14 | M3 → M4 | UAT-01, UAT-03 |
-| IH-AUTH-002 | IH-AUTH-002-AC02 | A | LR-14 | M3 → M4 | UAT-01, UAT-03 |
-| IH-AUTH-003 | IH-AUTH-003-AC01 | A | LR-14 | M3 → M4 | UAT-01 |
-| IH-AUTH-003 | IH-AUTH-003-AC02 | A | LR-14 | M3 → M4 | UAT-01 |
-| IH-AUTH-004 | IH-AUTH-004-AC01 | A | LR-14 | M3 → M4 | UAT-02 |
-| IH-AUTH-004 | IH-AUTH-004-AC02 | A | LR-14 | M3 → M4 | UAT-02 |
-| IH-AUTH-005 | IH-AUTH-005-AC01 | A | LR-14 | M3 → M4 | UAT-02, UAT-03 |
-| IH-AUTH-005 | IH-AUTH-005-AC02 | A | LR-14 | M3 → M4 | UAT-02, UAT-03 |
-| IH-AUTH-005 | IH-AUTH-005-AC03 | A | LR-14 | M3 → M4 | UAT-02, UAT-03 |
-| IH-AUTH-005 | IH-AUTH-005-AC04 | A | LR-14 | M3 → M4 | UAT-02, UAT-03 |
-| IH-AUTH-006 | IH-AUTH-006-AC01 | A | LR-14 | M3 → M4 | UAT-03 |
-| IH-AUTH-006 | IH-AUTH-006-AC02 | A | LR-14 | M3 → M4 | UAT-03 |
-| IH-AUTH-007 | IH-AUTH-007-AC01 | A | LR-14 | M3 → M4 | UAT-03 |
-| IH-AUTH-007 | IH-AUTH-007-AC02 | A | LR-14 | M3 → M4 | UAT-03 |
-| IH-AUTH-007 | IH-AUTH-007-AC03 | A | LR-14 | M3 → M4 | UAT-03 |
-| IH-AUTH-008 | IH-AUTH-008-AC01 | A | LR-14 | M3 → M4 | UAT-04 |
-| IH-AUTH-008 | IH-AUTH-008-AC02 | A | LR-14 | M3 → M4 | UAT-04 |
-| IH-AUTH-009 | IH-AUTH-009-AC01 | A | LR-14 | M3 → M4 | UAT-04 |
-| IH-AUTH-009 | IH-AUTH-009-AC02 | A | LR-14 | M3 → M4 | UAT-04 |
-| IH-AUTH-010 | IH-AUTH-010-AC01 | A | LR-14 | M3 → M4 | UAT-03 |
-| IH-AUTH-010 | IH-AUTH-010-AC02 | A | LR-14 | M3 → M4 | UAT-03 |
-| IH-NB-001 | IH-NB-001-AC01 | A | LR-15 | M3 → M4 | UAT-05 |
-| IH-NB-001 | IH-NB-001-AC02 | A | LR-15 | M3 → M4 | UAT-05 |
-| IH-NB-002 | IH-NB-002-AC01 | A | LR-15 | M3 → M4 | UAT-05 |
-| IH-NB-002 | IH-NB-002-AC02 | A | LR-15 | M3 → M4 | UAT-05 |
-| IH-NB-003 | IH-NB-003-AC01 | A | LR-15 | M3 → M4 | UAT-12 |
-| IH-NB-003 | IH-NB-003-AC02 | A | LR-15 | M3 → M4 | UAT-12 |
-| IH-NB-004 | IH-NB-004-AC01 | A | LR-15 | M3 → M4 | UAT-13 |
-| IH-NB-004 | IH-NB-004-AC02 | A | LR-15 | M3 → M4 | UAT-13 |
-| IH-DOC-001 | IH-DOC-001-AC01 | A | LR-15 | M3 → M4 | UAT-06 |
-| IH-DOC-001 | IH-DOC-001-AC02 | A | LR-15 | M3 → M4 | UAT-06 |
-| IH-DOC-002 | IH-DOC-002-AC01 | A | LR-15 | M3 → M4 | UAT-06 |
-| IH-DOC-002 | IH-DOC-002-AC02 | A | LR-15 | M3 → M4 | UAT-06 |
-| IH-DOC-003 | IH-DOC-003-AC01 | A | LR-15 | M3 → M4 | UAT-07 |
-| IH-DOC-003 | IH-DOC-003-AC02 | A | LR-15 | M3 → M4 | UAT-07 |
-| IH-DOC-004 | IH-DOC-004-AC01 | A | LR-15 | M3 → M4 | UAT-07 |
-| IH-DOC-004 | IH-DOC-004-AC02 | A | LR-15 | M3 → M4 | UAT-07 |
-| IH-DOC-005 | IH-DOC-005-AC01 | A | LR-15 | M3 → M4 | UAT-06, UAT-08, UAT-12 |
-| IH-DOC-005 | IH-DOC-005-AC02 | A | LR-15 | M3 → M4 | UAT-06, UAT-08, UAT-12 |
-| IH-DOC-006 | IH-DOC-006-AC01 | A | LR-15 | M3 → M4 | UAT-12 |
-| IH-DOC-006 | IH-DOC-006-AC02 | A | LR-15 | M3 → M4 | UAT-12 |
-| IH-CHAT-001 | IH-CHAT-001-AC01 | A | LR-15 | M3 → M4 | UAT-08 |
-| IH-CHAT-001 | IH-CHAT-001-AC02 | A | LR-15 | M3 → M4 | UAT-08 |
-| IH-CHAT-002 | IH-CHAT-002-AC01 | A | LR-15 | M3 → M4 | UAT-08 |
-| IH-CHAT-002 | IH-CHAT-002-AC02 | A | LR-15 | M3 → M4 | UAT-08 |
-| IH-CHAT-003 | IH-CHAT-003-AC01 | A | LR-15 | M3 → M4 | UAT-09 |
-| IH-CHAT-003 | IH-CHAT-003-AC02 | A | LR-15 | M3 → M4 | UAT-09 |
-| IH-CHAT-004 | IH-CHAT-004-AC01 | A | LR-15 | M3 → M4 | UAT-08, UAT-12 |
-| IH-CHAT-004 | IH-CHAT-004-AC02 | A | LR-15 | M3 → M4 | UAT-08, UAT-12 |
-| IH-CHAT-004 | IH-CHAT-004-AC03 | A | LR-15 | M3 → M4 | UAT-08, UAT-12 |
-| IH-CHAT-004 | IH-CHAT-004-AC04 | A | LR-15 | M3 → M4 | UAT-08, UAT-12 |
-| IH-CHAT-004 | IH-CHAT-004-AC05 | A | LR-15 | M3 → M4 | UAT-08, UAT-12 |
-| IH-CHAT-005 | IH-CHAT-005-AC01 | A | LR-15 | M3 → M4 | UAT-09, UAT-12 |
-| IH-CHAT-005 | IH-CHAT-005-AC02 | A | LR-15 | M3 → M4 | UAT-09, UAT-12 |
-| IH-NOTE-001 | IH-NOTE-001-AC01 | A | LR-15 | M3 → M4 | UAT-10 |
-| IH-NOTE-001 | IH-NOTE-001-AC02 | A | LR-15 | M3 → M4 | UAT-10 |
-| IH-NOTE-001 | IH-NOTE-001-AC03 | A | LR-15 | M3 → M4 | UAT-10 |
-| IH-NOTE-001 | IH-NOTE-001-AC04 | A | LR-15 | M3 → M4 | UAT-10 |
-| IH-NOTE-002 | IH-NOTE-002-AC01 | A | LR-15 | M3 → M4 | UAT-10, UAT-12 |
-| IH-NOTE-002 | IH-NOTE-002-AC02 | A | LR-15 | M3 → M4 | UAT-10, UAT-12 |
-| IH-AI-001 | IH-AI-001-AC01 | D1 | LR-18 | M3 → M4 | UAT-11 |
-| IH-AI-001 | IH-AI-001-AC02 | D1 | LR-18 | M3 → M4 | UAT-11 |
-| IH-AI-002 | IH-AI-002-AC01 | A | LR-18 | M3 → M4 | UAT-11 |
-| IH-AI-002 | IH-AI-002-AC02 | A | LR-18 | M3 → M4 | UAT-11 |
-| IH-AI-003 | IH-AI-003-AC01 | D1 | LR-18 | M3 → M4 | UAT-11, UAT-14 |
-| IH-AI-003 | IH-AI-003-AC02 | A | LR-18 | M3 → M4 | UAT-11, UAT-14 |
-| IH-AI-004 | IH-AI-004-AC01 | D1 | LR-18 | M3 → M4 | UAT-11, UAT-12 |
-| IH-AI-004 | IH-AI-004-AC02 | A | LR-18 | M3 → M4 | UAT-11, UAT-12 |
-| IH-MM-001 | IH-MM-001-AC01 | N | - | Mở rộng | UAT-11 |
-| IH-MM-001 | IH-MM-001-AC02 | N | - | Mở rộng | UAT-11 |
-| IH-MM-002 | IH-MM-002-AC01 | N | - | Mở rộng | UAT-11, UAT-15 |
-| IH-MM-002 | IH-MM-002-AC02 | N | - | Mở rộng | UAT-11, UAT-15 |
-| IH-SUM-001 | IH-SUM-001-AC01 | A | LR-16 | M3 → M4 | UAT-11 |
-| IH-SUM-001 | IH-SUM-001-AC02 | A | LR-16 | M3 → M4 | UAT-11 |
-| IH-SUM-002 | IH-SUM-002-AC01 | A | LR-16 | M3 → M4 | UAT-10, UAT-11 |
-| IH-SUM-002 | IH-SUM-002-AC02 | A | LR-16 | M3 → M4 | UAT-10, UAT-11 |
-| IH-SLD-001 | IH-SLD-001-AC01 | N | - | Mở rộng | UAT-11 |
-| IH-SLD-001 | IH-SLD-001-AC02 | N | - | Mở rộng | UAT-11 |
-| IH-SLD-002 | IH-SLD-002-AC01 | N | - | Mở rộng | UAT-11, UAT-15 |
-| IH-SLD-002 | IH-SLD-002-AC02 | N | - | Mở rộng | UAT-11, UAT-15 |
-| IH-QUIZ-001 | IH-QUIZ-001-AC01 | A | LR-17 | M3 → M4 | UAT-11 |
-| IH-QUIZ-001 | IH-QUIZ-001-AC02 | A | LR-17 | M3 → M4 | UAT-11 |
-| IH-QUIZ-002 | IH-QUIZ-002-AC01 | A | LR-17 | M3 → M4 | UAT-11 |
-| IH-QUIZ-002 | IH-QUIZ-002-AC02 | A | LR-17 | M3 → M4 | UAT-11 |
-| IH-RPT-001 | IH-RPT-001-AC01 | N | - | Mở rộng | UAT-11 |
-| IH-RPT-001 | IH-RPT-001-AC02 | N | - | Mở rộng | UAT-11 |
-| IH-RPT-002 | IH-RPT-002-AC01 | N | - | Mở rộng | UAT-11, UAT-13 |
-| IH-RPT-002 | IH-RPT-002-AC02 | N | - | Mở rộng | UAT-11, UAT-13 |
-| IH-OUT-001 | IH-OUT-001-AC01 | D1 | LR-18 | M3 → M4 | UAT-11, UAT-13 |
-| IH-OUT-001 | IH-OUT-001-AC02 | A | LR-18 | M3 → M4 | UAT-11, UAT-13 |
-| IH-OUT-002 | IH-OUT-002-AC01 | A | LR-18 | M3 → M4 | UAT-11, UAT-12 |
-| IH-OUT-002 | IH-OUT-002-AC02 | A | LR-18 | M3 → M4 | UAT-11, UAT-12 |
-| IH-OUT-003 | IH-OUT-003-AC01 | A | LR-18 | M3 → M4 | UAT-12 |
-| IH-OUT-003 | IH-OUT-003-AC02 | A | LR-18 | M3 → M4 | UAT-12 |
-| IH-DATA-001 | IH-DATA-001-AC01 | D1 | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
-| IH-DATA-001 | IH-DATA-001-AC02 | D1 | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
-| IH-DATA-001 | IH-DATA-001-AC03 | D1 | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
-| IH-DATA-001 | IH-DATA-001-AC04 | A | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
-| IH-DATA-001 | IH-DATA-001-AC05 | A | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
-| IH-DATA-001 | IH-DATA-001-AC06 | A | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
-| IH-DATA-002 | IH-DATA-002-AC01 | A | LR-17 | M3 → M4 | UAT-10, UAT-11, UAT-12, UAT-20 |
-| IH-DATA-002 | IH-DATA-002-AC02 | A | LR-22 | M3 → M4 | UAT-10, UAT-11, UAT-12, UAT-20 |
-| IH-DATA-002 | IH-DATA-002-AC03 | A | LR-17 | M3 → M4 | UAT-10, UAT-11, UAT-12, UAT-20 |
-| IH-DATA-002 | IH-DATA-002-AC04 | A | LR-22 | M3 → M4 | UAT-10, UAT-11, UAT-12, UAT-20 |
-| IH-UX-001 | IH-UX-001-AC01 | D2 | LR-10/LR-21 | M2 → M4 | UAT-15 |
-| IH-UX-001 | IH-UX-001-AC02 | D2 | LR-10/LR-21 | M2 → M4 | UAT-15 |
-| IH-UX-002 | IH-UX-002-AC01 | D2 | LR-10/LR-21 | M2 → M4 | UAT-15 |
-| IH-UX-002 | IH-UX-002-AC02 | A | LR-10/LR-21 | M2 → M4 | UAT-15 |
-| IH-UX-003 | IH-UX-003-AC01 | A | LR-10/LR-21 | M2 → M4 | UAT-15 |
-| IH-UX-003 | IH-UX-003-AC02 | A | LR-10/LR-21 | M2 → M4 | UAT-15 |
-| IH-UX-004 | IH-UX-004-AC01 | A | LR-10/LR-21 | M2 → M4 | UAT-07, UAT-09, UAT-14, UAT-15 |
-| IH-UX-004 | IH-UX-004-AC02 | A | LR-10/LR-21 | M2 → M4 | UAT-07, UAT-09, UAT-14, UAT-15 |
-| IH-MSG-001 | IH-MSG-001-AC01 | A | LR-15/LR-18 | M3 → M4 | UAT-18 |
-| IH-MSG-001 | IH-MSG-001-AC02 | A | LR-15/LR-18 | M3 → M4 | UAT-18 |
-| IH-MSG-002 | IH-MSG-002-AC01 | A | LR-15/LR-18 | M3 → M4 | UAT-15, UAT-18 |
-| IH-MSG-002 | IH-MSG-002-AC02 | A | LR-15/LR-18 | M3 → M4 | UAT-15, UAT-18 |
-| IH-MSG-003 | IH-MSG-003-AC01 | D5 | LR-14/LR-24 | M3 → M4 | UAT-01, UAT-02, UAT-03, UAT-19 |
-| IH-MSG-003 | IH-MSG-003-AC02 | A | LR-14/LR-24 | M3 → M4 | UAT-01, UAT-02, UAT-03, UAT-19 |
-| IH-MSG-003 | IH-MSG-003-AC03 | A | LR-14/LR-24 | M3 → M4 | UAT-01, UAT-02, UAT-03, UAT-19 |
-| IH-MSG-004 | IH-MSG-004-AC01 | A | LR-15/LR-18 | M3 → M4 | UAT-07, UAT-09, UAT-14, UAT-18 |
-| IH-MSG-004 | IH-MSG-004-AC02 | A | LR-15/LR-18 | M3 → M4 | UAT-07, UAT-09, UAT-14, UAT-18 |
-| IH-INT-001 | IH-INT-001-AC01 | D1 | LR-11/LR-18 | M2.1 → M4 | UAT-16 |
-| IH-INT-001 | IH-INT-001-AC02 | A | LR-11/LR-18 | M2.1 → M4 | UAT-16 |
-| IH-INT-002 | IH-INT-002-AC01 | A | LR-11/LR-18 | M2.1 → M4 | UAT-06, UAT-11, UAT-15, UAT-16 |
-| IH-INT-002 | IH-INT-002-AC02 | A | LR-11/LR-18 | M2.1 → M4 | UAT-06, UAT-11, UAT-15, UAT-16 |
-| IH-INT-002 | IH-INT-002-AC03 | A | LR-11/LR-18 | M2.1 → M4 | UAT-06, UAT-11, UAT-15, UAT-16 |
-| IH-INT-003 | IH-INT-003-AC01 | D3 | LR-09/LR-23 | M2.1 → M4 | UAT-01, UAT-02, UAT-03, UAT-11, UAT-16 |
-| IH-INT-003 | IH-INT-003-AC02 | A | LR-09/LR-23 | M2.1 → M4 | UAT-01, UAT-02, UAT-03, UAT-11, UAT-16 |
-| IH-INT-004 | IH-INT-004-AC01 | A | LR-11/LR-18 | M2.1 → M4 | UAT-07, UAT-09, UAT-12, UAT-16, UAT-17, UAT-20 |
-| IH-INT-004 | IH-INT-004-AC02 | A | LR-11/LR-18 | M2.1 → M4 | UAT-07, UAT-09, UAT-12, UAT-16, UAT-17, UAT-20 |
-| IH-NFR-001 | IH-NFR-001-AC01 | A | LR-20/LR-24 | M4 | UAT-01, UAT-02, UAT-03, UAT-04 |
-| IH-NFR-001 | IH-NFR-001-AC02 | A | LR-20/LR-24 | M4 | UAT-01, UAT-02, UAT-03, UAT-04 |
-| IH-NFR-001 | IH-NFR-001-AC03 | A | LR-20/LR-24 | M4 | UAT-01, UAT-02, UAT-03, UAT-04 |
-| IH-NFR-001 | IH-NFR-001-AC04 | A | LR-20/LR-24 | M4 | UAT-01, UAT-02, UAT-03, UAT-04 |
-| IH-NFR-001 | IH-NFR-001-AC05 | A | LR-20/LR-24 | M4 | UAT-01, UAT-02, UAT-03, UAT-04 |
-| IH-NFR-002 | IH-NFR-002-AC01 | A | LR-20/LR-24 | M4 | UAT-12, UAT-13 |
-| IH-NFR-002 | IH-NFR-002-AC02 | A | LR-20/LR-24 | M4 | UAT-12, UAT-13 |
-| IH-NFR-003 | IH-NFR-003-AC01 | A | LR-20/LR-24 | M4 | UAT-13, UAT-14 |
-| IH-NFR-003 | IH-NFR-003-AC02 | A | LR-20/LR-24 | M4 | UAT-13, UAT-14 |
-| IH-NFR-004 | IH-NFR-004-AC01 | A | LR-20/LR-24 | M4 | UAT-07, UAT-12, UAT-16 |
-| IH-NFR-004 | IH-NFR-004-AC02 | A | LR-20/LR-24 | M4 | UAT-07, UAT-12, UAT-16 |
-| IH-NFR-005 | IH-NFR-005-AC01 | A | LR-20/LR-24 | M4 | UAT-07, UAT-09, UAT-14, UAT-16 |
-| IH-NFR-005 | IH-NFR-005-AC02 | A | LR-20/LR-24 | M4 | UAT-07, UAT-09, UAT-14, UAT-16 |
-| IH-NFR-006 | IH-NFR-006-AC01 | A | LR-21 | M4 | UAT-17 |
-| IH-NFR-006 | IH-NFR-006-AC02 | A | LR-21 | M4 | UAT-17 |
-| IH-NFR-007 | IH-NFR-007-AC01 | D3 | LR-21/LR-23 | M4 | UAT-17 |
-| IH-NFR-007 | IH-NFR-007-AC02 | A | LR-21/LR-23 | M4 | UAT-17 |
-| IH-NFR-008 | IH-NFR-008-AC01 | A | LR-20/LR-24 | M4 | UAT-16 |
-| IH-NFR-008 | IH-NFR-008-AC02 | A | LR-20/LR-24 | M4 | UAT-16 |
-| IH-NFR-009 | IH-NFR-009-AC01 | A | LR-26 | M5 | UAT-16 |
-| IH-NFR-009 | IH-NFR-009-AC02 | A | LR-26 | M5 | UAT-16 |
-| IH-NFR-010 | IH-NFR-010-AC01 | A | LR-25 | M5 | UAT-16 |
-| IH-NFR-010 | IH-NFR-010-AC02 | A | LR-25 | M5 | UAT-16 |
-| IH-NFR-011 | IH-NFR-011-AC01 | A | LR-14/LR-24 | M4 | UAT-04, UAT-13, UAT-21 |
-| IH-NFR-011 | IH-NFR-011-AC02 | A | LR-14/LR-24 | M4 | UAT-04, UAT-13, UAT-21 |
-| IH-REL-001 | IH-REL-001-AC01 | D4 | LR-25 | M5 | UAT-01, UAT-21 |
-| IH-REL-001 | IH-REL-001-AC02 | A | LR-25 | M5 | UAT-01, UAT-21 |
-| IH-REL-002 | IH-REL-002-AC01 | A | LR-25/LR-26 | M5 | UAT-16 |
-| IH-REL-002 | IH-REL-002-AC02 | A | LR-25/LR-26 | M5 | UAT-16 |
-| IH-REL-003 | IH-REL-003-AC01 | A | LR-27 | M5 | UAT-16 |
-| IH-REL-003 | IH-REL-003-AC02 | A | LR-27 | M5 | UAT-16 |
+| Mã yêu cầu gốc | AC | Phạm vi | Tầng | Công việc hoàn thiện | Mốc hoàn thiện/kiểm tổng hợp | Nghiệm thu liên quan |
+| --- | --- | --- | --- | --- | --- | --- |
+| IH-AUTH-001 | IH-AUTH-001-AC01 | A | Core | LR-14 | M3 → M4 | UAT-01 |
+| IH-AUTH-001 | IH-AUTH-001-AC02 | A | Core | LR-14 | M3 → M4 | UAT-01 |
+| IH-AUTH-002 | IH-AUTH-002-AC01 | A | Core | LR-14 | M3 → M4 | UAT-01, UAT-03 |
+| IH-AUTH-002 | IH-AUTH-002-AC02 | A | Extended | LR-14 | M3 → M4 | UAT-01, UAT-03 |
+| IH-AUTH-003 | IH-AUTH-003-AC01 | A | Core | LR-14 | M3 → M4 | UAT-01 |
+| IH-AUTH-003 | IH-AUTH-003-AC02 | A | Extended | LR-14 | M3 → M4 | UAT-01 |
+| IH-AUTH-004 | IH-AUTH-004-AC01 | A | Core | LR-14 | M3 → M4 | UAT-02 |
+| IH-AUTH-004 | IH-AUTH-004-AC02 | A | Core | LR-14 | M3 → M4 | UAT-02 |
+| IH-AUTH-005 | IH-AUTH-005-AC01 | A | Extended | LR-14 | M3 → M4 | UAT-02, UAT-03 |
+| IH-AUTH-005 | IH-AUTH-005-AC02 | A | Core | LR-14 | M3 → M4 | UAT-02, UAT-03 |
+| IH-AUTH-005 | IH-AUTH-005-AC03 | A | Extended | LR-14 | M3 → M4 | UAT-02, UAT-03 |
+| IH-AUTH-005 | IH-AUTH-005-AC04 | A | Extended | LR-14 | M3 → M4 | UAT-02, UAT-03 |
+| IH-AUTH-006 | IH-AUTH-006-AC01 | A | Core | LR-14 | M3 → M4 | UAT-03 |
+| IH-AUTH-006 | IH-AUTH-006-AC02 | A | Extended | LR-14 | M3 → M4 | UAT-03 |
+| IH-AUTH-007 | IH-AUTH-007-AC01 | A | Core | LR-14 | M3 → M4 | UAT-03 |
+| IH-AUTH-007 | IH-AUTH-007-AC02 | A | Core | LR-14 | M3 → M4 | UAT-03 |
+| IH-AUTH-007 | IH-AUTH-007-AC03 | A | Extended | LR-14 | M3 → M4 | UAT-03 |
+| IH-AUTH-008 | IH-AUTH-008-AC01 | A | Core | LR-14 | M3 → M4 | UAT-04 |
+| IH-AUTH-008 | IH-AUTH-008-AC02 | A | Core | LR-14 | M3 → M4 | UAT-04 |
+| IH-AUTH-009 | IH-AUTH-009-AC01 | A | Core | LR-14 | M3 → M4 | UAT-04 |
+| IH-AUTH-009 | IH-AUTH-009-AC02 | A | Extended | LR-14 | M3 → M4 | UAT-04 |
+| IH-AUTH-010 | IH-AUTH-010-AC01 | A | Core | LR-14 | M3 → M4 | UAT-03 |
+| IH-AUTH-010 | IH-AUTH-010-AC02 | A | Core | LR-14 | M3 → M4 | UAT-03 |
+| IH-NB-001 | IH-NB-001-AC01 | A | Core | LR-15 | M3 → M4 | UAT-05 |
+| IH-NB-001 | IH-NB-001-AC02 | A | Core | LR-15 | M3 → M4 | UAT-05 |
+| IH-NB-002 | IH-NB-002-AC01 | A | Core | LR-15 | M3 → M4 | UAT-05 |
+| IH-NB-002 | IH-NB-002-AC02 | A | Extended | LR-15 | M3 → M4 | UAT-05 |
+| IH-NB-003 | IH-NB-003-AC01 | A | Extended | LR-15 | M3 → M4 | UAT-12 |
+| IH-NB-003 | IH-NB-003-AC02 | A | Core | LR-15 | M3 → M4 | UAT-12 |
+| IH-NB-004 | IH-NB-004-AC01 | A | Core | LR-15 | M3 → M4 | UAT-13 |
+| IH-NB-004 | IH-NB-004-AC02 | A | Core | LR-15 | M3 → M4 | UAT-13 |
+| IH-DOC-001 | IH-DOC-001-AC01 | A | Core | LR-15 | M3 → M4 | UAT-06 |
+| IH-DOC-001 | IH-DOC-001-AC02 | A | Core | LR-15 | M3 → M4 | UAT-06 |
+| IH-DOC-002 | IH-DOC-002-AC01 | A | Core | LR-15 | M3 → M4 | UAT-06 |
+| IH-DOC-002 | IH-DOC-002-AC02 | A | Core | LR-15 | M3 → M4 | UAT-06 |
+| IH-DOC-003 | IH-DOC-003-AC01 | A | Core | LR-15 | M3 → M4 | UAT-07 |
+| IH-DOC-003 | IH-DOC-003-AC02 | A | Extended | LR-15 | M3 → M4 | UAT-07 |
+| IH-DOC-004 | IH-DOC-004-AC01 | A | Core | LR-15 | M3 → M4 | UAT-07 |
+| IH-DOC-004 | IH-DOC-004-AC02 | A | Core | LR-15 | M3 → M4 | UAT-07 |
+| IH-DOC-005 | IH-DOC-005-AC01 | A | Extended | LR-15 | M3 → M4 | UAT-06, UAT-08, UAT-12 |
+| IH-DOC-005 | IH-DOC-005-AC02 | A | Core | LR-15 | M3 → M4 | UAT-06, UAT-08, UAT-12 |
+| IH-DOC-006 | IH-DOC-006-AC01 | A | Core | LR-15 | M3 → M4 | UAT-12 |
+| IH-DOC-006 | IH-DOC-006-AC02 | A | Extended | LR-15 | M3 → M4 | UAT-12 |
+| IH-CHAT-001 | IH-CHAT-001-AC01 | A | Core | LR-15 | M3 → M4 | UAT-08 |
+| IH-CHAT-001 | IH-CHAT-001-AC02 | A | Core | LR-15 | M3 → M4 | UAT-08 |
+| IH-CHAT-002 | IH-CHAT-002-AC01 | A | Core | LR-15 | M3 → M4 | UAT-08 |
+| IH-CHAT-002 | IH-CHAT-002-AC02 | A | Core | LR-15 | M3 → M4 | UAT-08 |
+| IH-CHAT-003 | IH-CHAT-003-AC01 | A | Core | LR-15 | M3 → M4 | UAT-09 |
+| IH-CHAT-003 | IH-CHAT-003-AC02 | A | Core | LR-15 | M3 → M4 | UAT-09 |
+| IH-CHAT-004 | IH-CHAT-004-AC01 | A | Core | LR-15 | M3 → M4 | UAT-08, UAT-12 |
+| IH-CHAT-004 | IH-CHAT-004-AC02 | A | Core | LR-15 | M3 → M4 | UAT-08, UAT-12 |
+| IH-CHAT-004 | IH-CHAT-004-AC03 | A | Extended | LR-15 | M3 → M4 | UAT-08, UAT-12 |
+| IH-CHAT-004 | IH-CHAT-004-AC04 | A | Extended | LR-15 | M3 → M4 | UAT-08, UAT-12 |
+| IH-CHAT-004 | IH-CHAT-004-AC05 | A | Extended | LR-15 | M3 → M4 | UAT-08, UAT-12 |
+| IH-CHAT-005 | IH-CHAT-005-AC01 | A | Core | LR-15 | M3 → M4 | UAT-09, UAT-12 |
+| IH-CHAT-005 | IH-CHAT-005-AC02 | A | Core | LR-15 | M3 → M4 | UAT-09, UAT-12 |
+| IH-NOTE-001 | IH-NOTE-001-AC01 | A | Extended | LR-15 | M3 → M4 | UAT-10 |
+| IH-NOTE-001 | IH-NOTE-001-AC02 | A | Extended | LR-15 | M3 → M4 | UAT-10 |
+| IH-NOTE-001 | IH-NOTE-001-AC03 | A | Extended | LR-15 | M3 → M4 | UAT-10 |
+| IH-NOTE-001 | IH-NOTE-001-AC04 | A | Extended | LR-15 | M3 → M4 | UAT-10 |
+| IH-NOTE-002 | IH-NOTE-002-AC01 | A | Extended | LR-15 | M3 → M4 | UAT-10, UAT-12 |
+| IH-NOTE-002 | IH-NOTE-002-AC02 | A | Extended | LR-15 | M3 → M4 | UAT-10, UAT-12 |
+| IH-AI-001 | IH-AI-001-AC01 | D1 | Core | LR-18 | M3 → M4 | UAT-11 |
+| IH-AI-001 | IH-AI-001-AC02 | D1 | Core | LR-18 | M3 → M4 | UAT-11 |
+| IH-AI-002 | IH-AI-002-AC01 | A | Core | LR-18 | M3 → M4 | UAT-11 |
+| IH-AI-002 | IH-AI-002-AC02 | A | Core | LR-18 | M3 → M4 | UAT-11 |
+| IH-AI-003 | IH-AI-003-AC01 | D1 | Core | LR-18 | M3 → M4 | UAT-11, UAT-14 |
+| IH-AI-003 | IH-AI-003-AC02 | A | Extended | LR-18 | M3 → M4 | UAT-11, UAT-14 |
+| IH-AI-004 | IH-AI-004-AC01 | D1 | Core | LR-18 | M3 → M4 | UAT-11, UAT-12 |
+| IH-AI-004 | IH-AI-004-AC02 | A | Core | LR-18 | M3 → M4 | UAT-11, UAT-12 |
+| IH-MM-001 | IH-MM-001-AC01 | N | Ngoài phạm vi | - | Mở rộng | UAT-11 |
+| IH-MM-001 | IH-MM-001-AC02 | N | Ngoài phạm vi | - | Mở rộng | UAT-11 |
+| IH-MM-002 | IH-MM-002-AC01 | N | Ngoài phạm vi | - | Mở rộng | UAT-11, UAT-15 |
+| IH-MM-002 | IH-MM-002-AC02 | N | Ngoài phạm vi | - | Mở rộng | UAT-11, UAT-15 |
+| IH-SUM-001 | IH-SUM-001-AC01 | A | Core | LR-16 | M3 → M4 | UAT-11 |
+| IH-SUM-001 | IH-SUM-001-AC02 | A | Core | LR-16 | M3 → M4 | UAT-11 |
+| IH-SUM-002 | IH-SUM-002-AC01 | A | Extended | LR-16 | M3 → M4 | UAT-10, UAT-11 |
+| IH-SUM-002 | IH-SUM-002-AC02 | A | Extended | LR-16 | M3 → M4 | UAT-10, UAT-11 |
+| IH-SLD-001 | IH-SLD-001-AC01 | N | Ngoài phạm vi | - | Mở rộng | UAT-11 |
+| IH-SLD-001 | IH-SLD-001-AC02 | N | Ngoài phạm vi | - | Mở rộng | UAT-11 |
+| IH-SLD-002 | IH-SLD-002-AC01 | N | Ngoài phạm vi | - | Mở rộng | UAT-11, UAT-15 |
+| IH-SLD-002 | IH-SLD-002-AC02 | N | Ngoài phạm vi | - | Mở rộng | UAT-11, UAT-15 |
+| IH-QUIZ-001 | IH-QUIZ-001-AC01 | A | Core | LR-17 | M3 → M4 | UAT-11 |
+| IH-QUIZ-001 | IH-QUIZ-001-AC02 | A | Core | LR-17 | M3 → M4 | UAT-11 |
+| IH-QUIZ-002 | IH-QUIZ-002-AC01 | A | Core | LR-17 | M3 → M4 | UAT-11 |
+| IH-QUIZ-002 | IH-QUIZ-002-AC02 | A | Core | LR-17 | M3 → M4 | UAT-11 |
+| IH-RPT-001 | IH-RPT-001-AC01 | N | Ngoài phạm vi | - | Mở rộng | UAT-11 |
+| IH-RPT-001 | IH-RPT-001-AC02 | N | Ngoài phạm vi | - | Mở rộng | UAT-11 |
+| IH-RPT-002 | IH-RPT-002-AC01 | N | Ngoài phạm vi | - | Mở rộng | UAT-11, UAT-13 |
+| IH-RPT-002 | IH-RPT-002-AC02 | N | Ngoài phạm vi | - | Mở rộng | UAT-11, UAT-13 |
+| IH-OUT-001 | IH-OUT-001-AC01 | D1 | Core | LR-18 | M3 → M4 | UAT-11, UAT-13 |
+| IH-OUT-001 | IH-OUT-001-AC02 | A | Core | LR-18 | M3 → M4 | UAT-11, UAT-13 |
+| IH-OUT-002 | IH-OUT-002-AC01 | A | Extended | LR-18 | M3 → M4 | UAT-11, UAT-12 |
+| IH-OUT-002 | IH-OUT-002-AC02 | A | Extended | LR-18 | M3 → M4 | UAT-11, UAT-12 |
+| IH-OUT-003 | IH-OUT-003-AC01 | A | Core | LR-18 | M3 → M4 | UAT-12 |
+| IH-OUT-003 | IH-OUT-003-AC02 | A | Extended | LR-18 | M3 → M4 | UAT-12 |
+| IH-DATA-001 | IH-DATA-001-AC01 | D1 | Extended | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
+| IH-DATA-001 | IH-DATA-001-AC02 | D1 | Core | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
+| IH-DATA-001 | IH-DATA-001-AC03 | D1 | Extended | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
+| IH-DATA-001 | IH-DATA-001-AC04 | A | Core | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
+| IH-DATA-001 | IH-DATA-001-AC05 | A | Extended | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
+| IH-DATA-001 | IH-DATA-001-AC06 | A | Extended | LR-15/LR-18 | M3 → M4 | UAT-05, UAT-06, UAT-08, UAT-10, UAT-11, UAT-20 |
+| IH-DATA-002 | IH-DATA-002-AC01 | A | Core | LR-17 | M3 → M4 | UAT-10, UAT-11, UAT-12, UAT-20 |
+| IH-DATA-002 | IH-DATA-002-AC02 | A | Core | LR-22 | M3 → M4 | UAT-10, UAT-11, UAT-12, UAT-20 |
+| IH-DATA-002 | IH-DATA-002-AC03 | A | Core | LR-17 | M3 → M4 | UAT-10, UAT-11, UAT-12, UAT-20 |
+| IH-DATA-002 | IH-DATA-002-AC04 | A | Core | LR-22 | M3 → M4 | UAT-10, UAT-11, UAT-12, UAT-20 |
+| IH-UX-001 | IH-UX-001-AC01 | D2 | Core | LR-10/LR-21 | M2 → M4 | UAT-15 |
+| IH-UX-001 | IH-UX-001-AC02 | D2 | Extended | LR-10/LR-21 | M2 → M4 | UAT-15 |
+| IH-UX-002 | IH-UX-002-AC01 | D2 | Core | LR-10/LR-21 | M2 → M4 | UAT-15 |
+| IH-UX-002 | IH-UX-002-AC02 | A | Extended | LR-10/LR-21 | M2 → M4 | UAT-15 |
+| IH-UX-003 | IH-UX-003-AC01 | A | Extended | LR-10/LR-21 | M2 → M4 | UAT-15 |
+| IH-UX-003 | IH-UX-003-AC02 | A | Extended | LR-10/LR-21 | M2 → M4 | UAT-15 |
+| IH-UX-004 | IH-UX-004-AC01 | A | Extended | LR-10/LR-21 | M2 → M4 | UAT-07, UAT-09, UAT-14, UAT-15 |
+| IH-UX-004 | IH-UX-004-AC02 | A | Core | LR-10/LR-21 | M2 → M4 | UAT-07, UAT-09, UAT-14, UAT-15 |
+| IH-MSG-001 | IH-MSG-001-AC01 | A | Extended | LR-15/LR-18 | M3 → M4 | UAT-18 |
+| IH-MSG-001 | IH-MSG-001-AC02 | A | Extended | LR-15/LR-18 | M3 → M4 | UAT-18 |
+| IH-MSG-002 | IH-MSG-002-AC01 | A | Extended | LR-15/LR-18 | M3 → M4 | UAT-15, UAT-18 |
+| IH-MSG-002 | IH-MSG-002-AC02 | A | Extended | LR-15/LR-18 | M3 → M4 | UAT-15, UAT-18 |
+| IH-MSG-003 | IH-MSG-003-AC01 | D5 | Core | LR-14/LR-24 | M3 → M4 | UAT-01, UAT-02, UAT-03, UAT-19 |
+| IH-MSG-003 | IH-MSG-003-AC02 | A | Core | LR-14/LR-24 | M3 → M4 | UAT-01, UAT-02, UAT-03, UAT-19 |
+| IH-MSG-003 | IH-MSG-003-AC03 | A | Extended | LR-14/LR-24 | M3 → M4 | UAT-01, UAT-02, UAT-03, UAT-19 |
+| IH-MSG-004 | IH-MSG-004-AC01 | A | Core | LR-15/LR-18 | M3 → M4 | UAT-07, UAT-09, UAT-14, UAT-18 |
+| IH-MSG-004 | IH-MSG-004-AC02 | A | Core | LR-15/LR-18 | M3 → M4 | UAT-07, UAT-09, UAT-14, UAT-18 |
+| IH-INT-001 | IH-INT-001-AC01 | D1 | Extended | LR-11/LR-18 | M2.1 → M4 | UAT-16 |
+| IH-INT-001 | IH-INT-001-AC02 | A | Extended | LR-11/LR-18 | M2.1 → M4 | UAT-16 |
+| IH-INT-002 | IH-INT-002-AC01 | A | Core | LR-11/LR-18 | M2.1 → M4 | UAT-06, UAT-11, UAT-15, UAT-16 |
+| IH-INT-002 | IH-INT-002-AC02 | A | Core | LR-11/LR-18 | M2.1 → M4 | UAT-06, UAT-11, UAT-15, UAT-16 |
+| IH-INT-002 | IH-INT-002-AC03 | A | Core | LR-11/LR-18 | M2.1 → M4 | UAT-06, UAT-11, UAT-15, UAT-16 |
+| IH-INT-003 | IH-INT-003-AC01 | D3 | Core | LR-09/LR-23 | M2.1 → M4 | UAT-01, UAT-02, UAT-03, UAT-11, UAT-16 |
+| IH-INT-003 | IH-INT-003-AC02 | A | Core | LR-09/LR-23 | M2.1 → M4 | UAT-01, UAT-02, UAT-03, UAT-11, UAT-16 |
+| IH-INT-004 | IH-INT-004-AC01 | A | Extended | LR-11/LR-18 | M2.1 → M4 | UAT-07, UAT-09, UAT-12, UAT-16, UAT-17, UAT-20 |
+| IH-INT-004 | IH-INT-004-AC02 | A | Core | LR-11/LR-18 | M2.1 → M4 | UAT-07, UAT-09, UAT-12, UAT-16, UAT-17, UAT-20 |
+| IH-NFR-001 | IH-NFR-001-AC01 | A | Core | LR-20/LR-24 | M4 | UAT-01, UAT-02, UAT-03, UAT-04 |
+| IH-NFR-001 | IH-NFR-001-AC02 | A | Core | LR-20/LR-24 | M4 | UAT-01, UAT-02, UAT-03, UAT-04 |
+| IH-NFR-001 | IH-NFR-001-AC03 | A | Core | LR-20/LR-24 | M4 | UAT-01, UAT-02, UAT-03, UAT-04 |
+| IH-NFR-001 | IH-NFR-001-AC04 | A | Core | LR-20/LR-24 | M4 | UAT-01, UAT-02, UAT-03, UAT-04 |
+| IH-NFR-001 | IH-NFR-001-AC05 | A | Core | LR-20/LR-24 | M4 | UAT-01, UAT-02, UAT-03, UAT-04 |
+| IH-NFR-002 | IH-NFR-002-AC01 | A | Core | LR-20/LR-24 | M4 | UAT-12, UAT-13 |
+| IH-NFR-002 | IH-NFR-002-AC02 | A | Core | LR-20/LR-24 | M4 | UAT-12, UAT-13 |
+| IH-NFR-003 | IH-NFR-003-AC01 | A | Core | LR-20/LR-24 | M4 | UAT-13, UAT-14 |
+| IH-NFR-003 | IH-NFR-003-AC02 | A | Core | LR-20/LR-24 | M4 | UAT-13, UAT-14 |
+| IH-NFR-004 | IH-NFR-004-AC01 | A | Core | LR-20/LR-24 | M4 | UAT-07, UAT-12, UAT-16 |
+| IH-NFR-004 | IH-NFR-004-AC02 | A | Core | LR-20/LR-24 | M4 | UAT-07, UAT-12, UAT-16 |
+| IH-NFR-005 | IH-NFR-005-AC01 | A | Core | LR-20/LR-24 | M4 | UAT-07, UAT-09, UAT-14, UAT-16 |
+| IH-NFR-005 | IH-NFR-005-AC02 | A | Core | LR-20/LR-24 | M4 | UAT-07, UAT-09, UAT-14, UAT-16 |
+| IH-NFR-006 | IH-NFR-006-AC01 | A | Core | LR-21 | M4 | UAT-17 |
+| IH-NFR-006 | IH-NFR-006-AC02 | A | Core | LR-21 | M4 | UAT-17 |
+| IH-NFR-007 | IH-NFR-007-AC01 | D3 | Core | LR-21/LR-23 | M4 | UAT-17 |
+| IH-NFR-007 | IH-NFR-007-AC02 | A | Core | LR-21/LR-23 | M4 | UAT-17 |
+| IH-NFR-008 | IH-NFR-008-AC01 | A | Core | LR-20/LR-24 | M4 | UAT-16 |
+| IH-NFR-008 | IH-NFR-008-AC02 | A | Core | LR-20/LR-24 | M4 | UAT-16 |
+| IH-NFR-009 | IH-NFR-009-AC01 | A | Core | LR-26 | M5 | UAT-16 |
+| IH-NFR-009 | IH-NFR-009-AC02 | A | Core | LR-26 | M5 | UAT-16 |
+| IH-NFR-010 | IH-NFR-010-AC01 | A | Core | LR-25 | M5 | UAT-16 |
+| IH-NFR-010 | IH-NFR-010-AC02 | A | Core | LR-25 | M5 | UAT-16 |
+| IH-NFR-011 | IH-NFR-011-AC01 | A | Core | LR-14/LR-24 | M4 | UAT-04, UAT-13, UAT-21 |
+| IH-NFR-011 | IH-NFR-011-AC02 | A | Core | LR-14/LR-24 | M4 | UAT-04, UAT-13, UAT-21 |
+| IH-REL-001 | IH-REL-001-AC01 | D4 | Core | LR-25 | M5 | UAT-01, UAT-21 |
+| IH-REL-001 | IH-REL-001-AC02 | A | Core | LR-25 | M5 | UAT-01, UAT-21 |
+| IH-REL-002 | IH-REL-002-AC01 | A | Core | LR-25/LR-26 | M5 | UAT-16 |
+| IH-REL-002 | IH-REL-002-AC02 | A | Core | LR-25/LR-26 | M5 | UAT-16 |
+| IH-REL-003 | IH-REL-003-AC01 | A | Core | LR-27 | M5 | UAT-16 |
+| IH-REL-003 | IH-REL-003-AC02 | A | Core | LR-27 | M5 | UAT-16 |
 
 <a id="evidence"></a>
 
