@@ -19,6 +19,8 @@ node_modules/
 .next/
 out/
 npm-debug.log*
+test-results/
+playwright-report/
 yarn-error.log*
 
 # --- IDE / OS ---

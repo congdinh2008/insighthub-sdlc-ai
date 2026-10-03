@@ -19,7 +19,9 @@ APPROVED = PROJECT_DIR / ".claude" / "approved-tests.txt"
 def main():
     event = read_event()
     data = event.get("tool_input") or {}
-    target = relative(data.get("file_path") or data.get("notebook_path") or "")
+    # Edit, Write, MultiEdit: file_path. NotebookEdit: notebook_path.
+    # generator_write_test của Playwright test agents (MCP): fileName, tương đối với gốc repo.
+    target = relative(data.get("file_path") or data.get("notebook_path") or data.get("fileName") or "")
     patterns = load_patterns(APPROVED)
     if target == ".claude/approved-tests.txt" or (patterns and matches(target, patterns)):
         block(

@@ -58,6 +58,12 @@ class HookTests(unittest.TestCase):
         self.assertEqual(edit(".claude/approved-tests.txt"), 2)
         self.assertEqual(edit("api/app/routers/chat.py"), 0)
 
+    def test_protect_approved_tests_from_playwright_generator(self):
+        (self.project / ".claude/approved-tests.txt").write_text("web/e2e/notebook-*.spec.ts\n", encoding="utf-8")
+        write = lambda name: run_hook("protect_approved_tests.py", {"tool_name": "mcp__playwright-test__generator_write_test", "tool_input": {"fileName": name, "code": "x"}}, self.project).returncode  # noqa: E731
+        self.assertEqual(write("web/e2e/notebook-owner.spec.ts"), 2)
+        self.assertEqual(write("web/e2e/generated/new-journey.spec.ts"), 0)
+
     def test_empty_approved_list_is_noop(self):
         result = run_hook("protect_approved_tests.py", {"tool_name": "Write", "tool_input": {"file_path": "api/tests/test_new.py"}}, self.project)
         self.assertEqual(result.returncode, 0)
