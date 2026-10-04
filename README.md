@@ -4,7 +4,7 @@
 
 InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa và hỏi đáp có nguồn trích dẫn bằng Retrieval-Augmented Generation (RAG). Từ nền này, học viên phát triển sản phẩm cá nhân qua các giai đoạn phân tích yêu cầu, thiết kế, lập trình, test, phát hành và bảo trì trong chương trình **B2B C07 - SDLC with AI**.
 
-**Runtime nền:** `v1.0.0-rc.3` · **Requirements:** `1.1 Draft`, revision 29/09/2026 (phát hành sau diễn tập M3) · **Starter revision:** 29/09/2026 (AI Engineering Kit, traceability matrix (bảng truy vết), eval harness, hướng dẫn Auth) · **Chủ dự án:** Đinh Xuân Công
+**Runtime nền:** `v1.0.0-rc.3` · **Requirements:** `1.2`, 04/10/2026 · **SRS:** `v1.1` · **Starter revision:** `learner-r1.3`, 04/10/2026 (Auth scaffold, AI Job scaffold, nền UI, MCP chỉ đọc, Playwright Test, eval trong CI, AI Engineering Kit, traceability matrix) · **Chủ dự án:** Đinh Xuân Công
 
 [Hướng dẫn cài đặt](GETTING_STARTED.md) · [Yêu cầu bài tập](docs/learner/01_Requirements_InsightHub.md) · [Kiến trúc](docs/Architecture_Starter_v1.md) · [API](docs/API_Contract_Starter_v1.md)
 
@@ -17,22 +17,26 @@ InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa v
 - **Hỏi đáp có căn cứ:** truy xuất trong tập tài liệu được chọn, tạo câu trả lời kèm trích dẫn và trả trạng thái `NoEvidence` khi không đủ căn cứ.
 - **Kiểm soát operation:** idempotency cho upload, retry, delete và chat; giới hạn thời gian xử lý; đối soát kết quả khi trình duyệt mất phản hồi.
 - **Vận hành và kiểm chứng:** health check, readiness, log theo request, metrics, migration, bộ test, công cụ đánh giá AI và diễn tập sao lưu/khôi phục.
+- **Auth scaffold:** Better Auth email và mật khẩu, bảng phiên, `current_user` ở API, trang `/login` tối thiểu, hai tài khoản thử ([Hướng dẫn Auth](docs/Auth_Integration_Guide.md)). Chỉ là plumbing, chính sách tài khoản là bài của học viên.
+- **AI Job scaffold:** job AI theo người dùng với idempotency, quota LIM-10, deadline LIM-11, publish fence, policy mặc định từ chối, envelope lỗi có `Retry-After`, giả lập lỗi provider ([AI Job Framework](docs/AI_Job_Framework.md)).
+- **Nền UI:** Tailwind CSS v4, component theo quy ước shadcn/ui trên Radix, app shell, token dùng chung với prototype HTML ([UI Foundation](docs/UI_Foundation.md)).
+- **MCP chỉ đọc:** role `insighthub_readonly` và server MCP cho Claude Code ([Getting Started](GETTING_STARTED.md#mcp-chi-doc)).
 
 ### Phần học viên phát triển
 
 | Nhóm chức năng | Kết quả cần xây dựng |
 | --- | --- |
-| Auth và Account | **Core:** đăng ký, xác minh email, đăng nhập mật khẩu/Google, quản lý session, recovery, đổi mật khẩu và profile. **Extended:** liên kết danh tính, phiên chờ xác minh, giới hạn thử. |
-| Transactional Email | **Core:** xác minh (EML-001), reset mật khẩu (EML-002), hướng dẫn tài khoản chỉ dùng Google (EML-004). **Extended:** thông báo liên kết Google (EML-003), thông báo thay đổi mật khẩu (EML-005). Starter cấp Mailpit và adapter SMTP tối thiểu. |
+| Auth và Account | **Core:** đăng ký, xác minh email, đăng nhập email và mật khẩu, quản lý session, recovery, đổi mật khẩu và profile, xây trên Auth scaffold. **Extended:** đăng nhập Google, liên kết danh tính, phiên chờ xác minh, giới hạn thử. |
+| Transactional Email | **Core:** xác minh (EML-001), reset mật khẩu (EML-002). **Extended:** thông báo liên kết Google (EML-003), hướng dẫn tài khoản chỉ dùng Google (EML-004), thông báo thay đổi mật khẩu (EML-005). Starter cấp Mailpit và adapter SMTP tối thiểu. |
 | Notebook | **Core:** tạo, liệt kê, mở, cập nhật và xóa; ownership, giới hạn, pagination. **Extended:** version conflict. |
 | Document | Tích hợp upload, trạng thái, retry, citation và xóa của Starter với Notebook, quyền và vòng đời dữ liệu. |
 | Chat và Conversation | **Core:** hỏi đáp theo nguồn được phép; giữ lịch sử conversation độc lập với operation TTL. **Extended:** đổi tên, xóa conversation. |
 | Note (Extended) | Tạo, xem, sửa, xóa; lưu câu trả lời hoặc Summary thành bản sao độc lập có provenance. |
 | Summary | Chọn nguồn/độ dài, tạo nội dung có căn cứ, lưu và mở lại. Chuyển thành Note là Extended. |
 | Quiz | Tạo đề, làm/nộp bài, chấm tại server, bảo vệ đáp án và lưu lịch sử lần làm. |
-| AI Job và Output | **Core:** theo dõi AI job, xem, mở lại, xóa kết quả; quota, idempotency, deadline và nguồn bị xóa. **Extended:** lọc, rename, regenerate. |
+| AI Job và Output | **Core:** policy, executor và Output trên AI Job scaffold; theo dõi AI job, xem, mở lại, xóa kết quả; nguồn bị xóa; fallback provider và usage (IH-AI-005). **Extended:** lọc, rename, regenerate. |
 
-Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các chức năng dùng chung trong bảng trên. Mindmap, Slide và Báo cáo chỉ được triển khai ở giai đoạn mở rộng cuối khi mentor cho phép. Học viên còn thực hiện UI/UX, test, release local/sandbox và một thay đổi sau phát hành; phạm vi có 151 AC áp dụng trong [traceability matrix](docs/learner/01_Requirements_InsightHub.md#pham-vi-truy-vet). AC được phân tầng **106 Core** (chấm) và **45 Extended** (Stretch, không trừ điểm), công bố ngày 29/09/2026 ([Core và Extended](docs/learner/01_Requirements_InsightHub.md#core-extended)). Học viên tập trung hoàn thiện Auth, Notebook (gồm Document và Chat) và hai AI Tools; phần Extended làm khi Core đã đạt.
+Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các chức năng dùng chung trong bảng trên. Mindmap, Slide và Báo cáo chỉ được triển khai ở giai đoạn mở rộng cuối khi mentor cho phép. Học viên còn thực hiện UI/UX, test, release local và một thay đổi sau phát hành; phạm vi có 153 AC áp dụng trong [traceability matrix](docs/learner/01_Requirements_InsightHub.md#pham-vi-truy-vet). AC được phân tầng **106 Core** (chấm) và **47 Extended** (Stretch, không trừ điểm), công bố ngày 29/09/2026 và cập nhật ngày 04/10/2026 ([Core và Extended](docs/learner/01_Requirements_InsightHub.md#core-extended)). Học viên tập trung hoàn thiện Auth, Notebook (gồm Document và Chat) và hai AI Tools; phần Extended làm khi Core đã đạt.
 
 [Requirements](docs/learner/01_Requirements_InsightHub.md) là tài liệu giao việc chính, gồm chức năng, 29 công việc, mười milestone, dữ liệu/API, rubric và evidence. [Ma trận tiến độ sản phẩm](docs/learner/01_Requirements_InsightHub.md#ma-tran-chuc-nang) chỉ rõ mức hoàn thành từng nhóm: M3.1 chạy hành trình Auth - Notebook - Document - Chat; M3 hoàn thiện phạm vi; M4 kiểm tổng hợp; M5 phát hành R1 rồi thực hiện thay đổi R1.1. Mỗi milestone nối kết quả sản phẩm với cách áp dụng SDLC và AI.
 
@@ -246,8 +250,8 @@ git diff --check
 | Nhu cầu | Tài liệu |
 | --- | --- |
 | Cài đặt, fork repository và chạy ứng dụng | [Getting Started](GETTING_STARTED.md) |
-| Bắt đầu bài tập, xem lộ trình và cách nộp | [Requirements học viên 1.1 Draft](docs/learner/01_Requirements_InsightHub.md) |
-| Tra hành vi sản phẩm và acceptance criteria (AC) | [SRS InsightHub v1.0](docs/learner/02_SRS_InsightHub_v1.0.md) |
+| Bắt đầu bài tập, xem lộ trình và cách nộp | [Requirements học viên 1.2](docs/learner/01_Requirements_InsightHub.md) |
+| Tra hành vi sản phẩm và acceptance criteria (AC) | [SRS InsightHub v1.1](docs/learner/02_SRS_InsightHub_v1.1.md) |
 | Thiết kế dữ liệu, API và tích hợp phần mở rộng | [Hướng dẫn tích hợp](docs/learner/01_Requirements_InsightHub.md#data-api) |
 | Hiểu mã nguồn nền và giao tiếp hiện có | [Kiến trúc](docs/Architecture_Starter_v1.md), [API Starter](docs/API_Contract_Starter_v1.md) |
 | Chọn cấu hình AI và kiểm chất lượng | [Model Profiles](docs/Model_Profiles_And_Reranking.md), [Evaluation](evaluation/README.md) |
@@ -256,6 +260,8 @@ git diff --check
 | Chọn module legacy cho characterization/refactor | [Module legacy](docs/Legacy_Modules.md) |
 | Thành phần AI Engineering Kit theo milestone | [AI Engineering Kit](docs/ai/README.md), [Review Workflow](docs/ai/Review_Workflow.md) |
 | Tích hợp Auth, Google và email | [Hướng dẫn Auth](docs/Auth_Integration_Guide.md) |
+| Cơ chế AI job, quota, fallback và usage | [AI Job Framework](docs/AI_Job_Framework.md), [ADR-004](docs/adr/ADR-004-AI-Job-Framework.md) |
+| Token, component và prototype HTML | [UI Foundation](docs/UI_Foundation.md), [Prototype base](design/prototype/_base/README.md) |
 | Traceability matrix và kiểm chứng theo rủi ro | [trace/README](trace/README.md) |
 | Spec chain và eval harness | [specs/README](specs/README.md), [Eval harness](evaluation/harness/README.md) |
 | Template ADR, threat model, release note | [ADR](docs/adr/ADR-000-Template.md), [Threat model](docs/security/Threat_Model_Template.md), [Release note](docs/release/Release_Notes_Template.md) |

@@ -1,12 +1,41 @@
 # Hướng dẫn tích hợp Auth và Email
 
-Dùng cho M2.1 (LR-09 spike), M2 (LR-11 thiết kế, ADR), M3.1 (LR-12) và M3 (LR-14). Tài liệu nêu **quyết định mặc định, fit-gap và điểm kiểm**; không phải lời giải. Hành vi phải đạt vẫn theo [SRS](learner/02_SRS_InsightHub_v1.0.md#req-ih-auth-001) và [Requirements mục 14](learner/01_Requirements_InsightHub.md#auth-email).
+Dùng cho M2.1 (LR-09 spike), M2 (LR-11 thiết kế, ADR), M3.1 (LR-12) và M3 (LR-14). Tài liệu nêu **quyết định mặc định, fit-gap và điểm kiểm**; không phải lời giải. Hành vi phải đạt vẫn theo [SRS](learner/02_SRS_InsightHub_v1.1.md#req-ih-auth-001) và [Requirements mục 14](learner/01_Requirements_InsightHub.md#auth-email).
+
+## 0. Auth scaffold trong Starter `learner-r1.3`
+
+Starter cấp sẵn phần **plumbing** cho phương án mặc định (Better Auth, email và mật khẩu). Scaffold không chứa chính sách SRS và không làm AC nào tự đạt.
+
+| Thành phần | Vị trí | Đã có |
+| --- | --- | --- |
+| Cấu hình Better Auth 1.7.6 | `web/lib/auth/config.ts`, `server.ts`, `client.ts` | Email và mật khẩu, cookie `insighthub.session_token` ký HMAC, ID dạng UUID, bảng `auth_*` tên snake_case |
+| Route Better Auth | `web/app/api/auth/[...all]/route.ts` | Đăng ký, đăng nhập, đăng xuất, đọc phiên theo endpoint của thư viện |
+| Bảng Auth | `api/migrations/004_auth_scaffold.sql` | `auth_user`, `auth_session`, `auth_account`, `auth_verification`, sinh bằng `getMigrations` rồi review như migration do công cụ sinh |
+| API xác định người dùng | `api/app/core/auth.py`, `GET /auth/me` | Dependency `current_user` tra `auth_session` trong cùng PostgreSQL theo mỗi request (phương án (a) ở mục 2), kiểm chữ ký cookie, phiên hết hạn hoặc bị xóa trả 401 `not_authenticated` |
+| Chuyển phiên web sang API | `web/lib/forward.ts` | Route handler chỉ chuyển cookie phiên InsightHub, không chuyển toàn bộ cookie |
+| Trạng thái client | `web/lib/client-state.ts` | Khóa `sessionStorage` gắn người dùng; đăng xuất xóa mọi khóa `insighthub.*` |
+| Giao diện | `web/app/login/`, `web/components/app/app-header.tsx`, `requireSession()` | Trang `/login` tối thiểu, menu người dùng và đăng xuất, helper chuyển về `/login` cho Server Component |
+| Email | `web/lib/auth/email.ts`, `mailer.ts` | Adapter SMTP (Mailpit hoặc dịch vụ thật). Hook EML-001, EML-002 là stub báo chưa triển khai |
+| Dữ liệu thử | `make seed-users` | Hai tài khoản A, B đã xác minh, chỉ cho môi trường local |
+
+**Việc của học viên trên scaffold** (đối chiếu mục 3):
+
+| Nhóm | Việc phải làm |
+| --- | --- |
+| Chính sách tài khoản | Bật bắt buộc xác minh email, chặn dữ liệu nghiệp vụ khi `PendingVerification`; độ dài mật khẩu LIM-01; thời hạn phiên LIM-07 (idle 2 giờ, tuyệt đối 24 giờ); thu hồi phiên khi đổi hoặc đặt lại mật khẩu |
+| Email | Trigger, nội dung, liên kết, thời hạn, dùng một lần và trạng thái gửi EML-001, EML-002 (Core) |
+| Màn hình | Đăng ký, xác minh, quên và đặt lại mật khẩu, đổi mật khẩu, hồ sơ theo prototype M2; trang `/login` của Starter thay theo prototype |
+| Quyền | Bảo vệ endpoint và trang demo kế thừa (đang công khai) bằng `current_user`; ownership Notebook và mọi tài nguyên con; không tin `owner_id` do client gửi |
+| Kiểm chứng | Test AC Auth và quyền A/B trên bài làm; scaffold có test mẫu cho `current_user` nhưng không thay evidence AC |
+| Mở rộng | Google, liên kết danh tính, rate limit, phiên chờ xác minh hạn chế là Extended |
+
+Muốn thay scaffold bằng phương án khác (mục 1), ghi ADR so sánh với scaffold và giữ hợp đồng `current_user` hoặc thay đồng bộ các điểm dùng.
 
 ## 1. Thư viện mặc định
 
 | Phương án | Khi nào dùng | Ghi chú |
 | --- | --- | --- |
-| **Better Auth** (TypeScript, chạy trong Next.js, lưu bảng ở PostgreSQL của app) | Mặc định của lớp | Có email/password, xác minh email, reset mật khẩu, Google, account linking, session trong DB. Học viên tập trung vào phần SRS khác mặc định thư viện |
+| **Better Auth** (TypeScript, chạy trong Next.js, lưu bảng ở PostgreSQL của app) | Mặc định của lớp | Có email/password, xác minh email, reset mật khẩu, Google, account linking, session trong DB. Starter đã cấu hình phần nền (mục 0). Học viên tập trung vào phần SRS khác mặc định thư viện |
 | Authlib + pwdlib (Argon2) + session tự xây trong FastAPI | Muốn giữ Auth trong Python | Nhiều code và rủi ro bảo mật hơn; bắt buộc ADR so sánh với phương án mặc định |
 | Firebase Auth | Không khuyến nghị | Email theo template dịch vụ, user nằm ngoài DB ứng dụng nên backup/restore (LR-26) phức tạp, thêm luồng dữ liệu ra nước ngoài |
 
@@ -16,7 +45,7 @@ Pin phiên bản thư viện trong `package-lock.json`. Giá trị mặc định
 
 | Câu hỏi | Lựa chọn thường gặp | Điểm kiểm |
 | --- | --- | --- |
-| FastAPI xác định người dùng thế nào? | (a) Tra bảng session của Better Auth trong cùng PostgreSQL. (b) JWT/JWKS | LIM-07 yêu cầu thu hồi phiên trong tối đa 60 giây và IH-AUTH-008-AC02 từ chối request sau logout. JWT không tra DB chỉ đạt khi TTL rất ngắn; ghi trade-off |
+| FastAPI xác định người dùng thế nào? | (a) Tra bảng session của Better Auth trong cùng PostgreSQL (scaffold đã chọn). (b) JWT/JWKS | LIM-07 yêu cầu thu hồi phiên trong tối đa 60 giây và IH-AUTH-008-AC02 từ chối request sau logout. JWT không tra DB chỉ đạt khi TTL rất ngắn; ghi trade-off |
 | Cookie đi từ trình duyệt tới API ra sao? | Next.js route/proxy chuyển tiếp cookie hoặc session token; API không nhận định danh người dùng từ header do client tự đặt | Tài khoản B gọi thẳng API `:8107` bằng ID của A phải bị từ chối |
 | Email gửi từ đâu? | (a) Callback Better Auth trong Next.js gửi SMTP tới Mailpit. (b) Gọi mailer `api/app/core/mailer.py` qua endpoint nội bộ có xác thực | IH-MSG-003-AC02: lỗi gửi được ghi nhận, không đổi kết quả nghiệp vụ, không lộ tài khoản |
 | Bảng Auth được quản lý thế nào? | Sinh SQL từ CLI của thư viện, **review như migration do AI/tool sinh**, đưa vào `api/migrations/` dạng forward | Chạy trên DB đã có dữ liệu; thêm bảng vào `--extra-tables` khi kiểm restore (LR-26) |
@@ -30,23 +59,23 @@ SRS ghi rõ không coi giá trị mặc định của thư viện là đã đáp
 | BR-03: không tự liên kết Google khi trùng email | Account linking bật sẵn và có thể liên kết ngầm khi email trùng | Tắt liên kết ngầm (tùy chọn `disableImplicitLinking` hoặc tương đương); kiểm IH-AUTH-005-AC02 |
 | LIM-01: mật khẩu 15-128 ký tự, không cắt khoảng trắng | Có tùy chọn độ dài tối thiểu/tối đa với mặc định khác SRS | Cấu hình 15/128; test mật khẩu có khoảng trắng đầu/cuối |
 | LIM-07: hết hạn sau 2 giờ không hoạt động hoặc tối đa 24 giờ; thu hồi trong 60 giây | Thời hạn session và chu kỳ làm mới theo mặc định thư viện | Cấu hình idle; tự kiểm giới hạn tuyệt đối 24 giờ; API tra trạng thái session |
-| Tài khoản `PendingVerification` không truy cập dữ liệu nghiệp vụ | Chế độ bắt buộc xác minh email thường chặn đăng nhập, không có phiên hạn chế | Core: chặn dữ liệu nghiệp vụ (IH-AUTH-001-AC01). Phiên hạn chế là Extended (IH-AUTH-002-AC02) |
+| Tài khoản `PendingVerification` không truy cập dữ liệu nghiệp vụ | Scaffold để `requireEmailVerification: false` (mặc định thư viện). Chế độ bắt buộc xác minh email thường chặn đăng nhập, không có phiên hạn chế | Core: chặn dữ liệu nghiệp vụ (IH-AUTH-001-AC01). Phiên hạn chế là Extended (IH-AUTH-002-AC02) |
 | LIM-09: đếm sai theo tài khoản và IP, sliding window | Rate limit của thư viện theo cửa sổ và đường dẫn | Extended (IH-AUTH-003-AC02, IH-AUTH-006-AC02): tự xây bộ đếm |
 | LIM-19: bằng chứng mật khẩu dùng một lần, tối đa 5 phút | Đổi mật khẩu nhận mật khẩu hiện tại trong cùng request | Ghi trong ADR cách đáp ứng IH-AUTH-010 và IH-NFR-011-AC02 |
-| EML-001..005 | Có callback cho xác minh và reset; không có sẵn thông báo đổi mật khẩu, hướng dẫn tài khoản chỉ dùng Google | Tự bắt sự kiện cho EML-004 (Core); EML-003 và EML-005 thuộc Extended |
+| EML-001..005 | Có callback cho xác minh và reset (scaffold nối sẵn tới stub); không có sẵn thông báo đổi mật khẩu, hướng dẫn tài khoản chỉ dùng Google | EML-001, EML-002 là Core; EML-003, EML-004 (đi cùng Google) và EML-005 thuộc Extended |
 
-## 4. Phạm vi chấm AUTH (quyết định 28/09/2026, cập nhật email 29/09/2026)
+## 4. Phạm vi chấm AUTH (quyết định 28/09/2026, cập nhật 04/10/2026)
 
 | Tầng | AC |
 | --- | --- |
-| Core (chấm) | IH-AUTH-001-AC01/02, 002-AC01, 003-AC01, 004-AC01/02, 005-AC02, 006-AC01, 007-AC01/02, 008-AC01/02, 009-AC01, 010-AC01/02; IH-MSG-003-AC01 (D5: ba email EML-001, 002, 004), IH-MSG-003-AC02 |
-| Extended (Stretch, không trừ điểm) | IH-AUTH-002-AC02, 003-AC02, 005-AC01/03/04, 006-AC02, 007-AC03, 009-AC02; IH-MSG-003-AC03 (gồm EML-005) |
+| Core (chấm) | IH-AUTH-001-AC01/02, 002-AC01, 003-AC01, 006-AC01, 007-AC01/02, 008-AC01/02, 009-AC01, 010-AC01/02; IH-MSG-003-AC01 (D5: hai email EML-001, EML-002), IH-MSG-003-AC02 |
+| Extended (Stretch, không trừ điểm) | IH-AUTH-002-AC02, 003-AC02, 004-AC01/02 (đăng nhập Google), 005-AC01..04 (liên kết danh tính), 006-AC02, 007-AC03, 009-AC02; IH-MSG-003-AC03 (gồm EML-005); EML-003, EML-004 |
 
-Khi chưa làm liên kết Google, đăng nhập Google bằng email trùng tài khoản mật khẩu phải **bị từ chối an toàn**, không tự liên kết và không cấp phiên. Nguồn đầy đủ: cột `tier` trong [trace/ac-trace.csv](../trace/ac-trace.csv).
+Hành trình mặc định là email và mật khẩu. Nếu làm đăng nhập Google mà chưa làm liên kết, đăng nhập Google bằng email trùng tài khoản mật khẩu phải **bị từ chối an toàn**, không tự liên kết và không cấp phiên. IH-AUTH-006-AC01 vẫn Core; nhánh tài khoản chỉ dùng Google ghi "không áp dụng" khi chưa làm Google. Nguồn đầy đủ: cột `tier` trong [trace/ac-trace.csv](../trace/ac-trace.csv).
 
 ## 5. Chuẩn bị và dữ liệu
 
-- Tài khoản Google và email **test riêng** cho khóa học; OAuth client ở chế độ testing với danh sách test user; callback trên `localhost`.
+- Email **test riêng** cho khóa học. Khi làm Google (Extended): tài khoản Google test riêng, OAuth client ở chế độ testing với danh sách test user, callback trên `localhost`.
 - Mailpit cho kiểm local (`make mail-up`); evidence thư nhận thật gửi tới inbox test theo Requirements mục 14.
 - Client secret chỉ nằm trong `.env`; không dán vào Claude, log, issue hoặc ảnh chụp.
 

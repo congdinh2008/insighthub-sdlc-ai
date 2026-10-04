@@ -20,6 +20,10 @@ mail-down:
 build:
 	$(COMPOSE) build api web
 
+# Auth scaffold: dịch vụ api bắt buộc BETTER_AUTH_SECRET. Test dùng giá trị cố định, không phải secret,
+# để `--env-file .env.example` (giá trị trống) vẫn chạy được. Giá trị trong môi trường shell được ưu tiên.
+test-db test-backend test-web: export BETTER_AUTH_SECRET ?= test-only-not-a-secret-0123456789abcdef
+
 test-db:
 	$(COMPOSE) up -d --wait postgres
 

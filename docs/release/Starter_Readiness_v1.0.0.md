@@ -4,7 +4,7 @@ Ngày đánh giá: 19/09/2026. Technical candidate `v1.0.0-rc.3`. Phạm vi: n�
 
 | Gate | Kết quả | Evidence và giới hạn |
 | --- | --- | --- |
-| Baseline/contract | Đạt kiểm kỹ thuật | [SRS v1.0 bản học viên](../learner/02_SRS_InsightHub_v1.0.md) nằm trong repo; 72 yêu cầu/163 AC được mapping; validator kiểm version/hash/link. SRS v1.0 phê duyệt làm baseline khóa học R1 ngày 27/09/2026 (D11), có banner phạm vi bài tập. |
+| Baseline/contract | Đạt kiểm kỹ thuật | SRS v1.0 bản học viên (nay là [SRS v1.1](../learner/02_SRS_InsightHub_v1.1.md), cập nhật 04/10/2026) nằm trong repo; 72 yêu cầu/163 AC được mapping; validator kiểm version/hash/link. SRS v1.0 phê duyệt làm baseline khóa học R1 ngày 27/09/2026 (D11), có banner phạm vi bài tập. |
 | Backend/data | Đạt | 86 backend tests: lỗi terminal, deadline cả SQL/lock, replay nguồn đã xóa, Markdown heading/table/code, failed/pending dedup; forward migration 002. |
 | Web/recovery | Đạt | Build/typecheck, 6 unit tests; Chrome và Edge mỗi trình duyệt 14 kiểm tra tại 1440x900 và 390x844, gồm reload/lost response/keyboard/source invalidation. |
 | Real RAG | Đạt trên corpus synthetic | DeepSeek flash + Gemini embedding 2, 1024D, reranker none; 8/8 lượt, 13 claim có nguồn, hai NoEvidence, injection và PDF. Reviewer: Codex, chưa phải review độc lập của instructor. |

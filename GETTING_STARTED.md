@@ -54,12 +54,17 @@ Không đặt API key vào biến môi trường của shell đang chạy Claude
 
 ZIP dùng để đối chiếu hoặc kiểm cài đặt sạch, không thay repository fork nộp bài. Giải nén vào thư mục riêng và kiểm SHA-256 trước khi chạy; không ghi đè bản fork đang phát triển. Nếu chưa có quyền fork, báo giảng viên cấp quyền và tiếp tục kiểm setup trên ZIP, ghi rõ phụ thuộc chưa hoàn tất. Không tạo lịch sử Git mới để giả lập nguồn starter.
 
-[SRS của bài tập](docs/learner/02_SRS_InsightHub_v1.0.md) và hợp đồng tham khảo nằm trong bộ tài liệu học viên. `PACKAGE_MANIFEST.json`, khi có trong gói Starter, là biên nhận của đúng gói mã nguồn đó; không thay bảng phạm vi hoặc kết quả kiểm của bài làm. Không đưa `.env` thật vào Git hoặc artifact. Đọc [Hướng dẫn bắt đầu](docs/learner/01_Requirements_InsightHub.md) trước khi phát triển.
+[SRS của bài tập](docs/learner/02_SRS_InsightHub_v1.1.md) và hợp đồng tham khảo nằm trong bộ tài liệu học viên. `PACKAGE_MANIFEST.json`, khi có trong gói Starter, là biên nhận của đúng gói mã nguồn đó; không thay bảng phạm vi hoặc kết quả kiểm của bài làm. Không đưa `.env` thật vào Git hoặc artifact. Đọc [Hướng dẫn bắt đầu](docs/learner/01_Requirements_InsightHub.md) trước khi phát triển.
 
 ## Khởi động offline fixture
 
 ```sh
 cp .env.example .env
+```
+
+Mở `.env` bằng trình soạn thảo và điền `BETTER_AUTH_SECRET` (khóa ký cookie phiên của Auth scaffold, tối thiểu 32 ký tự). Tạo giá trị bằng `openssl rand -base64 32` rồi dán vào file; không in `.env` ra terminal hoặc gửi cho công cụ AI. Thiếu biến này thì Compose dừng với thông báo hướng dẫn.
+
+```sh
 docker compose --env-file .env -p insighthub-c07-starter up --build -d --wait
 ```
 
@@ -69,13 +74,43 @@ docker compose --env-file .env -p insighthub-c07-starter up --build -d --wait
 
 Upload riêng từng file trong `sample-docs/`. Fixture trả trích đoạn có nhãn để kiểm flow. Nó không chứng minh câu trả lời AI có chất lượng.
 
+### Tài khoản thử A và B (Auth scaffold)
+
+```sh
+make COMPOSE="docker compose --env-file .env -p insighthub-c07-starter" seed-users
+```
+
+Lệnh tạo `a@insighthub.test` và `b@insighthub.test` qua endpoint đăng ký của Better Auth rồi đánh dấu đã xác minh (chỉ cho dữ liệu thử). Mật khẩu lấy từ `SEED_USER_PASSWORD` trong `.env`; để trống thì script sinh mật khẩu và in một lần. Đăng nhập tại http://localhost:3107/login, kiểm menu người dùng và đăng xuất. Trang demo `/` và các endpoint tài liệu, hỏi đáp kế thừa từ rc.3 vẫn công khai; bảo vệ chúng bằng phiên và quyền là việc của học viên ở M3.1 (xem [Auth Integration Guide](docs/Auth_Integration_Guide.md)).
+
+Nền UI: trang `/dev/ui-kit` hiển thị component dùng chung; token và quy tắc tại [UI Foundation](docs/UI_Foundation.md). Prototype HTML ở M2 dùng `design/prototype/_base/`.
+
+<a id="mcp-chi-doc"></a>
+
+### MCP PostgreSQL chỉ đọc (M0.2, LR-05)
+
+Ranh giới quyền nằm ở database: role `insighthub_readonly` (migration 003) chỉ có `SELECT` trên bảng tài liệu và vận hành, giao dịch mặc định chỉ đọc, `statement_timeout` 5 giây, không đọc bảng phiên Auth. Server MCP của Starter (`tools/mcp/insighthub_db_readonly.py`, SDK `mcp` 2.2.0) từ chối chạy nếu kết nối bằng role khác.
+
+1. Cài [uv](https://docs.astral.sh/uv/) (dùng để chạy server với phiên bản đã pin).
+2. Mở `.env`, bỏ dấu `#` của `MCP_DB_READONLY_PASSWORD=` và đặt mật khẩu riêng cho role. Cổng database trên máy mặc định `5433` (`DB_PORT`), chỉ mở trên `127.0.0.1`.
+3. Bật đăng nhập cho role và kiểm kết nối:
+
+   ```sh
+   make COMPOSE="docker compose --env-file .env -p insighthub-c07-starter" mcp-role
+   make mcp-check
+   ```
+
+4. Tạo cấu hình cho Claude Code: `cp .mcp.json.example .mcp.json` (file này bị `.gitignore`, không commit). Mở `claude` tại thư mục repo, chạy `/mcp` và duyệt server `insighthub-db`.
+5. Evidence LR-05 gồm ba lượt: một truy vấn hợp lệ, một lỗi tool (ví dụ bảng không tồn tại) và một lệnh ghi bị database từ chối (`cannot execute INSERT in a read-only transaction` hoặc `permission denied`).
+
+**Phương án dự phòng** khi máy không chạy được MCP: dùng tool Bash của Claude Code gọi `psql` bằng chính role chỉ đọc, ví dụ `psql "postgresql://insighthub_readonly@127.0.0.1:5433/insighthub"` (nhập mật khẩu khi được hỏi). Máy chưa có `psql` thì chạy trong container: `docker compose --env-file .env -p insighthub-c07-starter exec postgres psql -h 127.0.0.1 -U insighthub_readonly -d insighthub`. Evidence vẫn phải có lỗi do database trả về; lời từ chối của mô hình không thay kiểm soát thực tế.
+
 Ghi SHA mã nguồn và hash file mẫu đã dùng trong hồ sơ milestone. Khi chạy lại trên dữ liệu còn tồn tại, cùng byte của tài liệu `Ready` được dedup; cùng byte của tài liệu `Failed` trả `409 document_conflict` theo [API Contract](docs/API_Contract_Starter_v1.md). Đổi `Idempotency-Key` không đổi danh tính nội dung. Với ca kiểm validation cho file mới, dùng nội dung thử riêng; với ca dedup/retry, giữ nguyên nội dung để kiểm đúng hành vi. Không xóa volume hoặc nới expected result để làm test đạt.
 
 Nếu giảng viên cung cấp revision Starter mới, giữ commit nền cũ, review diff trước khi tích hợp vào fork và kiểm lại phần bị ảnh hưởng. Không reset mất bài làm; evidence của lần chạy trước vẫn thuộc SHA/corpus trước đó.
 
 ## Email local với Mailpit (tùy chọn)
 
-Starter cấp hạ tầng tối thiểu cho phần Auth/Email của bài làm: mail catcher Mailpit (Compose profile `mail`) và adapter SMTP [`api/app/core/mailer.py`](api/app/core/mailer.py). Starter **không** có luồng xác minh email hoặc reset mật khẩu; học viên tự thiết kế và kiểm các luồng này theo Requirements.
+Starter cấp hạ tầng tối thiểu cho phần Auth/Email của bài làm: mail catcher Mailpit (Compose profile `mail`), adapter SMTP [`api/app/core/mailer.py`](api/app/core/mailer.py) và adapter gửi thư của Auth scaffold (`web/lib/auth/mailer.ts`). Hook gửi EML-001, EML-002 của Better Auth mới là stub báo chưa triển khai; nội dung, trigger, thời hạn liên kết và chính sách xác minh là việc của học viên theo Requirements.
 
 ```sh
 make COMPOSE="docker compose --env-file .env -p insighthub-c07-starter" mail-up
