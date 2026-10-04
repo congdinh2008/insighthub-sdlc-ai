@@ -8,6 +8,7 @@ import httpx
 from app.core.config import get_settings
 from app.core.errors import ProviderError, ProviderRateLimited, ProviderTimeout
 from app.core.deadline import check_deadline, remaining_timeout
+from app.core.fault_injection import transport_for
 
 logger = logging.getLogger("insighthub.providers")
 
@@ -27,10 +28,12 @@ def post_json(
     for attempt in range(settings.provider_retry_attempts):
         try:
             # Do not inherit proxies, follow redirects, or log bodies, headers or URLs.
+            # transport_for chỉ khác None trong test có inject_provider_faults (app/core/fault_injection.py).
             with httpx.Client(
                 timeout=remaining_timeout(configured_timeout),
                 trust_env=False,
                 follow_redirects=False,
+                transport=transport_for(url),
             ) as client:
                 response = client.post(url, headers=headers, json=payload)
                 last_rate_limited = response.status_code == 429

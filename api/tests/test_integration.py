@@ -760,3 +760,183 @@ class IntegrationTests(unittest.TestCase):
         self.assertEqual(self.client.get('/operations/upload/expired-upload').json()['status'],'failed')
         detail=self.client.get(f'/documents/{identifier}').json()
         self.assertEqual((detail['status'],detail['attempts'][0]['status']),('failed','failed'))
+
+    # AI Job scaffold (learner-r1.3): cơ chế idempotency, LIM-10, LIM-11, publish fence, đọc trạng thái.
+    def _job_user(self):
+        return self._auth_session()[0]
+
+    def _accept(self, user_id, key, data=None, job_type="summary", **kwargs):
+        from app.core.ai_jobs import accept_job
+        return accept_job(user_id=user_id, job_type=job_type, idempotency_key=key,
+                          normalized_input=data or {"source_ids": [1], "length": "short"}, **kwargs)
+
+    def _allow(self, read=True, publish=True):
+        return type("Policy", (), {"can_read": lambda *_: read, "can_publish": lambda *_: publish})()
+
+    def test_ai_job_idempotency_is_scoped_by_user_and_checked_before_quota(self):
+        from app.core.errors import AiJobRunning, AiJobNotFound, IdempotencyConflict
+        a, b = self._job_user(), self._job_user()
+        job, replay = self._accept(a, "k1")
+        self.assertFalse(replay)
+        self.assertEqual(job.status, "Processing")
+        self.assertAlmostEqual((job.deadline_at - job.accepted_at).total_seconds(), 120, delta=1)
+        # Gửi lại cùng key cùng dữ liệu: trả job cũ, không tính lượt dù đang có job chạy.
+        again, replay = self._accept(a, "k1", policy=self._allow())
+        self.assertEqual((again.id, replay), (job.id, True))
+        # Policy mặc định từ chối đọc lại.
+        with self.assertRaises(AiJobNotFound):
+            self._accept(a, "k1")
+        with self.assertRaises(IdempotencyConflict):
+            self._accept(a, "k1", {"source_ids": [1], "length": "detailed"})
+        # Cùng key ở người dùng khác là job khác, không replay chéo.
+        other, replay = self._accept(b, "k1")
+        self.assertNotEqual(other.id, job.id)
+        self.assertFalse(replay)
+        # Key mới trong khi còn job chạy: từ chối và không ghi job.
+        with self.assertRaises(AiJobRunning) as caught:
+            self._accept(a, "k2")
+        self.assertGreaterEqual(caught.exception.retry_after_seconds, 1)
+        with db.get_conn() as conn:
+            self.assertEqual(conn.execute("SELECT count(*) FROM ai_jobs WHERE user_id=%s", (a,)).fetchone()[0], 1)
+
+    def test_ai_job_two_concurrent_requests_accept_only_one(self):
+        from app.core.errors import AiJobRunning
+        user = self._job_user()
+        barrier = threading.Barrier(2)
+
+        def attempt(key):
+            barrier.wait()
+            try:
+                return self._accept(user, key)[0].id
+            except AiJobRunning:
+                return "rejected"
+
+        with concurrent.futures.ThreadPoolExecutor(2) as pool:
+            results = list(pool.map(attempt, ["c1", "c2"]))
+        self.assertEqual(results.count("rejected"), 1, results)
+        with db.get_conn() as conn:
+            self.assertEqual(conn.execute("SELECT count(*) FROM ai_jobs WHERE user_id=%s AND status='Processing'", (user,)).fetchone()[0], 1)
+
+    def test_ai_job_rate_limit_counts_accepted_jobs_in_sliding_window(self):
+        from app.core.errors import AiRateLimited
+        user = self._job_user()
+        with db.get_conn() as conn:
+            for index in range(10):
+                conn.execute(
+                    "INSERT INTO ai_jobs(user_id,job_type,idempotency_key,request_fingerprint,input_snapshot,status,error_code,"
+                    "accepted_at,deadline_at,finished_at,idempotency_expires_at) VALUES(%s,'summary',%s,'fp','{}','Failed','x',"
+                    "clock_timestamp()-interval '50 seconds'+%s*interval '1 second',clock_timestamp()+interval '1 minute',clock_timestamp(),clock_timestamp()+interval '1 day')",
+                    (user, f"old-{index}", index),
+                )
+        with self.assertRaises(AiRateLimited) as caught:
+            self._accept(user, "eleventh")
+        self.assertTrue(1 <= caught.exception.retry_after_seconds <= 11, caught.exception.retry_after_seconds)
+        with db.get_conn() as conn:
+            conn.execute("UPDATE ai_jobs SET accepted_at=accepted_at-interval '61 seconds' WHERE user_id=%s AND idempotency_key='old-0'", (user,))
+        job, _ = self._accept(user, "eleventh")
+        self.assertEqual(job.status, "Processing")
+
+    def test_ai_job_expired_after_deadline_frees_slot_and_cannot_publish(self):
+        from app.core.ai_jobs import JobOutcome, get_job, publish
+        from app.core.errors import DeadlineExceeded
+        user = self._job_user()
+        job, _ = self._accept(user, "late")
+        with db.get_conn() as conn:
+            conn.execute("UPDATE ai_jobs SET accepted_at=accepted_at-interval '200 seconds', deadline_at=clock_timestamp()-interval '1 second' WHERE id=%s", (job.id,))
+        stale = get_job(user, job_id=job.id, policy=self._allow())
+        self.assertEqual((stale.status, stale.error_code), ("Failed", "deadline_exceeded"))
+        written = []
+        with self.assertRaises(DeadlineExceeded):
+            publish(job, JobOutcome("Succeeded"), policy=self._allow(), write_result=lambda *_: written.append(1))
+        self.assertEqual(written, [])
+        fresh, _ = self._accept(user, "after-late")
+        self.assertEqual(fresh.status, "Processing")
+
+    def test_ai_job_publish_fence_uses_policy_and_rolls_back_result(self):
+        from app.core.ai_jobs import JobOutcome, get_job, publish, run_job
+        from app.core.errors import PublishBlocked
+        user = self._job_user()
+        with db.get_conn() as conn:
+            conn.execute("CREATE TABLE IF NOT EXISTS test_outputs(id serial PRIMARY KEY, job_id uuid)")
+
+        def write(conn, job, outcome):
+            return conn.execute("INSERT INTO test_outputs(job_id) VALUES(%s) RETURNING id", (job.id,)).fetchone()[0]
+
+        blocked, _ = self._accept(user, "blocked")
+        outcome = run_job(blocked, lambda job: JobOutcome("Succeeded", {"text": "fixture"}))
+        with self.assertRaises(PublishBlocked):
+            publish(blocked, outcome, write_result=write)  # DenyAllPolicy mặc định
+        state = get_job(user, job_id=blocked.id, policy=self._allow())
+        self.assertEqual((state.status, state.error_code, state.result_ref), ("Failed", "publish_blocked", None))
+
+        ok, _ = self._accept(user, "ok")
+        done = publish(ok, run_job(ok, lambda job: JobOutcome("Succeeded")), policy=self._allow(), write_result=write)
+        self.assertEqual(done.status, "Succeeded")
+        self.assertIsNotNone(done.finished_at)
+        with db.get_conn() as conn:
+            self.assertEqual(conn.execute("SELECT count(*) FROM test_outputs WHERE job_id=%s", (blocked.id,)).fetchone()[0], 0)
+            self.assertEqual(str(conn.execute("SELECT id FROM test_outputs WHERE job_id=%s", (ok.id,)).fetchone()[0]), done.result_ref)
+
+        no_evidence, _ = self._accept(user, "noevidence")
+        result = publish(no_evidence, JobOutcome("NoEvidence"), policy=self._allow())
+        self.assertEqual(result.status, "NoEvidence")
+
+    def test_ai_job_executor_errors_become_stable_failed_codes(self):
+        from app.core.ai_jobs import run_job, get_job, job_usage, record_usage
+        from app.core.errors import ProviderTimeout, ServiceError
+        from app.core.fault_injection import check_fixture_fault, inject_provider_faults
+        user = self._job_user()
+        job, _ = self._accept(user, "fault")
+
+        def executor(job):
+            record_usage(job, {"provider": "deepseek", "model": "m", "attempt": 1, "outcome": "timeout", "latency_ms": 5})
+            check_fixture_fault("deepseek")
+
+        with inject_provider_faults({"deepseek": ["timeout"]}), self.assertRaises(ProviderTimeout):
+            run_job(job, executor)
+        state = get_job(user, job_id=job.id, policy=self._allow())
+        self.assertEqual((state.status, state.error_code), ("Failed", "provider_timeout"))
+        self.assertEqual(job_usage(job)[0]["provider"], "deepseek")
+
+        crash, _ = self._accept(user, "crash", retry_of=job.id)
+        self.assertEqual(crash.retry_of, job.id)
+        with self.assertRaises(ServiceError) as caught:
+            run_job(crash, lambda job: (_ for _ in ()).throw(RuntimeError("prompt text must not leak")))
+        self.assertEqual(caught.exception.code, "internal_error")
+        self.assertEqual(get_job(user, job_id=crash.id, policy=self._allow()).error_code, "internal_error")
+
+    def test_ai_job_status_endpoint_checks_session_owner_and_policy(self):
+        from app.core.ai_jobs import _POLICIES
+        owner_id, owner_token = self._auth_session()
+        _, other_token = self._auth_session()
+        job, _ = self._accept(owner_id, "endpoint")
+        with patch.dict(os.environ, {"BETTER_AUTH_SECRET": "test-secret"}):
+            owner = {"insighthub.session_token": self._signed(owner_token, "test-secret")}
+            other = {"insighthub.session_token": self._signed(other_token, "test-secret")}
+            self.assertEqual(self.client.get(f"/ai-jobs/{job.id}").status_code, 401)
+            denied = self.client.get(f"/ai-jobs/{job.id}", cookies=owner)
+            self.assertEqual((denied.status_code, denied.json()["code"]), (404, "ai_job_not_found"))
+            _POLICIES["summary"] = self._allow()
+            try:
+                ok = self.client.get(f"/ai-jobs/{job.id}", cookies=owner)
+                self.assertEqual((ok.status_code, ok.json()["status"]), (200, "Processing"))
+                self.assertNotIn("input_snapshot", ok.json())
+                by_key = self.client.get("/ai-jobs/by-key/summary/endpoint", cookies=owner)
+                self.assertEqual(by_key.json()["id"], job.id)
+                self.assertEqual(self.client.get(f"/ai-jobs/{job.id}", cookies=other).status_code, 404)
+                self.assertEqual(self.client.get("/ai-jobs/not-a-uuid", cookies=owner).status_code, 404)
+            finally:
+                _POLICIES.pop("summary")
+
+    def test_ai_job_processing_is_failed_on_restart_and_key_released_after_ttl(self):
+        user = self._job_user()
+        job, _ = self._accept(user, "restart")
+        with db.get_conn() as conn:
+            recover_interrupted_operations(conn)
+            self.assertEqual(conn.execute("SELECT status,error_code FROM ai_jobs WHERE id=%s", (job.id,)).fetchone(), ("Failed", "interrupted"))
+            conn.execute("UPDATE ai_jobs SET idempotency_expires_at=now()-interval '1 second' WHERE id=%s", (job.id,))
+        reused, replay = self._accept(user, "restart", {"source_ids": [2], "length": "short"})
+        self.assertFalse(replay)
+        self.assertNotEqual(reused.id, job.id)
+        with db.get_conn() as conn:
+            self.assertEqual(conn.execute("SELECT idempotency_key FROM ai_jobs WHERE id=%s", (job.id,)).fetchone()[0], None)

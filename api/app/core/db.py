@@ -111,6 +111,11 @@ def recover_interrupted_operations(conn):
             "response_body=%s,updated_at=now() WHERE status='processing'",
             (Jsonb({"detail": "Operation bị gián đoạn khi tiến trình khởi động lại.", "code": "interrupted"}),),
         )
+        # AI Job scaffold chạy đồng bộ trong request: job còn Processing khi khởi động là job bị gián đoạn.
+        if conn.execute("SELECT to_regclass('ai_jobs')").fetchone()[0] is not None:
+            conn.execute(
+                "UPDATE ai_jobs SET status='Failed',error_code='interrupted',finished_at=now() WHERE status='Processing'"
+            )
 
 
 def healthcheck() -> bool:
