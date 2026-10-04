@@ -120,7 +120,7 @@ Bản chuẩn bị của buổi 1-9 gửi trước giờ bắt đầu buổi h�
 | 7 | 6 giờ | 120 phút | LR-14: 45; LR-15: 45; LR-16: 25; LR-17: 30; LR-18: 35; LR-19: 60 |
 | 8 | 6 giờ | 180 phút | LR-20: 40; LR-21: 20; LR-22: 30; LR-23: 50; LR-24: 40 |
 | 9 | 4 giờ | 100 phút | LR-25: 45; LR-26: 50; LR-27: 45 |
-| 10 | 4 giờ | 65 phút | LR-28: 115; LR-29: 60 |
+| 10 | 4 giờ | 60 phút | Trước buổi: LR-28: 60; LR-29: 30. Sau buổi: sửa hồ sơ và kế hoạch theo review: 90 |
 
 Timebox là mốc tự kiểm tiến độ, không thay hạn nộp hoặc rubric. Timebox LR-14..18 áp cho AC Core; AC Extended làm khi còn thời gian. Phần hoàn thiện Assignment refactor trước buổi 9 dùng timebox LR-19 và test tích lũy ở LR-20. Timebox M2 đến M5 là giả định ban đầu, được hiệu chỉnh sau diễn tập và theo số đo thực tế của lớp; học viên ghi thời gian thực tế vào [AI Delivery Log](#ai-kit) để làm căn cứ. Khi một công việc vượt timebox khoảng 50% mà chưa có hướng xử lý, dừng lại, ghi phần đã làm, phần bị chặn và thời gian thực tế trong bản chuẩn bị để giảng viên hỗ trợ; không bỏ AC Core hoặc hạ expected để kịp giờ. Số phút được điều chỉnh theo số đo thực tế của lớp.
 
@@ -1108,13 +1108,14 @@ Học viên tự demo bản phát hành đã nộp và giải thích được c�
 
 <a id="lr-29"></a>
 
-2. **Lập kế hoạch áp dụng AI trong 30 ngày.** Chọn một quy trình công việc thực tế; ghi baseline hiện trạng, mục tiêu, các mốc ngày 7/14/30 và rủi ro. Dùng `make delivery-report` trên AI Delivery Log của dự án làm baseline tham chiếu và bài học về cách đo. KPI dùng DORA metrics (lead time for changes, deployment frequency, change failure rate, failed deployment recovery time, rework rate) cùng review load và cost per accepted change; không dùng số dòng code (LOC) hoặc số token làm KPI chính. Nêu cách thu dữ liệu, điều kiện tiếp tục hoặc dừng; có thể nêu hướng mở rộng 60/90 ngày. Có mục **Công cụ và dữ liệu được phép**: chỉ dùng công cụ AI được Samsung SDS phê duyệt và loại dữ liệu được phép theo phân loại trong AI Usage Charter. Đây là bản kế hoạch cần nộp, không yêu cầu làm thêm 30 ngày để hoàn thành khóa.
+2. **Lập kế hoạch áp dụng AI trong 30 ngày.** Chọn một quy trình công việc thực tế; ghi baseline hiện trạng, mục tiêu, các mốc ngày 7/14/30 và rủi ro. Dùng `make delivery-report` trên AI Delivery Log của dự án làm baseline tham chiếu và bài học về cách đo. KPI dùng năm DORA metrics (change lead time, deployment frequency, change fail rate, failed deployment recovery time, deployment rework rate) cùng review load và cost per accepted change; không dùng số dòng code (LOC) hoặc số token làm KPI chính. Số liệu của `make delivery-report` là proxy đo theo PR trong dự án cá nhân (ví dụ CI lần đầu fail, PR rework rate), không phải DORA metrics đo theo lần triển khai production; ghi nhãn proxy khi trình bày. Nêu cách thu dữ liệu, điều kiện tiếp tục hoặc dừng; có thể nêu hướng mở rộng 60/90 ngày. Có mục **Công cụ và dữ liệu được phép**: chỉ dùng công cụ AI được Samsung SDS phê duyệt và loại dữ liệu được phép theo phân loại trong AI Usage Charter. Đây là bản kế hoạch cần nộp, không yêu cầu làm thêm 30 ngày để hoàn thành khóa.
 
 ### 12.3 Điều kiện hoàn thành
 
 - Demo hành trình có Auth, Notebook, Document/Chat, Summary và Quiz; mở kết quả đã lưu và kiểm một tình huống lỗi/quyền.
 - Chỉ ra evidence của các email và nhánh Auth tầng Core, vòng đời Output tầng Core, lifecycle và bảo mật; không cần chạy lại mọi test trong thời gian bảo vệ.
 - Truy được yêu cầu đến thiết kế/code/test/tag; giải thích refactor, đánh giá AI, restore và CR R1.1, cùng giới hạn đã ghi.
+- Kết luận nghiệm thu ghi đúng phạm vi D4 (mục 15.1): đạt hay chưa đạt các AC áp dụng của bài tập hai công cụ, AC Extended đã làm hoặc `Extended-NotDone`; không kết luận đạt nghiệm thu toàn bộ sản phẩm năm công cụ của SRS.
 - Tự xử lý hoặc phân tích chính xác thay đổi nhỏ được giao; có kế hoạch áp dụng AI 30 ngày với baseline, KPI, điều kiện kiểm và công cụ, dữ liệu được phép.
 
 ### 12.4 Áp dụng SDLC và AI
@@ -1123,7 +1124,7 @@ Học viên tự demo bản phát hành đã nộp và giải thích được c�
 
 - Demo theo hành trình người dùng và giải thích quyết định kỹ thuật.
 - Truy từ yêu cầu đến thiết kế, mã nguồn, test và phiên bản phát hành.
-- Đánh giá hiệu quả ứng dụng AI bằng baseline, DORA metrics, rework rate, review load và chi phí.
+- Đánh giá hiệu quả ứng dụng AI bằng baseline, DORA metrics (gồm deployment rework rate), review load và chi phí, phân biệt chỉ số chuẩn với proxy của dự án.
 
 | Phần bảo vệ | Kết quả ứng dụng vào Running Project |
 | --- | --- |

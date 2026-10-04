@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Summarize docs/ai/delivery-log.csv into delivery KPIs (Kit K10, LR-29 baseline).
 
-Metrics are proxies for a local, single-developer project and are labelled so:
-- Lead time (proxy): pr_opened -> pr_merged, hours
-- Change failure (proxy): share of PRs whose first CI run failed
-- Rework rate: share of PRs with rework_rounds > 0 or outcome = rework
+Metrics are proxies for a local, single-developer project and are labelled so.
+They are NOT the DORA software delivery metrics (dora.dev/guides/dora-metrics),
+which are measured per deployment to production:
+- PR lead time (proxy for DORA change lead time): pr_opened -> pr_merged, hours
+- CI first-run failure (proxy, not DORA change fail rate): share of PRs whose first CI run failed
+- PR rework rate (proxy, not DORA deployment rework rate): share of PRs with rework_rounds > 0 or outcome = rework
 - Review load: review minutes per PR and per 100 diff lines
 - AI review precision: ai_findings_valid / ai_findings
 - Cost per accepted change: cost_usd (or tokens) over accepted PRs
@@ -65,9 +67,9 @@ def metrics(rows):
     return {
         "PR": len(rows),
         "PR accepted": len(accepted),
-        "Lead time median, giờ (proxy)": median(lead),
-        "Change failure, CI lần đầu fail (proxy)": ratio(sum(r["ci_first_run"].strip().lower() == "fail" for r in ci), len(ci)),
-        "Rework rate": ratio(len(reworked), len(rework_known)),
+        "PR lead time median, giờ (proxy)": median(lead),
+        "CI lần đầu fail (proxy, không phải DORA change fail rate)": ratio(sum(r["ci_first_run"].strip().lower() == "fail" for r in ci), len(ci)),
+        "PR rework rate (proxy, không phải DORA deployment rework rate)": ratio(len(reworked), len(rework_known)),
         "Review phút/PR (median)": median(review),
         "Review phút/100 dòng diff (median)": median(per_100),
         "AI review precision": ratio(valid, findings),
@@ -77,7 +79,7 @@ def metrics(rows):
     }
 
 
-PERCENT = {"Change failure, CI lần đầu fail (proxy)", "Rework rate", "AI review precision"}
+PERCENT = {"CI lần đầu fail (proxy, không phải DORA change fail rate)", "PR rework rate (proxy, không phải DORA deployment rework rate)", "AI review precision"}
 
 
 def fmt(key, value):
@@ -98,7 +100,8 @@ def render(rows):
     for key in data["Tổng"]:
         lines.append(f"| {key} | " + " | ".join(fmt(key, data[c][key]) for c in columns) + " |")
     lines.append("")
-    lines.append("Số liệu là proxy cho dự án cá nhân local; không dùng LOC, số prompt hoặc token làm KPI chính (LR-29).")
+    lines.append("Số liệu là proxy cho dự án cá nhân local, không phải DORA metrics đo theo lần triển khai production. "
+                 "Ghi nhãn proxy khi trình bày. Không dùng LOC, số prompt hoặc token làm KPI chính (LR-29).")
     return "\n".join(lines)
 
 

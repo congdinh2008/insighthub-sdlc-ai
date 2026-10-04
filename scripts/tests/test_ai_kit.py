@@ -184,7 +184,7 @@ class HandoverToolTests(unittest.TestCase):
         m = delivery_report.metrics(rows)
         self.assertEqual(m["AI review precision"], 0.25)
         self.assertIsNone(m["Cost USD/accepted change"])
-        self.assertEqual(m["Lead time median, giờ (proxy)"], 2.0)
+        self.assertEqual(m["PR lead time median, giờ (proxy)"], 2.0)
 
 
 if __name__ == "__main__":
