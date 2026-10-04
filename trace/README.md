@@ -1,13 +1,13 @@
 # Traceability matrix AC và kiểm chứng theo rủi ro
 
-`ac-trace.csv` là **một traceability matrix (bảng truy vết) xuyên khóa** cho 163 AC (151 áp dụng, 12 ngoài phạm vi), thay cho việc tự dựng bảng ở LR-08. Cột bên trái do giảng viên cấp; cột bên phải học viên điền dần từ M2.1 đến M5. Cách ghi theo [Requirements mục 16.1](../docs/learner/01_Requirements_InsightHub.md#bang-ket-qua).
+`ac-trace.csv` là **một traceability matrix (bảng truy vết) xuyên khóa** cho 165 AC (153 áp dụng, 12 ngoài phạm vi), thay cho việc tự dựng bảng ở LR-08. Cột bên trái do giảng viên cấp; cột bên phải học viên điền dần từ M2.1 đến M5. Cách ghi theo [Requirements mục 16.1](../docs/learner/01_Requirements_InsightHub.md#bang-ket-qua).
 
 ## Cột
 
 | Nhóm | Cột | Ý nghĩa |
 | --- | --- | --- |
-| Giảng viên cấp | `ac_id`, `req_id`, `group`, `scope`, `lr`, `due`, `uat`, `srs_ref` | Lấy từ Requirements mục 15.4; không sửa |
-| Giảng viên cấp | `tier` | `Core` (chấm, 106 AC), `Extended` (Stretch, 45 AC, công bố 29/09/2026), `OutOfScope` (12 AC). `Pending` chỉ dùng khi giảng viên chưa công bố tầng |
+| Giảng viên cấp | `ac_id`, `req_id`, `group`, `scope`, `lr`, `due`, `uat`, `srs_ref` | Lấy từ Requirements mục 15.4; không sửa. `scope` là mã A, D1-D6, N tại Requirements mục 15.1 |
+| Giảng viên cấp | `tier` | `Core` (chấm, 106 AC), `Extended` (Stretch, 47 AC), `OutOfScope` (12 AC). Tầng công bố 29/09/2026, cập nhật 04/10/2026 theo Requirements 1.2 và SRS v1.1. `Pending` chỉ dùng khi giảng viên chưa công bố tầng |
 | Giảng viên cấp | `risk_suggested` | Mức rủi ro gợi ý R1/R2/R3 |
 | Học viên | `risk`, `risk_reason` | Mức rủi ro áp dụng; hạ mức so với gợi ý phải ghi lý do |
 | Học viên | `branches`, `expected` | Nhánh cần kiểm, input và expected result theo SRS |

@@ -59,11 +59,11 @@ def main():
     requirements = set(re.findall(r'^#{4,5} (IH-[A-Z]+-\d{3}):', srs.read_text(), re.M))
     acceptance = set(re.findall(r'IH-[A-Z]+-\d{3}-AC\d{2}', srs.read_text()))
     mapped = set(re.findall(r'\| `?(IH-[A-Z]+-\d{3})`? \|', mapping))
-    assert requirements == mapped and len(requirements) == 72, 'Incomplete requirement mapping'
-    assert acceptance <= set(re.findall(r'IH-[A-Z]+-\d{3}-AC\d{2}', mapping)) and len(acceptance) == 163, 'Incomplete AC mapping'
-    rows = re.findall(r'^\| (IH-[A-Z]+-\d{3}) \| (IH-[A-Z]+-\d{3}-AC\d{2}) \| (A|D[1-5]|N) \|', mapping, re.M)
-    assert len(rows) == 163 and {row[1] for row in rows} == acceptance, 'Incomplete AC table'
-    assert {scope: sum(row[2] == scope for row in rows) for scope in ['A', 'D1', 'D2', 'D3', 'D4', 'D5', 'N']} == {'A': 135, 'D1': 9, 'D2': 3, 'D3': 2, 'D4': 1, 'D5': 1, 'N': 12}, 'Assignment scope drift'
+    assert requirements == mapped and len(requirements) == 73, 'Incomplete requirement mapping'
+    assert acceptance <= set(re.findall(r'IH-[A-Z]+-\d{3}-AC\d{2}', mapping)) and len(acceptance) == 165, 'Incomplete AC mapping'
+    rows = re.findall(r'^\| (IH-[A-Z]+-\d{3}) \| (IH-[A-Z]+-\d{3}-AC\d{2}) \| (A|D[1-6]|N) \|', mapping, re.M)
+    assert len(rows) == 165 and {row[1] for row in rows} == acceptance, 'Incomplete AC table'
+    assert {scope: sum(row[2] == scope for row in rows) for scope in ['A', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'N']} == {'A': 136, 'D1': 9, 'D2': 3, 'D3': 2, 'D4': 1, 'D5': 1, 'D6': 1, 'N': 12}, 'Assignment scope drift'
     assert re.findall(r'<a id="lr-(\d+)">', mapping) == [f'{i:02}' for i in range(1, 30)], 'Learning task drift'
     broken = []
     markdown = list(ROOT.glob('*.md'))
@@ -83,7 +83,7 @@ def main():
             elif anchor and resolved.suffix == '.md' and anchor not in anchors(resolved.read_text()):
                 broken.append(f'{path.relative_to(ROOT)}: {target} (anchor)')
     assert not broken, 'Nonportable/broken links: ' + '; '.join(broken)
-    print(f'PASS: {version}; 72 requirements / 163 AC; portable links; SRS sha256={hashlib.sha256(srs.read_bytes()).hexdigest()}')
+    print(f'PASS: {version}; 73 requirements / 165 AC; portable links; SRS sha256={hashlib.sha256(srs.read_bytes()).hexdigest()}')
 
 
 if __name__ == '__main__':

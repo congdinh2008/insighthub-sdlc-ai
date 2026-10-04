@@ -2,18 +2,18 @@
 
 **Ứng dụng quản lý và khai thác tài liệu cá nhân bằng AI**
 
-Phiên bản 1.0 | 23/09/2026, phê duyệt baseline khóa học R1 ngày 27/09/2026 | Tham chiếu khung SRS của ISO/IEC/IEEE 29148:2018
+Phiên bản 1.1 | 04/10/2026, baseline khóa học R1 phê duyệt ngày 27/09/2026, cập nhật theo yêu cầu thay đổi ngày 04/10/2026 | Tham chiếu khung SRS của ISO/IEC/IEEE 29148:2018
 
-> **Phạm vi bài tập khóa C07:** 2 công cụ AI (Tóm tắt, Quiz), 12 lượt AEV (AEV-01, AEV-03, AEV-05 và hai lượt lặp); 151 AC áp dụng, Mindmap, Slide và Báo cáo ngoài phạm vi bài tập. Xem Requirements mục 15. SRS vẫn đặc tả sản phẩm R1 đầy đủ năm công cụ.
+> **Phạm vi bài tập khóa C07:** 2 công cụ AI (Tóm tắt, Quiz), 12 lượt AEV (AEV-01, AEV-03, AEV-05 và hai lượt lặp); 153 AC áp dụng, Mindmap, Slide và Báo cáo ngoài phạm vi bài tập. Xem Requirements mục 15. SRS vẫn đặc tả sản phẩm R1 đầy đủ năm công cụ.
 
 | Thuộc tính | Giá trị |
 | --- | --- |
 | Mã tài liệu | SRS-IH-001 |
-| Phiên bản và trạng thái | 1.0, phê duyệt làm baseline khóa học R1 ngày 27/09/2026 (Đinh Xuân Công) |
+| Phiên bản và trạng thái | 1.1, cập nhật baseline khóa học R1 ngày 04/10/2026 (Đinh Xuân Công). Baseline 1.0 phê duyệt ngày 27/09/2026 |
 | Chủ sản phẩm và chủ tài liệu | Đinh Xuân Công |
 | Sản phẩm được đặc tả | InsightHub R1, đầy đủ năm công cụ AI |
 | Căn cứ xác định phạm vi | Mục tiêu OBJ-01..05, quy tắc BR-01..16 và giới hạn LIM-01..19 được trình bày trong tài liệu |
-| Nội dung đặc tả | 72 mã yêu cầu/nhóm yêu cầu, 169 yêu cầu thành phần, 163 tiêu chí chấp nhận; dữ liệu logic, giao tiếp và kiểm chứng R1 |
+| Nội dung đặc tả | 73 mã yêu cầu/nhóm yêu cầu, 174 yêu cầu thành phần, 165 tiêu chí chấp nhận; dữ liệu logic, giao tiếp và kiểm chứng R1 |
 | Tiêu chuẩn tham chiếu | ISO/IEC/IEEE 29148:2018, khung nội dung tài liệu đặc tả yêu cầu phần mềm |
 | Hiệu lực sử dụng | Baseline khóa học R1: căn cứ phân tích, thiết kế, kiểm thử và nghiệm thu bài tập trong phạm vi Requirements mục 15. Thay đổi sau baseline chỉ áp dụng khi chủ sản phẩm phê duyệt yêu cầu thay đổi |
 | Đối tượng đọc | Chủ sản phẩm, chuyên viên phân tích nghiệp vụ, người thiết kế giao diện và trải nghiệm, lập trình viên, người kiểm thử và người vận hành |
@@ -56,7 +56,7 @@ Người dùng thường lưu tài liệu rời rạc, mất thời gian đọc 
 | OBJ-01 Tổ chức tài liệu cá nhân | Người dùng tự tạo tài khoản, quản lý Notebook và khai thác dữ liệu của mình. |
 | OBJ-02 Hỏi đáp có căn cứ | Câu trả lời truy xuất đúng Notebook, có nguồn kiểm tra và phân biệt thiếu căn cứ với lỗi. |
 | OBJ-03 Tạo nội dung có ích | Cả Mindmap, Tóm tắt, Slide, Quiz và Báo cáo tạo được đầu ra đúng cấu trúc, lưu kết quả và mở lại để sử dụng. |
-| OBJ-04 Trải nghiệm nhất quán | Các hành trình chính đáp ứng thiết kế Figma được duyệt, thao tác được trên hai kích thước viewport và trình duyệt theo LIM-16. |
+| OBJ-04 Trải nghiệm nhất quán | Các hành trình chính đáp ứng thiết kế được duyệt (Figma hoặc prototype HTML có phiên bản), thao tác được trên hai kích thước viewport và trình duyệt theo LIM-16. |
 | OBJ-05 Vận hành có thể kiểm chứng | Dữ liệu được bảo toàn sau khi khởi động lại; quyền truy cập, thông báo lỗi, kết quả kiểm thử và hướng dẫn bàn giao có thể đối chiếu với yêu cầu. |
 
 <a id="sec-1-2-1"></a>
@@ -106,7 +106,7 @@ Mục tiêu sản phẩm tại 1.2 xác định nhu cầu cần đáp ứng. Cá
 | --- | --- | --- |
 | ST1 | [ISO/IEC/IEEE 29148:2018 - ISO](https://www.iso.org/standard/72089.html); [IEEE](https://standards.ieee.org/ieee/29148/6937/) | Chuẩn tham chiếu về kỹ nghệ yêu cầu và nội dung đặc tả |
 | ST2 | [Bản xem trước tiêu chuẩn do SIST cung cấp](https://cdn.standards.iteh.ai/sist-preview/72089/62bb2ea1ef8b4f33a80d984f826267c1/ISO-IEC-IEEE-29148-2018.pdf), trang v | Tham chiếu các nhóm nội dung của đặc tả yêu cầu phần mềm tại mục 9.6 |
-| TS1 | [Contract R1 v0.2](03_API_Schema_Reference_v1.0.zip) | Thiết kế giao tiếp API và cấu trúc dữ liệu cho năm công cụ; phải đáp ứng yêu cầu trong SRS |
+| TS1 | [Contract R1 v0.3](03_API_Schema_Reference_v1.1.zip) | Thiết kế giao tiếp API và cấu trúc dữ liệu cho năm công cụ; phải đáp ứng yêu cầu trong SRS |
 
 Tài liệu sử dụng mô tả chính thức và mục lục công khai của ST1/ST2 để tổ chức nội dung. Việc tham chiếu khung nội dung không phải tuyên bố đã được đánh giá tuân thủ đầy đủ tiêu chuẩn.
 
@@ -365,7 +365,7 @@ AS/DP xác định các điều kiện cần kiểm để thiết kế, triển 
 
 ### 2.6. Phân bổ yêu cầu và phạm vi phát hành
 
-Toàn bộ 72 mã IH gốc, các yêu cầu thành phần và 163 AC được phân bổ cho sản phẩm R1. Các mục ngoài phạm vi tại 1.2.2 không được coi là đã cam kết cho một phiên bản tương lai. Nếu hoãn yêu cầu bắt buộc, phải ghi phiên bản/phạm vi mới và quyết định theo IH-REL-003.
+Toàn bộ 73 mã IH gốc, các yêu cầu thành phần và 165 AC được phân bổ cho sản phẩm R1. Các mục ngoài phạm vi tại 1.2.2 không được coi là đã cam kết cho một phiên bản tương lai. Nếu hoãn yêu cầu bắt buộc, phải ghi phiên bản/phạm vi mới và quyết định theo IH-REL-003.
 
 Các phạm vi triển khai một phần phải có danh mục yêu cầu áp dụng riêng; hoàn thành một phần không đồng nghĩa đáp ứng toàn bộ SRS R1.
 
@@ -484,7 +484,7 @@ Bảng dưới quy định giới hạn đầu vào, thời hạn xử lý và m
 | LIM-08 Liên kết tài khoản | Liên kết đặt lại mật khẩu dùng một lần, hiệu lực tối đa 60 phút; liên kết xác minh email dùng một lần, hiệu lực tối đa 24 giờ. EML-003 là email thông báo, không phát hành liên kết xác thực. |
 | LIM-09 Chống lạm dụng | Sliding window 15 phút: tổng tối đa 5 lần đăng nhập/tái xác thực bằng mật khẩu sai theo tài khoản và 20 lần theo IP. Sliding window 60 phút: tối đa 3 yêu cầu gửi email do người dùng kích hoạt theo tài khoản và 20 theo IP. Điều kiện đếm, ranh giới và thời gian được thử lại tại mục 3.2.6; không khóa tài khoản vĩnh viễn. |
 | LIM-10 Tác vụ AI | Mỗi người dùng có tối đa 1 tác vụ AI đang chạy; tối đa 10 yêu cầu AI mới được tiếp nhận trong sliding window 60 giây theo mục 3.2.6. Gửi lại cùng thao tác và request bị từ chối trước khi tiếp nhận không tính thành yêu cầu mới. |
-| LIM-11 Thời hạn xử lý | Tiếp nhận và xử lý tài liệu: tối đa 120 giây/tệp. Hỏi đáp: tối đa 60 giây/lượt. Công cụ AI: tối đa 120 giây/lần. Tác vụ quá hạn phải chuyển sang `Failed`; không được công bố kết quả đến sau thời hạn. |
+| LIM-11 Thời hạn xử lý | Tiếp nhận và xử lý tài liệu: tối đa 120 giây/tệp. Hỏi đáp: tối đa 60 giây/lượt. Công cụ AI: tối đa 120 giây/lần. Retry nội bộ và chuyển sang nhà cung cấp dự phòng (IH-AI-005) nằm trong cùng thời hạn. Tác vụ quá hạn phải chuyển sang `Failed`; không được công bố kết quả đến sau thời hạn. |
 | LIM-12 Gửi lặp | Idempotency key được giữ tối thiểu 24 giờ cho tải lên, hỏi đáp và công cụ AI. Cùng idempotency key nhưng khác dữ liệu phải báo xung đột. |
 | LIM-13 Xóa dữ liệu | Ngăn truy cập tài nguyên đã xóa ngay từ thời điểm commit thao tác xóa theo BR-08 và BR-09; xóa vật lý tệp, nội dung trích xuất và chỉ mục trong tối đa 24 giờ. Sao lưu giữ tối đa 7 ngày, chỉ được đọc bởi người vận hành và khôi phục trong môi trường riêng để kiểm chứng. |
 | LIM-14 Môi trường kiểm chứng | Một môi trường local hoặc sandbox; ghi cấu hình thực tế của máy, dịch vụ và phiên bản. Dùng 2 tài khoản, mỗi tài khoản có ít nhất 1 Notebook với 3 tài liệu TXT, MD và PDF có văn bản; bộ nguồn có tiếng Việt và tiếng Anh. Kiểm chứng nghiệp vụ tuần tự; các tình huống gửi đồng thời được kiểm riêng ở UAT-20. |
@@ -1445,6 +1445,33 @@ Tất cả yêu cầu trong mục này là bắt buộc cho sản phẩm R1. Cá
 
 **Kiểm chứng:** Kiểm thử và phân tích. [Căn cứ và thuộc tính yêu cầu](#attr-ih-ai-004).
 
+<a id="req-ih-ai-005"></a>
+
+##### IH-AI-005: Xử lý lỗi nhà cung cấp AI, fallback và ngân sách token
+
+**Phạm vi nhóm:** Xử lý lỗi khả dụng của nhà cung cấp AI, chuyển sang nhà cung cấp dự phòng và ghi nhận mức sử dụng mô hình cho hỏi đáp và công cụ AI.
+
+**Yêu cầu thành phần:**
+
+| Mã con | Yêu cầu bắt buộc | AC đối chiếu |
+| --- | --- | --- |
+| <a id="req-ih-ai-005-r01"></a>IH-AI-005-R01 | Máy chủ phải retry có giới hạn khi nhà cung cấp chính gặp lỗi khả dụng (hết thời gian chờ, HTTP 429, HTTP 5xx, lỗi kết nối), trong thời hạn chung của tác vụ theo LIM-11. | IH-AI-005-AC01 |
+| <a id="req-ih-ai-005-r02"></a>IH-AI-005-R02 | Máy chủ phải chuyển sang nhà cung cấp dự phòng đã cấu hình khi nhà cung cấp chính vẫn lỗi khả dụng sau retry. Không chuyển sang dữ liệu kiểm thử hoặc kết quả trả sẵn. | IH-AI-005-AC01 |
+| <a id="req-ih-ai-005-r03"></a>IH-AI-005-R03 | Kết quả từ nhà cung cấp dự phòng phải qua cùng bước kiểm cấu trúc, căn cứ và tham chiếu nguồn như nhà cung cấp chính. | IH-AI-005-AC01 |
+| <a id="req-ih-ai-005-r04"></a>IH-AI-005-R04 | Máy chủ phải lưu nhà cung cấp, mô hình, phiên bản prompt, token vào, token ra, thời gian phản hồi, lý do kết thúc (`finish_reason`) và chi phí ước tính cho mỗi lời gọi mô hình của tác vụ. | IH-AI-005-AC02 |
+| <a id="req-ih-ai-005-r05"></a>IH-AI-005-R05 | Máy chủ phải áp trần token đầu ra theo cấu hình. Đầu ra bị cắt vì chạm trần không được lưu là kết quả thành công. | IH-AI-005-AC02 |
+
+**Tiêu chí chấp nhận:**
+
+- **IH-AI-005-AC01:** Khi nhà cung cấp chính lỗi khả dụng, tác vụ retry trong giới hạn rồi chuyển sang nhà cung cấp dự phòng nếu đã cấu hình. Kết quả hợp lệ ghi rõ nhà cung cấp và mô hình thực tế đã dùng. Khi không có nhà cung cấp dự phòng hoặc nhà cung cấp dự phòng cũng lỗi, tác vụ kết thúc `Failed` đúng nguyên nhân trong thời hạn và giải phóng suất xử lý theo LIM-10. Lỗi sai cấu trúc hoặc thiếu căn cứ không kích hoạt fallback.
+- **IH-AI-005-AC02:** Mỗi lời gọi mô hình của hỏi đáp và công cụ AI có bản ghi mức sử dụng đủ các trường tại IH-AI-005-R04, đọc được qua nhật ký hoặc chỉ số vận hành mà không chứa nội dung nguồn, prompt có dữ liệu hay bí mật. Đầu ra có `finish_reason` báo chạm trần token kết thúc theo IH-AI-003, không được lưu như kết quả thành công.
+
+**Không gồm:** circuit breaker, định tuyến theo tình trạng nhà cung cấp và cân bằng tải. Đây là hướng mở rộng sau R1.
+
+**Truy vết:** [Use case UC-05](#uc-05); [Use case UC-07](#uc-07); [Nghiệm thu UAT-14](#sec-4-3); [Đánh giá AEV-07](#sec-4-2-1); [Giới hạn LIM-10](#sec-3-2); [Giới hạn LIM-11](#sec-3-2); [Giới hạn LIM-18](#sec-3-2)
+
+**Kiểm chứng:** Kiểm thử bằng nhà cung cấp giả lập lỗi (hết thời gian chờ, HTTP 429, HTTP 503) cho AC01; kiểm bản ghi mức sử dụng của các lượt đánh giá tại mục 4.2 cho AC02. [Căn cứ và thuộc tính yêu cầu](#attr-ih-ai-005).
+
 <a id="sec-3-4-7"></a>
 
 #### 3.4.7. Tạo sơ đồ tư duy (Mindmap)
@@ -1746,14 +1773,14 @@ Giao diện sản phẩm phải được thiết kế và triển khai theo phi�
 
 <a id="req-ih-ux-001"></a>
 
-#### IH-UX-001: Tuân thủ thiết kế Figma
+#### IH-UX-001: Tuân thủ thiết kế đã duyệt
 
-**Yêu cầu:** Giao diện phải đáp ứng các màn hình, hành trình và trạng thái của phiên bản thiết kế Figma đã được duyệt.
+**Yêu cầu:** Giao diện phải đáp ứng các màn hình, hành trình và trạng thái của phiên bản thiết kế đã được duyệt. Thiết kế lập bằng Figma hoặc prototype HTML có phiên bản; hai hình thức có cùng yêu cầu đối chiếu.
 
 **Tiêu chí chấp nhận:**
 
-- **IH-UX-001-AC01:** Hồ sơ cấu hình nghiệm thu phải ghi liên kết Figma, phiên bản, ngày chốt và danh sách màn hình, thành phần giao diện. Việc đối chiếu phải bao phủ bố cục, kiểu chữ, màu sắc, khoảng cách và hành vi tương tác.
-- **IH-UX-001-AC02:** Sai khác ảnh hưởng luồng hoặc thành phần chính phải được sửa hoặc ghi nhận thay đổi thiết kế được duyệt; không nghiệm thu chỉ bằng việc có tệp Figma.
+- **IH-UX-001-AC01:** Hồ sơ cấu hình nghiệm thu phải ghi liên kết Figma hoặc đường dẫn prototype HTML, phiên bản (phiên bản Figma hoặc commit), ngày chốt và danh sách màn hình, thành phần giao diện. Việc đối chiếu phải bao phủ bố cục, kiểu chữ, màu sắc, khoảng cách và hành vi tương tác.
+- **IH-UX-001-AC02:** Sai khác ảnh hưởng luồng hoặc thành phần chính phải được sửa hoặc ghi nhận thay đổi thiết kế được duyệt; không nghiệm thu chỉ bằng việc có tệp Figma hoặc prototype.
 
 **Truy vết:** [Use case UC-01](#uc-01); [Use case UC-02](#uc-02); [Use case UC-03](#uc-03); [Use case UC-04](#uc-04); [Use case UC-05](#uc-05); [Use case UC-06](#uc-06); [Use case UC-07](#uc-07); [Use case UC-08](#uc-08); [Use case UC-10](#uc-10); [Use case UC-11](#uc-11); [Use case UC-12](#uc-12); [Use case UC-13](#uc-13); [Use case UC-14](#uc-14); [Nghiệm thu UAT-15](#sec-4-3)
 
@@ -2175,7 +2202,7 @@ Quy ước kiểm tra chung:
 
 #### 3.7.4. Cấu trúc logic của đầu ra AI
 
-Mọi kết quả AI thành công phải có loại công cụ, phiên bản cấu trúc, tiêu đề, nội dung, danh mục nguồn đã sử dụng, cấu hình, mô hình, phiên bản prompt và thời điểm. Hình thức trao đổi được cụ thể hóa tại [Contract R1 v0.2](03_API_Schema_Reference_v1.0.zip); quy tắc chọn phiên bản và kiểm tra trước khi lưu ở 3.7.9. Các thành phần và ràng buộc dưới đây là bắt buộc.
+Mọi kết quả AI thành công phải có loại công cụ, phiên bản cấu trúc, tiêu đề, nội dung, danh mục nguồn đã sử dụng, cấu hình, mô hình, phiên bản prompt và thời điểm. Hình thức trao đổi được cụ thể hóa tại [Contract R1 v0.3](03_API_Schema_Reference_v1.1.zip); quy tắc chọn phiên bản và kiểm tra trước khi lưu ở 3.7.9. Các thành phần và ràng buộc dưới đây là bắt buộc.
 
 | Loại | Thành phần nội dung bắt buộc | Kiểm tra trước khi công bố |
 | --- | --- | --- |
@@ -2475,7 +2502,7 @@ Các dữ liệu điều khiển có thể là bản ghi, bộ nhớ đệm bề
 
 Server phải chọn schema từ cặp `(tool_type, schema_version)` nằm trong danh mục hỗ trợ, lưu lựa chọn đó cùng cấu hình tác vụ và gán cho kết quả đã kiểm tra hợp lệ. Mô hình AI không được tự quyết định chủ sở hữu, Notebook, thời điểm, loại công cụ, phiên bản, điểm Quiz hoặc trạng thái kiểm tra.
 
-[Contract R1 v0.2](03_API_Schema_Reference_v1.0.zip) mô tả cấu trúc API cụ thể. Tên trường JSON và đường dẫn API là quyết định thiết kế; ý nghĩa dữ liệu và ràng buộc trong SRS phải được bảo toàn.
+[Contract R1 v0.3](03_API_Schema_Reference_v1.1.zip) mô tả cấu trúc API cụ thể. Tên trường JSON và đường dẫn API là quyết định thiết kế; ý nghĩa dữ liệu và ràng buộc trong SRS phải được bảo toàn.
 
 **Schema version và tên hiển thị**
 
@@ -2788,7 +2815,7 @@ Trước khi chạy, nhóm kiểm thử chốt một danh mục dữ liệu gồ
 
 AEV-01 đến AEV-06 phải chạy trên cấu hình dùng mô hình thực. Chọn trước một trường hợp RAG có căn cứ và một trường hợp công cụ AI để chạy thêm lần thứ hai nhằm quan sát biến động; chấm cả hai lần, không chọn riêng kết quả tốt. Bộ ban đầu có 18 lượt chạy: 6 RAG, 10 công cụ và 2 lượt lặp. Số lần gọi nhà cung cấp thực tế còn phụ thuộc việc phát hiện thiếu căn cứ trước khi gọi mô hình và retry nội bộ; phải ghi mức sử dụng thực tế. Con số 18 không gồm embedding, phép thử cấu hình tại mục 3.2.5 hoặc lần chạy lại sau khi sửa lỗi.
 
-AEV-07 được dùng giả lập có chủ đích để kiểm trạng thái và cấu trúc; không thay bằng chứng nội dung thực của từng công cụ. AEV-08 có thể kiểm ở tầng API hoặc dịch vụ với dữ liệu kiểm soát. Thời lượng các lần chạy thực được dùng lại cho IH-NFR-007.
+Mỗi lượt chạy ghi nhà cung cấp, mô hình và phiên bản prompt thực tế đã dùng cùng bản ghi mức sử dụng theo IH-AI-005-R04; lượt có fallback được đánh giá như lượt thường. AEV-07 được dùng giả lập có chủ đích để kiểm trạng thái và cấu trúc; không thay bằng chứng nội dung thực của từng công cụ. AEV-08 có thể kiểm ở tầng API hoặc dịch vụ với dữ liệu kiểm soát. Thời lượng các lần chạy thực được dùng lại cho IH-NFR-007.
 
 <a id="sec-4-2-2"></a>
 
@@ -2832,8 +2859,8 @@ Các kịch bản sau phải được thực hiện với vai trò, dữ liệu 
 | UAT-11 | Đầy đủ năm công cụ AI | Chạy từng công cụ với cấu hình riêng; kiểm tra hiển thị, tham chiếu nguồn, lưu, mở, lọc, đổi tên và tạo lại; làm Quiz, trình chiếu Slide, tải báo cáo Markdown. | Cả năm công cụ đáp ứng yêu cầu riêng và đạt bộ đánh giá AEV tương ứng. |
 | UAT-12 | Xóa dữ liệu trong các giai đoạn xử lý | Xóa tài liệu, Notebook, kết quả AI hoặc hội thoại trước, trong và sau tác vụ; truy cập đường dẫn cũ; kiểm tra tài nguyên con. | Dữ liệu đã xóa không xuất hiện lại; kết quả lịch sử tuân theo chính sách giữ nội dung và đánh dấu nguồn đã xóa. |
 | UAT-13 | Truy cập trái phép và nội dung độc hại | Hai tài khoản, hai Notebook; thay định danh, đường dẫn tải xuống, phạm vi truy xuất, bộ nhớ đệm; chèn mã lệnh vào nội dung. | Không tiết lộ nội dung hoặc metadata ngoài quyền truy cập; không thực thi mã lệnh từ dữ liệu. |
-| UAT-14 | Ngoại lệ công cụ AI | Bộ AEV-07; hết hạn mức, quá thời hạn xử lý, sai cấu trúc đầu ra, thiếu căn cứ và thử lại. | Trạng thái phản ánh đúng nguyên nhân; không lưu kết quả không hợp lệ như kết quả thành công hoặc tạo trùng kết quả. |
-| UAT-15 | UI/UX và Figma | Đối chiếu UI-01 đến UI-08 trên hai kích thước viewport và trình duyệt theo LIM-16; thao tác bàn phím theo điều khiển, tương phản, trạng thái rỗng và lỗi. | Các hành trình đáp ứng thiết kế đã phê duyệt; không có lỗi cản trở thao tác chính. |
+| UAT-14 | Ngoại lệ công cụ AI | Bộ AEV-07; hết hạn mức, quá thời hạn xử lý, sai cấu trúc đầu ra, thiếu căn cứ và thử lại; nhà cung cấp chính lỗi khả dụng có và không có nhà cung cấp dự phòng (IH-AI-005). | Trạng thái phản ánh đúng nguyên nhân; không lưu kết quả không hợp lệ như kết quả thành công hoặc tạo trùng kết quả; kết quả sau fallback ghi nhà cung cấp và mô hình thực tế. |
+| UAT-15 | UI/UX và thiết kế đã duyệt | Đối chiếu UI-01 đến UI-08 với thiết kế Figma hoặc prototype HTML có phiên bản trên hai kích thước viewport và trình duyệt theo LIM-16; thao tác bàn phím theo điều khiển, tương phản, trạng thái rỗng và lỗi. | Các hành trình đáp ứng thiết kế đã phê duyệt; không có lỗi cản trở thao tác chính. |
 | UAT-16 | Tái lập môi trường và vận hành | Cài đặt sạch, cấu hình, API, dịch vụ thực, khởi động lại, nhật ký; sao lưu thủ công và một lần khôi phục trên môi trường riêng. | Tái lập được môi trường; nội dung và quyền khớp bản sao lưu, dữ liệu hiện hành không bị thay thế; dọn dữ liệu kiểm chứng sau hoàn tất. |
 | UAT-17 | Thời gian phản hồi | 10 thao tác không gọi AI theo LIM-15; tái sử dụng thời lượng xử lý tệp và bộ AEV; ghi mọi lỗi hoặc quá hạn. | Thao tác nghiệp vụ đạt LIM-15, xử lý tài liệu và AI đạt LIM-11 trên cấu hình đã ghi nhận; không yêu cầu kiểm thử tải riêng. |
 | UAT-18 | Thông báo và trạng thái có thể xem lại | Danh mục MSG; phản hồi khi mất mạng chưa biết kết quả; lỗi trường; xác nhận xóa; tải lại/chuyển trang; bàn phím và trình đọc màn hình. | Đúng ý nghĩa/vị trí/thời gian tồn tại, không báo thành công trước khi lưu; trạng thái nghiệp vụ không mất khi đóng thông báo, không tiết lộ dữ liệu. |
@@ -2961,7 +2988,7 @@ Nhóm dự án xác định các quyết định dưới đây trước hoạt �
 
 #### 4.4.4. Danh mục tham chiếu và điều kiện hoàn tất
 
-Các hồ sơ dưới đây cụ thể hóa thiết kế và bằng chứng cần cho nghiệm thu. SRS xác định hành vi; tài liệu thiết kế không được tự thay phạm vi hoặc ngưỡng. Mỗi hồ sơ phải có phiên bản, phạm vi áp dụng, người xác nhận và kết quả kiểm phù hợp. Các tệp kỹ thuật được định danh trong [manifest tham chiếu trong gói API/Schema](03_API_Schema_Reference_v1.0.zip); có tệp được định danh không đồng nghĩa đã nghiệm thu triển khai.
+Các hồ sơ dưới đây cụ thể hóa thiết kế và bằng chứng cần cho nghiệm thu. SRS xác định hành vi; tài liệu thiết kế không được tự thay phạm vi hoặc ngưỡng. Mỗi hồ sơ phải có phiên bản, phạm vi áp dụng, người xác nhận và kết quả kiểm phù hợp. Các tệp kỹ thuật được định danh trong [manifest tham chiếu trong gói API/Schema](03_API_Schema_Reference_v1.1.zip); có tệp được định danh không đồng nghĩa đã nghiệm thu triển khai.
 
 | Mã | Tài liệu hoặc hồ sơ | Vai trò và điều kiện sử dụng |
 | --- | --- | --- |
@@ -2969,12 +2996,12 @@ Các hồ sơ dưới đây cụ thể hóa thiết kế và bằng chứng cầ
 | REF-02 | Hồ sơ kiến trúc và môi trường R1 | Nhóm kỹ thuật mô tả thành phần, ranh giới trách nhiệm, cấu hình và cách tái lập theo mục 2.1, 2.4 và IH-NFR-010. |
 | REF-03 | [Kế hoạch kiểm tính khả thi](#sec-4-4-3) | Nhóm kỹ thuật xác định phép thử về xác thực, email, AI và giới hạn tại mục 3.2.5; kết quả được ghi trong REF-07 và REF-08. |
 | REF-04 | [Danh mục màn hình và trạng thái](#sec-3-5-6) | Người thiết kế sử dụng để xây dựng và kiểm tra độ đầy đủ của thiết kế REF-06. |
-| REF-05 | [Contract R1 v0.2: OpenAPI, schema và các tình huống kiểm chứng](03_API_Schema_Reference_v1.0.zip) | Nhóm kỹ thuật và QA rà soát, chọn API contract trước khi tích hợp; thực hiện contract testing trên phiên bản phần mềm dự kiến nghiệm thu. |
+| REF-05 | [Contract R1 v0.3: OpenAPI, schema và các tình huống kiểm chứng](03_API_Schema_Reference_v1.1.zip) | Nhóm kỹ thuật và QA rà soát, chọn API contract trước khi tích hợp; thực hiện contract testing trên phiên bản phần mềm dự kiến nghiệm thu. |
 | REF-06 | Bản Figma và hồ sơ cấu hình kiểm giao diện | Người thiết kế ghi đường dẫn hoặc định danh tệp, phiên bản và thành phần thiết kế, kích thước viewport, trình duyệt và công nghệ hỗ trợ trước khi đối chiếu giao diện. |
 | REF-07 | Hồ sơ cấu hình và kết quả xác thực, Google và email | Nhóm kỹ thuật ghi nhận nhà cung cấp, địa chỉ tiếp nhận kết quả xác thực, chính sách và kết quả các luồng tại mục 3.2.4 và 3.2.6; không ghi bí mật xác thực vào hồ sơ. |
 | REF-08 | Hồ sơ cấu hình RAG, AI và môi trường đo | Ghi nhận cấu hình dùng DeepSeek để sinh nội dung và Gemini để tạo embedding; cố định phiên bản mô hình, prompt và output parser. Kiểm các giới hạn LIM-05, LIM-11, LIM-14 và khả năng phát hiện lỗi nội dung. |
 | REF-09 | Bộ dữ liệu đánh giá và đáp án đối chiếu cho năm công cụ | QA chuẩn bị nguồn có mã băm, đáp án và 18 lượt AEV-01 đến AEV-06 cùng các tình huống ngoại lệ AEV-07. |
-| REF-10 | Bảng đối chiếu và kết quả kiểm yêu cầu | Ghi phiên bản tài liệu và phần mềm được kiểm, 163 AC cùng yêu cầu thành phần và biến thể, kết quả kỳ vọng, kết quả thực tế và kết luận. Kiểm cấu trúc dữ liệu tĩnh không thay thế kiểm hành vi sản phẩm. |
+| REF-10 | Bảng đối chiếu và kết quả kiểm yêu cầu | Ghi phiên bản tài liệu và phần mềm được kiểm, 165 AC cùng yêu cầu thành phần và biến thể, kết quả kỳ vọng, kết quả thực tế và kết luận. Kiểm cấu trúc dữ liệu tĩnh không thay thế kiểm hành vi sản phẩm. |
 | REF-11 | Biên bản quan sát hành trình sử dụng theo AS-03 | Người thiết kế ghi kịch bản, quan sát, hỗ trợ và vấn đề được phát hiện để xác nhận giao diện phù hợp với người dùng. |
 | REF-12 | Hồ sơ vận hành và khôi phục R1 | Nhóm kỹ thuật và người tái lập môi trường kiểm UC-09, UC-15 và UC-16 trên toàn bộ dữ liệu và quyền sở hữu. |
 
@@ -3049,6 +3076,7 @@ Mọi dòng có mức bắt buộc **phải đáp ứng trong R1** và trạng t
 | <a id="attr-ih-ai-002"></a>[IH-AI-002](#req-ih-ai-002) | Chức năng | [OBJ-03](#sec-1-2) | [Cấu trúc và chất lượng AI](#sec-3-7-4); [giao tiếp tác vụ](#sec-3-3-2) |
 | <a id="attr-ih-ai-003"></a>[IH-AI-003](#req-ih-ai-003) | Chức năng | [OBJ-03](#sec-1-2) | [Cấu trúc và chất lượng AI](#sec-3-7-4); [giao tiếp tác vụ](#sec-3-3-2) |
 | <a id="attr-ih-ai-004"></a>[IH-AI-004](#req-ih-ai-004) | Chức năng | [OBJ-03](#sec-1-2) | [Cấu trúc và chất lượng AI](#sec-3-7-4); [giao tiếp tác vụ](#sec-3-3-2) |
+| <a id="attr-ih-ai-005"></a>[IH-AI-005](#req-ih-ai-005) | Độ tin cậy | [OBJ-03](#sec-1-2) | [Giới hạn xử lý](#sec-3-2); [giao tiếp tác vụ](#sec-3-3-2) |
 | <a id="attr-ih-mm-001"></a>[IH-MM-001](#req-ih-mm-001) | Chức năng | [OBJ-03](#sec-1-2) | [Đầu ra Mindmap](#sec-3-7-4); [giới hạn công cụ](#sec-3-2) |
 | <a id="attr-ih-mm-002"></a>[IH-MM-002](#req-ih-mm-002) | Chức năng | [OBJ-03](#sec-1-2) | [Đầu ra Mindmap](#sec-3-7-4); [giới hạn công cụ](#sec-3-2) |
 | <a id="attr-ih-sum-001"></a>[IH-SUM-001](#req-ih-sum-001) | Chức năng | [OBJ-03](#sec-1-2) | [Đầu ra Tóm tắt](#sec-3-7-4); [quy tắc ghi chú](#sec-3-7-5) |
@@ -3140,6 +3168,7 @@ Mỗi yêu cầu có mã AC ngay tại nơi đặc tả. Bản ghi kiểm thử 
 | [IH-AI-002](#req-ih-ai-002) | UC-07 | UAT-11 | 2 |
 | [IH-AI-003](#req-ih-ai-003) | UC-07 | UAT-11; UAT-14 | 2 |
 | [IH-AI-004](#req-ih-ai-004) | UC-07; UC-08 | UAT-11; UAT-12 | 2 |
+| [IH-AI-005](#req-ih-ai-005) | UC-05; UC-07 | UAT-14 | 2 |
 | [IH-MM-001](#req-ih-mm-001) | UC-07 | UAT-11 | 2 |
 | [IH-MM-002](#req-ih-mm-002) | UC-08 | UAT-11; UAT-15 | 2 |
 | [IH-SUM-001](#req-ih-sum-001) | UC-07 | UAT-11 | 2 |
@@ -3444,7 +3473,7 @@ Các tình huống sau chỉ áp dụng tại điểm xử lý được chỉ ra
 | E4 | M7: nguồn đã bị xóa sau khi câu trả lời được lưu. | Hiển thị MSG-DATA-011 trong câu trả lời thuộc quyền người dùng; giữ nội dung lịch sử, không tải lại đoạn nguồn từ bộ nhớ đệm. Kết thúc thao tác mở nguồn. |
 | E5 | M3, M6 hoặc M7: phiên hết hiệu lực. | Hệ thống xử lý theo CF-01; không chuyển nội dung tới client chưa đăng nhập lại. Sau đăng nhập, người dùng chủ động mở lịch sử để đọc kết quả còn hợp lệ. |
 
-**Truy vết:** IH-NB-004, IH-DOC-005, IH-CHAT-001, IH-CHAT-002, IH-CHAT-003, IH-CHAT-004, IH-CHAT-005, IH-DATA-001, IH-DATA-002, IH-UX-001, IH-UX-002, IH-UX-003, IH-UX-004, IH-MSG-001, IH-MSG-002, IH-MSG-004, IH-INT-001, IH-INT-002, IH-INT-003, IH-INT-004, IH-NFR-002, IH-NFR-003, IH-NFR-004, IH-NFR-005, IH-NFR-007, IH-REL-001; [Quy tắc BR-04](#sec-3-1) đến [Quy tắc BR-13](#sec-3-1); [Giới hạn LIM-06](#sec-3-2), [Giới hạn LIM-10](#sec-3-2) đến [Giới hạn LIM-12](#sec-3-2); [Nghiệm thu UAT-08](#sec-4-3), [Nghiệm thu UAT-09](#sec-4-3), [Nghiệm thu UAT-12](#sec-4-3) đến [Nghiệm thu UAT-14](#sec-4-3), [Nghiệm thu UAT-18](#sec-4-3); AEV-01, AEV-08.
+**Truy vết:** IH-NB-004, IH-DOC-005, IH-CHAT-001, IH-CHAT-002, IH-CHAT-003, IH-CHAT-004, IH-CHAT-005, IH-AI-005, IH-DATA-001, IH-DATA-002, IH-UX-001, IH-UX-002, IH-UX-003, IH-UX-004, IH-MSG-001, IH-MSG-002, IH-MSG-004, IH-INT-001, IH-INT-002, IH-INT-003, IH-INT-004, IH-NFR-002, IH-NFR-003, IH-NFR-004, IH-NFR-005, IH-NFR-007, IH-REL-001; [Quy tắc BR-04](#sec-3-1) đến [Quy tắc BR-13](#sec-3-1); [Giới hạn LIM-06](#sec-3-2), [Giới hạn LIM-10](#sec-3-2) đến [Giới hạn LIM-12](#sec-3-2); [Nghiệm thu UAT-08](#sec-4-3), [Nghiệm thu UAT-09](#sec-4-3), [Nghiệm thu UAT-12](#sec-4-3) đến [Nghiệm thu UAT-14](#sec-4-3), [Nghiệm thu UAT-18](#sec-4-3); AEV-01, AEV-08.
 
 <a id="uc-06"></a>
 
@@ -3533,7 +3562,7 @@ Mỗi dòng sau xác định một nhánh tại M1-M2; sau khi hoàn tất cấu
 
 **Yêu cầu chất lượng riêng:** AEV-02 đến AEV-06 đánh giá nội dung của từng công cụ; cấu trúc hợp lệ không tự chứng minh nội dung đúng. AEV-07 kiểm ngoại lệ và AEV-08 kiểm cách ly. Năm công cụ đều phải đạt yêu cầu riêng.
 
-**Truy vết:** IH-NB-004, IH-DOC-005, IH-AI-001, IH-AI-002, IH-AI-003, IH-AI-004, IH-MM-001, IH-SUM-001, IH-SLD-001, IH-QUIZ-001, IH-RPT-001, IH-DATA-001, IH-UX-001, IH-UX-002, IH-UX-003, IH-UX-004, IH-MSG-001, IH-MSG-002, IH-MSG-004, IH-INT-001, IH-INT-002, IH-INT-003, IH-INT-004, IH-NFR-002, IH-NFR-003, IH-NFR-004, IH-NFR-005, IH-NFR-007, IH-REL-001; [Quy tắc BR-04](#sec-3-1) đến [Quy tắc BR-13](#sec-3-1), [Quy tắc BR-15](#sec-3-1); [Giới hạn LIM-05](#sec-3-2), [Giới hạn LIM-10](#sec-3-2) đến [Giới hạn LIM-12](#sec-3-2), [Giới hạn LIM-17](#sec-3-2); [Nghiệm thu UAT-11](#sec-4-3), [Nghiệm thu UAT-12](#sec-4-3), [Nghiệm thu UAT-13](#sec-4-3), [Nghiệm thu UAT-14](#sec-4-3), [Nghiệm thu UAT-18](#sec-4-3).
+**Truy vết:** IH-NB-004, IH-DOC-005, IH-AI-001, IH-AI-002, IH-AI-003, IH-AI-004, IH-AI-005, IH-MM-001, IH-SUM-001, IH-SLD-001, IH-QUIZ-001, IH-RPT-001, IH-DATA-001, IH-UX-001, IH-UX-002, IH-UX-003, IH-UX-004, IH-MSG-001, IH-MSG-002, IH-MSG-004, IH-INT-001, IH-INT-002, IH-INT-003, IH-INT-004, IH-NFR-002, IH-NFR-003, IH-NFR-004, IH-NFR-005, IH-NFR-007, IH-REL-001; [Quy tắc BR-04](#sec-3-1) đến [Quy tắc BR-13](#sec-3-1), [Quy tắc BR-15](#sec-3-1); [Giới hạn LIM-05](#sec-3-2), [Giới hạn LIM-10](#sec-3-2) đến [Giới hạn LIM-12](#sec-3-2), [Giới hạn LIM-17](#sec-3-2); [Nghiệm thu UAT-11](#sec-4-3), [Nghiệm thu UAT-12](#sec-4-3), [Nghiệm thu UAT-13](#sec-4-3), [Nghiệm thu UAT-14](#sec-4-3), [Nghiệm thu UAT-18](#sec-4-3).
 
 <a id="uc-08"></a>
 
@@ -3858,6 +3887,7 @@ Mỗi dòng sau xác định một nhánh tại M1-M2; sau khi hoàn tất cấu
 | --- | --- | --- |
 | 1.0 Draft | 23/09/2026 | Khởi tạo đặc tả InsightHub R1: phạm vi, yêu cầu chức năng và chất lượng, dữ liệu logic, giao tiếp, use case, kiểm chứng và truy vết. |
 | 1.0 | 27/09/2026 | Phê duyệt làm baseline khóa học R1 (Đinh Xuân Công); thêm banner phạm vi bài tập khóa C07. Không đổi yêu cầu, AC hoặc ngưỡng. |
+| 1.1 | 04/10/2026 | Yêu cầu thay đổi ngày 04/10/2026 (Đinh Xuân Công): thêm IH-AI-005 (5 yêu cầu thành phần, 2 AC) về retry, nhà cung cấp dự phòng và mức sử dụng mô hình; LIM-11 ghi rõ retry và fallback nằm trong thời hạn; UAT-14 thêm ca fallback; mục 4.2.1 ghi nhà cung cấp thực tế mỗi lượt đánh giá. IH-UX-001, OBJ-04 và UAT-15 chấp nhận Figma hoặc prototype HTML có phiên bản. Contract tham chiếu lên R1 v0.3 (`ExecutionProfile` thêm `provider_id`, `fallback_used`). Tổng 73 mã, 174 yêu cầu thành phần, 165 AC. |
 
 <a id="sec-6-3"></a>
 

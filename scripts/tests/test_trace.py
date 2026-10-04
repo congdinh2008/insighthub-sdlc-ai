@@ -24,25 +24,31 @@ class TraceTests(unittest.TestCase):
         return trace_check.check(self.rows, self.fields, self.scopes, gate)[0]
 
     def test_skeleton_is_consistent(self):
-        self.assertEqual(len(self.rows), 163)
+        self.assertEqual(len(self.rows), 165)
         self.assertEqual(self.errors(), [])
         applied = [r for r in self.rows if r["scope"] != "N"]
-        self.assertEqual(len(applied), 151)
-        self.assertEqual({k: sum(r["risk"] == k for r in applied) for k in ("R1", "R2", "R3")}, {"R1": 63, "R2": 75, "R3": 13})
+        self.assertEqual(len(applied), 153)
+        self.assertEqual({k: sum(r["risk"] == k for r in applied) for k in ("R1", "R2", "R3")}, {"R1": 63, "R2": 77, "R3": 13})
 
     def test_auth_tiers_follow_decision(self):
         auth = [r for r in self.rows if r["group"] == "AUTH"]
-        self.assertEqual(sum(r["tier"] == "Core" for r in auth), 15)
+        # Requirements 1.2: đăng nhập Google và liên kết danh tính là Extended (quyết định 04/10/2026).
+        self.assertEqual(sum(r["tier"] == "Core" for r in auth), 12)
         self.assertEqual(self.row("IH-AUTH-003-AC02")["tier"], "Extended")
-        self.assertEqual(self.row("IH-AUTH-005-AC02")["tier"], "Core")
+        for ac in ("IH-AUTH-004-AC01", "IH-AUTH-004-AC02", "IH-AUTH-005-AC02"):
+            self.assertEqual(self.row(ac)["tier"], "Extended")
 
     def test_core_list_is_published(self):
         applied = [r for r in self.rows if r["scope"] != "N"]
         self.assertEqual(sum(r["tier"] == "Core" for r in applied), 106)
-        self.assertEqual(sum(r["tier"] == "Extended" for r in applied), 45)
+        self.assertEqual(sum(r["tier"] == "Extended" for r in applied), 47)
         self.assertFalse(any(r["tier"] == "Pending" for r in applied))
         self.assertTrue(all(r["tier"] == "Extended" for r in applied if r["group"] == "NOTE"))
         self.assertEqual(self.row("IH-QUIZ-002-AC01")["tier"], "Core")
+        # SRS v1.1: IH-AI-005 (fallback, usage) Core R2; IH-UX-003-AC01 Core với phạm vi D6.
+        for ac in ("IH-AI-005-AC01", "IH-AI-005-AC02"):
+            self.assertEqual((self.row(ac)["tier"], self.row(ac)["risk_suggested"]), ("Core", "R2"))
+        self.assertEqual((self.row("IH-UX-003-AC01")["tier"], self.row("IH-UX-003-AC01")["scope"]), ("Core", "D6"))
 
     def test_passed_requires_commit_evidence_and_verification(self):
         self.row("IH-NB-004-AC01")["verdict"] = "Passed"
