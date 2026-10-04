@@ -1,6 +1,9 @@
 # --- Secrets ---
 .env
-.env.local
+.env.*
+!.env.example
+secrets/
+.mcp.json
 .claude/settings.local.json
 *.pem
 *.key

@@ -22,6 +22,17 @@ Số liệu đo bằng `radon cc -s` trên Starter `v1.0.0-rc.3` ngày 27/09/202
 
 Rubric Assignment (mức Đầy đủ) yêu cầu chứng minh test bắt lỗi. Cách gọn: chạy mutation testing trên đúng module đã chọn, ví dụ `mutmut` cho Python, giới hạn phạm vi file để thời gian chạy ngắn. Ghi số mutant sống, phân tích ít nhất một mutant sống (test thiếu assertion hay mutant tương đương), bổ sung test rồi chạy lại. Không đặt mục tiêu phần trăm mutation score cố định; giá trị nằm ở phân tích.
 
+## Module không dùng cho bài Assignment
+
+Các module dưới đây đã được dùng làm ví dụ phân tích và refactor trong Knowledge Content buổi 7. Không chọn chúng cho ASG01 để bài làm thể hiện phân tích của chính học viên.
+
+| Module | Hàm hoặc phạm vi |
+| --- | --- |
+| `api/app/services/reranking.py` | Toàn module |
+| `api/app/services/chunking.py` | Toàn module |
+| `api/app/services/retrieval.py` | `_pack_contexts` |
+| `api/app/services/embeddings.py` | `_real_embed` |
+
 ## Chọn module khác
 
-Học viên được chọn module khác (ví dụ `api/app/services/llm.py::_parse_result`, D (22)) nếu nêu lý do trong hồ sơ milestone: độ phức tạp đo được, mức rủi ro, test hiện có và phạm vi ảnh hưởng. Module chọn phải thuộc mã nền của Starter, không phải phần học viên vừa viết.
+Học viên được chọn module khác (ví dụ `api/app/services/llm.py::_parse_result`, D (22)) nếu nêu lý do trong hồ sơ milestone: độ phức tạp đo được, mức rủi ro, test hiện có và phạm vi ảnh hưởng. Module chọn phải thuộc mã nền của Starter, không phải phần học viên vừa viết, không thuộc danh sách ở mục trên và không thuộc phần scaffold Auth, AI Job hoặc nền UI cấp từ `learner-r1.3`.
