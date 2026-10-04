@@ -90,5 +90,6 @@ cd web
 npm run typecheck
 npm test            # gồm tokens.test.mjs
 npm run build
-npm run test:e2e    # cần API và web đang chạy
+npm run test:pw     # Playwright Test trong web/e2e, cần API và web fixture đang chạy
+npm run test:e2e    # script E2E cũ của rc.3
 ```

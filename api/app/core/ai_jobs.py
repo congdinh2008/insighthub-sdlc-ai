@@ -1,4 +1,7 @@
-"""AI Job scaffold (learner-r1.3, ADR-004): cơ chế dùng chung cho hỏi đáp và công cụ AI.
+"""AI Job scaffold (learner-r1.3, ADR-004): cơ chế dùng chung cho công cụ AI (Summary, Quiz).
+
+Chat của bài tập R1 giữ `operation_records` của Starter (mã D8); nhánh `chat` (deadline 60 giây) được giữ
+cho trường hợp tích hợp sau này.
 
 Starter chỉ cấp **cơ chế**, không chứa nghiệp vụ. Vòng đời một tác vụ trong endpoint của học viên:
 
@@ -48,7 +51,7 @@ from app.core.operations import validate_key
 logger = logging.getLogger("insighthub.ai_jobs")
 
 # Giới hạn nghiệp vụ của SRS, không phải tham số vận hành: đổi giá trị nghĩa là đổi yêu cầu.
-CHAT_TIMEOUT_SECONDS = 60  # LIM-11 hỏi đáp
+CHAT_TIMEOUT_SECONDS = 60  # LIM-11 hỏi đáp (nhánh dự phòng, xem D8)
 TOOL_TIMEOUT_SECONDS = 120  # LIM-11 công cụ AI
 MAX_RUNNING_JOBS = 1  # LIM-10
 RATE_LIMIT_REQUESTS = 10  # LIM-10

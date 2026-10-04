@@ -4,8 +4,8 @@
 Sample:   python3 scripts/trace_sample.py --seed 20261004 --size 10
 Evaluate: python3 scripts/trace_sample.py --evaluate
 
-Sampling picks from applied AC that are still Unverified, stratified by function
-group, and appends the picks to trace/sampling-log.csv. The learner then checks
+Sampling picks from applied Core AC (scope != N, tier != Extended) that are still
+Unverified, stratified by function group, and appends the picks to trace/sampling-log.csv. The learner then checks
 each sampled row against the SRS and fills `result` with OK or Error (and
 `error_type`). `--evaluate` computes the error rate per round: at or above the
 threshold (default 20%, i.e. 2 of 10) the AI draft is not trusted, so fix the

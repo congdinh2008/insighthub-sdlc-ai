@@ -3,7 +3,7 @@ PYTHON ?= python3
 API_URL ?= http://127.0.0.1:8107
 WEB_URL ?= http://127.0.0.1:3107
 
-.PHONY: seed-users mcp-role mcp-check trace-check trace-sample eval ai-bom delivery-report up down build test test-db test-backend test-web test-tools test-e2e test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
+.PHONY: seed-users mcp-role mcp-check trace-check trace-sample eval ai-bom delivery-report up down build test test-db test-backend test-web test-tools test-e2e test-pw test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
 up:
 	$(COMPOSE) up --build -d --wait
 
@@ -44,6 +44,10 @@ test-release:
 
 test-e2e:
 	cd web && npm run test:e2e
+
+# Playwright Test trong web/e2e (cần stack fixture đang chạy).
+test-pw:
+	cd web && npm run test:pw
 
 test: test-backend test-web test-tools
 

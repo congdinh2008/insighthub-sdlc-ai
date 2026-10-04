@@ -113,7 +113,7 @@ Ranh giới quyền nằm ở database: role `insighthub_readonly` (migration 00
 4. Tạo cấu hình cho Claude Code: `cp .mcp.json.example .mcp.json` (file này bị `.gitignore`, không commit). Mở `claude` tại thư mục repo, chạy `/mcp` và duyệt server `insighthub-db`.
 5. Evidence LR-05 gồm ba lượt: một truy vấn hợp lệ, một lỗi tool (ví dụ bảng không tồn tại) và một lệnh ghi bị database từ chối (`cannot execute INSERT in a read-only transaction` hoặc `permission denied`).
 
-**Phương án dự phòng** khi máy không chạy được MCP: dùng tool Bash của Claude Code gọi `psql` bằng chính role chỉ đọc, ví dụ `psql "postgresql://insighthub_readonly@127.0.0.1:5433/insighthub"` (nhập mật khẩu khi được hỏi). Máy chưa có `psql` thì chạy trong container: `docker compose --env-file .env -p insighthub-c07-starter exec postgres psql -h 127.0.0.1 -U insighthub_readonly -d insighthub`. Evidence vẫn phải có lỗi do database trả về; lời từ chối của mô hình không thay kiểm soát thực tế.
+**Phương án dự phòng** khi máy không chạy được MCP: dùng tool Bash của Claude Code gọi `psql` bằng chính role chỉ đọc, ví dụ `psql "postgresql://insighthub_readonly@127.0.0.1:5433/insighthub" -c "SELECT count(*) FROM documents"`. Tool Bash của Claude Code không nhập được mật khẩu tương tác, nên lưu mật khẩu role vào `~/.pgpass` (dòng `127.0.0.1:5433:insighthub:insighthub_readonly:<mật khẩu>`, `chmod 600 ~/.pgpass`) trước khi mở `claude`; không đặt mật khẩu trong lệnh hoặc prompt. Máy chưa có `psql` thì chạy trong container với `-T` (không cần TTY) và tự nhập mật khẩu trong terminal riêng: `docker compose --env-file .env -p insighthub-c07-starter exec -T postgres psql -h 127.0.0.1 -U insighthub_readonly -d insighthub -c "SELECT 1"`, hoặc gán `PGPASSWORD` trong shell của học viên trước khi mở `claude` (không gõ vào chat). Evidence vẫn phải có lỗi do database trả về; lời từ chối của mô hình không thay kiểm soát thực tế.
 
 Ghi SHA mã nguồn và hash file mẫu đã dùng trong hồ sơ milestone. Khi chạy lại trên dữ liệu còn tồn tại, cùng byte của tài liệu `Ready` được dedup; cùng byte của tài liệu `Failed` trả `409 document_conflict` theo [API Contract](docs/API_Contract_Starter_v1.md). Đổi `Idempotency-Key` không đổi danh tính nội dung. Với ca kiểm validation cho file mới, dùng nội dung thử riêng; với ca dedup/retry, giữ nguyên nội dung để kiểm đúng hành vi. Không xóa volume hoặc nới expected result để làm test đạt.
 
@@ -136,12 +136,12 @@ Mailpit giữ thư trong máy, không gửi ra Internet. Chỉ dùng địa ch�
 ## Kiểm tra
 
 ```sh
-make COMPOSE="docker compose --env-file .env.example -p insighthub-c07-check" test
+DB_PORT=5434 make COMPOSE="docker compose --env-file .env.example -p insighthub-c07-check" test
 make API_URL=http://127.0.0.1:8107 WEB_URL=http://127.0.0.1:3107 smoke
 git diff --check
 ```
 
-Backend integration tests tạo PostgreSQL schema ngẫu nhiên và tự xóa. Smoke test chỉ xóa document do chính lần chạy tạo.
+Backend integration tests tạo PostgreSQL schema ngẫu nhiên và tự xóa. Smoke test chỉ xóa document do chính lần chạy tạo. `DB_PORT=5434` cho project check tránh trùng cổng `5433` của project starter đang chạy; project real dùng `5435`. Từ M3.1, smoke cần cookie phiên theo [Runbook](docs/Runbook_Starter_v1.md#kiem-tra-sau-khi-bao-ve-endpoint).
 
 ## Migration dữ liệu cũ
 
@@ -170,7 +170,7 @@ Key do học viên tự mua và tự chịu chi phí; đặt spending limit trê
 Áp dụng lại cấu hình và kiểm profile:
 
 ```sh
-API_PORT=8117 WEB_PORT=3117 docker compose --env-file .env -p insighthub-c07-real up --build -d --wait
+API_PORT=8117 WEB_PORT=3117 DB_PORT=5435 docker compose --env-file .env -p insighthub-c07-real up --build -d --wait
 curl -fsS http://127.0.0.1:8117/system/profile
 python3 scripts/run_aev.py --api-url http://127.0.0.1:8117
 ```

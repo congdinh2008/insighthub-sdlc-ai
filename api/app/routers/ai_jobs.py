@@ -2,7 +2,8 @@
 
 Chỉ đọc, không tạo job. Kiểm phiên (Auth scaffold) và policy của loại job; mặc định DenyAllPolicy nên
 trả 404 cho tới khi học viên đăng ký policy bằng app.core.ai_jobs.register_policy.
-Endpoint tạo job (Chat, Summary, Quiz) là việc của học viên, xem docs/AI_Job_Framework.md.
+Endpoint tạo job Summary, Quiz là việc của học viên, xem docs/AI_Job_Framework.md. Chat của bài tập R1 giữ
+cơ chế operation của Starter (Requirements mục 15.1, mã D8), không tạo job tại đây.
 """
 
 from fastapi import APIRouter, Depends

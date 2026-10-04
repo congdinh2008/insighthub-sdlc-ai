@@ -62,6 +62,9 @@ jobs:
         run: npm ci --prefix web
       - name: Playwright E2E
         run: cd web && npx playwright install --with-deps chromium && npm run test:e2e
+      # Playwright Test (web/e2e). Học viên bổ sung spec hành trình M3.1 ở LR-20.
+      - name: Playwright Test
+        run: cd web && npm run test:pw
       - name: npm audit
         run: npm audit --omit=dev --audit-level=high --prefix web
       - if: always()

@@ -8,7 +8,7 @@ Starter cấp sẵn phần **plumbing** cho phương án mặc định (Better A
 
 | Thành phần | Vị trí | Đã có |
 | --- | --- | --- |
-| Cấu hình Better Auth 1.7.6 | `web/lib/auth/config.ts`, `server.ts`, `client.ts` | Email và mật khẩu, cookie `insighthub.session_token` ký HMAC, ID dạng UUID, bảng `auth_*` tên snake_case |
+| Cấu hình Better Auth 1.7.6 | `web/lib/auth/config.ts`, `server.ts`, `client.ts` | Email và mật khẩu, cookie `insighthub.session_token` ký HMAC, ID dạng UUID, bảng `auth_*` tên snake_case. `disabledPaths` tắt endpoint Extended của thư viện (`/request-password-reset`, `/reset-password`, `/change-password`, `/verify-password`, `/update-user` trả 404); test `web/tests/auth-config.test.mjs` |
 | Route Better Auth | `web/app/api/auth/[...all]/route.ts` | Đăng ký, đăng nhập, đăng xuất, đọc phiên theo endpoint của thư viện |
 | Bảng Auth | `api/migrations/004_auth_scaffold.sql` | `auth_user`, `auth_session`, `auth_account`, `auth_verification`, sinh bằng `getMigrations` rồi review như migration do công cụ sinh |
 | API xác định người dùng | `api/app/core/auth.py`, `GET /auth/me` | Dependency `current_user` tra `auth_session` trong cùng PostgreSQL theo mỗi request (phương án (a) ở mục 2), kiểm chữ ký cookie, phiên hết hạn hoặc bị xóa trả 401 `not_authenticated` |
@@ -16,7 +16,7 @@ Starter cấp sẵn phần **plumbing** cho phương án mặc định (Better A
 | Trạng thái client | `web/lib/client-state.ts` | Khóa `sessionStorage` gắn người dùng; đăng xuất xóa mọi khóa `insighthub.*` |
 | Giao diện | `web/app/login/`, `web/components/app/app-header.tsx`, `requireSession()` | Trang `/login` tối thiểu, menu người dùng và đăng xuất, helper chuyển về `/login` cho Server Component |
 | Email | `web/lib/auth/email.ts`, `mailer.ts` | Adapter SMTP (Mailpit hoặc dịch vụ thật). Hook EML-001, EML-002 là stub báo chưa triển khai (EML-002 chỉ cần khi làm Extended) |
-| Dữ liệu thử | `make seed-users` | Hai tài khoản A, B đã xác minh, chỉ cho môi trường local |
+| Dữ liệu thử | `make seed-users`, `scripts/session_cookie.py` | Hai tài khoản A, B đã xác minh, chỉ cho môi trường local; helper in cookie phiên để smoke, eval, AEV gọi endpoint đã bảo vệ |
 
 **Việc của học viên trên scaffold** (đối chiếu mục 3):
 
@@ -27,7 +27,7 @@ Starter cấp sẵn phần **plumbing** cho phương án mặc định (Better A
 | Màn hình | Đăng ký, xác minh theo prototype M2; trang `/login` của Starter thay theo prototype. Quên, đặt lại, đổi mật khẩu và hồ sơ khi làm Extended |
 | Quyền | Bảo vệ endpoint và trang demo kế thừa (đang công khai) bằng `current_user`; ownership Notebook và mọi tài nguyên con; không tin `owner_id` do client gửi |
 | Kiểm chứng | Test AC Auth và quyền A/B trên bài làm; scaffold có test mẫu cho `current_user` nhưng không thay evidence AC |
-| Mở rộng | Khôi phục, đặt lại, đổi mật khẩu, hồ sơ, Google, liên kết danh tính, rate limit, phiên chờ xác minh hạn chế là Extended |
+| Mở rộng | Khôi phục, đặt lại, đổi mật khẩu, hồ sơ, Google, liên kết danh tính, rate limit, phiên chờ xác minh hạn chế là Extended. Khi làm, bỏ đường dẫn tương ứng khỏi `extendedAuthPaths` trong `config.ts`, ghi vào fit-gap và kiểm lại endpoint còn tắt |
 
 Muốn thay scaffold bằng phương án khác (mục 1), ghi ADR so sánh với scaffold và giữ hợp đồng `current_user` hoặc thay đồng bộ các điểm dùng.
 
@@ -68,7 +68,7 @@ SRS ghi rõ không coi giá trị mặc định của thư viện là đã đáp
 
 | Tầng | AC |
 | --- | --- |
-| Core (chấm) | IH-AUTH-001-AC01/02, 002-AC01, 003-AC01, 008-AC01/02; IH-MSG-003-AC01 (D5: email EML-001), IH-MSG-003-AC02; IH-NFR-011-AC02 (chặn yêu cầu giả mạo, bằng chứng cookie và CSRF; nhánh tái xác thực không áp dụng khi chưa làm Extended) |
+| Core (chấm) | IH-AUTH-001-AC01/02, 002-AC01, 003-AC01, 008-AC01/02; IH-MSG-003-AC01 (D5: email EML-001), IH-MSG-003-AC02; IH-NFR-001-AC01 (lưu mật khẩu), IH-NFR-001-AC02 (token xác minh, phiên LIM-07; nhánh LIM-08 đặt lại mật khẩu và LIM-09 không áp dụng khi chưa làm Extended), IH-NFR-001-AC03 (HTTPS, loopback), IH-NFR-001-AC05 (không lộ tài khoản tồn tại); IH-NFR-011-AC01 (không tái dùng phiên chưa xác thực, không lộ phiên trong URL hoặc log); IH-NFR-011-AC02 (chặn yêu cầu giả mạo, bằng chứng cookie và CSRF; nhánh tái xác thực không áp dụng khi chưa làm Extended) |
 | Extended (Stretch, không trừ điểm) | IH-AUTH-002-AC02, 003-AC02, 004-AC01/02 (đăng nhập Google), 005-AC01..04 (liên kết danh tính), 006-AC01/02, 007-AC01..03 (khôi phục, đặt lại mật khẩu), 009-AC01/02 (hồ sơ), 010-AC01/02 (đổi mật khẩu); IH-NFR-001-AC04 (tái xác thực); IH-MSG-003-AC03 (gồm EML-005); EML-002, EML-003, EML-004 |
 
 Hành trình mặc định là email và mật khẩu. Nếu làm đăng nhập Google mà chưa làm liên kết, đăng nhập Google bằng email trùng tài khoản mật khẩu phải **bị từ chối an toàn**, không tự liên kết và không cấp phiên. Khôi phục và đổi mật khẩu là Extended từ Requirements 1.3; khi chưa làm, giao diện không hiển thị các chức năng này. Nguồn đầy đủ: cột `tier` trong [trace/ac-trace.csv](../trace/ac-trace.csv).

@@ -82,7 +82,7 @@ Phần nền rc.3 được viết cho một người dùng. Các điểm dưới
 | --- | --- | --- | --- |
 | Endpoint và trang demo | `/documents`, `/chat`, `/operations`, trang `/` công khai để chạy M0.1 | Bất kỳ ai gọi được API đọc, xóa tài liệu | Bảo vệ bằng `current_user` và kiểm quyền theo Notebook ở M3.1 |
 | Chống trùng tài liệu | Theo `content_sha256` toàn cục | Tải cùng tệp có thể lộ việc người khác đã có tài liệu đó (SRS mục 3.3.2) | Giới hạn chống trùng theo Notebook và người dùng |
-| Idempotency key | `operation_records` duy nhất theo `(operation_type, operation_key)` toàn cục | Replay chéo người dùng nếu hai người dùng trùng key | Scope theo người dùng; Chat chuyển sang `ai_jobs` |
+| Idempotency key | `operation_records` duy nhất theo `(operation_type, operation_key)` toàn cục | Replay chéo người dùng nếu hai người dùng trùng key | Scope theo người dùng; Chat giữ `operation_records` (mã D8), không chuyển sang `ai_jobs` |
 | Danh sách tài liệu | Không lọc theo chủ sở hữu | Người dùng B thấy tài liệu của A | Lọc theo Notebook thuộc người dùng trước khi trả và trước retrieval |
 | Tập nguồn mặc định | `ready_document_ids(None)` lấy toàn bộ tài liệu Ready | Hỏi đáp trên tài liệu của người khác | Xác định Notebook và tập nguồn trước retrieval |
 | Trạng thái client | Đã gắn người dùng (Auth scaffold) | | Giữ quy tắc khi thêm khóa mới |

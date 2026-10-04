@@ -11,9 +11,9 @@ Tài liệu này dành cho người bảo trì Starter (giảng viên, Academic 
 
 | Bước | Lệnh | Kiểm gì |
 | --- | --- | --- |
-| 1 | `python3 scripts/check_project.py` | Version đồng bộ (manifest, web, lockfile, SBOM, API, README, Readiness); hash SRS khớp manifest trong ZIP API/Schema; 72 yêu cầu/163 AC được mapping; link Markdown nội bộ hợp lệ |
+| 1 | `python3 scripts/check_project.py` | Version đồng bộ (manifest, web, lockfile, SBOM, API, README, Readiness); hash SRS khớp manifest trong ZIP API/Schema; 73 yêu cầu/165 AC (153 áp dụng, 12 ngoài phạm vi) được mapping; link Markdown nội bộ hợp lệ |
 | 2 | `make test` và `make test-release` | Test ứng dụng; `test-release` bật thêm delivery regression (`STARTER_RELEASE_CHECKS=1`) |
-| 3 | `make smoke`, `cd web && npm run test:e2e` | Smoke và Playwright E2E trên fixture |
+| 3 | `make smoke`, `make test-e2e`, `make test-pw` | Smoke, E2E cũ và Playwright Test trên fixture |
 | 4 | `python3 scripts/seed_recovery_fixture.py --api-url http://127.0.0.1:8107` rồi `COMPOSE_PROJECT_NAME=insighthub-c07-starter ENV_FILE=.env make backup-restore-check` | Restore drill trên corpus có dữ liệu, một chat thành công và một failed attempt |
 | 5 | `make sbom` | Sinh lại SBOM |
 | 6 | Commit thay đổi đã review | `make package` chỉ chạy trên working tree sạch |
@@ -38,7 +38,9 @@ Trên GitHub, chạy workflow [Starter release gate](../../.github/workflows/sta
 
 ## Phát hành repository học viên
 
-Không cho học viên fork repository tác giả: lịch sử Git còn tài liệu đã loại (ví dụ `docs/archive`). Tạo repository học viên từ snapshot một commit đã qua gate:
+Không cho học viên fork repository tác giả: lịch sử Git còn tài liệu đã loại (ví dụ `docs/archive`). Repository học viên là `insighthub-starter`, có lịch sử riêng bắt đầu từ snapshot `learner-r1.0`.
+
+**Lần đầu (learner-r1.0):** tạo repository học viên từ snapshot một commit đã qua gate. `scripts/maintainer/` chỉ có trong repository tác giả, không nằm trong repository học viên:
 
 ```sh
 python3 scripts/maintainer/build_trace_skeleton.py      # khi Requirements đổi bảng AC, tier hoặc mức rủi ro
@@ -50,6 +52,20 @@ git push -u origin main --tags
 ```
 
 Script dùng `git archive` (chỉ file đã track), bỏ `scripts/maintainer/`, `dist/`, `docs/archive`, kiểm không có `.env` hoặc chuỗi giống API key, tạo một commit và tag. Công bố URL và tag cho lớp; học viên fork repository này.
+
+**Revision tiếp theo (learner-r1.1 trở đi):** làm trên nhánh `release/learner-rX.Y` tách từ `main` của `insighthub-starter`, chạy gate, review rồi fast-forward `main` và gắn tag annotated. Không tạo lại snapshot vì học viên đã fork và cần `git fetch upstream` để nhận diff:
+
+```sh
+cd insighthub-starter
+git fetch <nguồn nhánh release> release/learner-r1.3:release/learner-r1.3
+git checkout main && git merge --ff-only release/learner-r1.3
+python3 scripts/check_project.py && python3 scripts/trace_check.py
+git push origin main
+git tag -a learner-r1.3 -m "Starter learner-r1.3: Requirements 1.3"
+git push origin learner-r1.3
+```
+
+Khi tầng Core/Extended đổi ở repository học viên, đồng bộ lại bản đồ trong `scripts/maintainer/build_trace_skeleton.py` của repository tác giả để lần sinh skeleton sau không ghi đè tầng mới.
 
 ## Lưu ý khi đổi tài liệu học viên
 

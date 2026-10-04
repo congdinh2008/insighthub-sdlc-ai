@@ -10,6 +10,8 @@ git status --short
 
 Không dùng cùng Compose project name cho lớp học và test. Không dùng `down -v` với namespace có dữ liệu cần giữ.
 
+Mỗi Compose project mở PostgreSQL ra `127.0.0.1:${DB_PORT:-5433}`. Khi chạy song song nhiều project (starter, check, real, recovery), đặt `DB_PORT` riêng cho project thứ hai trở đi, ví dụ `DB_PORT=5434` cho `insighthub-c07-check`, `5435` cho `insighthub-c07-real`, `5436` cho `insighthub-c07-recovery`; nếu không, lệnh `up` báo cổng đã bị chiếm.
+
 ## Start và kiểm tra
 
 ```sh
@@ -24,11 +26,28 @@ python3 scripts/smoke.py --api-url http://127.0.0.1:8107 --web-url http://127.0.
 ## Regression
 
 ```sh
-make COMPOSE="docker compose --env-file .env.example -p insighthub-c07-check" test
+DB_PORT=5434 make COMPOSE="docker compose --env-file .env.example -p insighthub-c07-check" test
 git diff --check
 ```
 
 Fixture regression không gọi dịch vụ AI bên ngoài.
+
+Thư mục `reports/` bị `.gitignore` để báo cáo nháp không vào Git. Evidence đã review (không chứa cookie, key, dữ liệu thật) đưa vào commit bằng `git add -f reports/<đường dẫn file>` và ghi đường dẫn trong PR hoặc hồ sơ milestone.
+
+<a id="kiem-tra-sau-khi-bao-ve-endpoint"></a>
+
+## Kiểm tra sau khi bảo vệ endpoint (từ M3.1)
+
+Khi `/documents`, `/chat`, `/operations` đã yêu cầu phiên đăng nhập, smoke, eval adapter và AEV gửi kèm cookie phiên của tài khoản thử:
+
+```sh
+make COMPOSE="docker compose --env-file .env -p insighthub-c07-starter" seed-users
+export INSIGHTHUB_SESSION_COOKIE="$(python3 scripts/session_cookie.py --web-url http://127.0.0.1:3107)"
+python3 scripts/smoke.py --api-url http://127.0.0.1:8107 --web-url http://127.0.0.1:3107
+unset INSIGHTHUB_SESSION_COOKIE
+```
+
+Thêm `--account B` để lấy phiên tài khoản B khi kiểm quyền A/B. Cookie là phiên thật: không in ra log, không dán vào công cụ AI, không đưa vào evidence; chỉ ghi lệnh đã chạy và kết quả. Script cũ `web/tests/e2e.mjs`, spec mẫu `web/e2e/smoke.spec.ts` và probe đọc qua API của backup drill viết cho endpoint công khai rc.3, học viên cập nhật cùng bài làm (đăng nhập trong E2E, `dependency_overrides[current_user]` trong `TestClient`).
 
 ## AEV với provider thật
 
@@ -51,7 +70,7 @@ Script từ chối database rỗng. Nó hash mọi giá trị của tám bảng,
 Tạo corpus fixture cho drill trong namespace test riêng:
 
 ```sh
-API_PORT=8127 WEB_PORT=3127 docker compose --env-file .env.example -p insighthub-c07-recovery up --build -d --wait
+API_PORT=8127 WEB_PORT=3127 DB_PORT=5436 docker compose --env-file .env.example -p insighthub-c07-recovery up --build -d --wait
 python3 scripts/seed_recovery_fixture.py --api-url http://127.0.0.1:8127
 python3 scripts/backup_restore_check.py --project insighthub-c07-recovery --env-file .env.example
 docker compose --env-file .env.example -p insighthub-c07-recovery down

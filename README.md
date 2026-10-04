@@ -4,7 +4,7 @@
 
 InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa và hỏi đáp có nguồn trích dẫn bằng Retrieval-Augmented Generation (RAG). Từ nền này, học viên phát triển sản phẩm cá nhân qua các giai đoạn phân tích yêu cầu, thiết kế, lập trình, test, phát hành và bảo trì trong chương trình **B2B C07 - SDLC with AI**.
 
-**Runtime nền:** `v1.0.0-rc.3` · **Requirements:** `1.2`, 04/10/2026 · **SRS:** `v1.1` · **Starter revision:** `learner-r1.3`, 04/10/2026 (Auth scaffold, AI Job scaffold, nền UI, MCP chỉ đọc, Playwright Test, eval trong CI, AI Engineering Kit, traceability matrix) · **Chủ dự án:** Đinh Xuân Công
+**Runtime nền:** `v1.0.0-rc.3` · **Requirements:** `1.3`, 04/10/2026 · **SRS:** `v1.1` · **Starter revision:** `learner-r1.3`, 04/10/2026 (Auth scaffold, AI Job scaffold, nền UI, MCP chỉ đọc, Playwright Test, eval trong CI, AI Engineering Kit, traceability matrix) · **Chủ dự án:** Đinh Xuân Công
 
 [Hướng dẫn cài đặt](GETTING_STARTED.md) · [Yêu cầu bài tập](docs/learner/01_Requirements_InsightHub.md) · [Kiến trúc](docs/Architecture_Starter_v1.md) · [API](docs/API_Contract_Starter_v1.md)
 
@@ -53,12 +53,12 @@ Repository có sẵn khung để dự án vận hành AI một cách có kiểm 
 | Quy tắc agent, quyền, hook | `AGENTS.md`, `CLAUDE.md`, `.claude/` |
 | Template context pack, Charter, skill, subagent, checklist review | `docs/ai/templates/` |
 | PR template (AI usage, DoD), issue template (tính năng, task giao agent, lỗi) | `.github/` |
-| Traceability matrix 163 AC, mức rủi ro, lấy mẫu có seed | `trace/`, `scripts/trace_check.py`, `scripts/trace_sample.py` |
+| Traceability matrix 165 AC (153 áp dụng, 12 ngoài phạm vi), mức rủi ro, lấy mẫu có seed | `trace/`, `scripts/trace_check.py`, `scripts/trace_sample.py` |
 | Spec chain Specify, Plan, Tasks | `specs/` |
 | Eval harness: golden set, grader bằng code, pass^k | `evaluation/harness/`, `make eval` |
 | AI Delivery Log, báo cáo KPI, AI-BOM | `docs/ai/delivery-log.csv`, `make delivery-report`, `make ai-bom` |
 
-Starter hiện dành cho môi trường phát triển local, chưa có xác thực và phân quyền đa người dùng. Cần hoàn thiện các phần này trước khi triển khai cho nhiều người dùng.
+Starter hiện dành cho môi trường phát triển local. Auth scaffold mới cấp phiên đăng nhập; các endpoint tài liệu, chat và operation của rc.3 vẫn công khai, chưa phân quyền theo người dùng hoặc Notebook. Học viên bảo vệ các endpoint này ở M3.1 trước khi dùng cho nhiều người dùng.
 
 ## Bắt đầu nhanh
 
@@ -79,8 +79,8 @@ Chạy ứng dụng bằng Docker không yêu cầu cài riêng Python hoặc No
 Để xem và chạy Starter, clone repository bằng tài khoản đã được cấp quyền:
 
 ```sh
-git clone https://github.com/congdinh2008/insighthub-sdlc-ai.git
-cd insighthub-sdlc-ai
+git clone https://github.com/congdinh2008/insighthub-starter.git
+cd insighthub-starter
 ```
 
 **Khi làm bài tập:** fork repository trước, sau đó clone fork cá nhân thay cho repository gốc. Giữ lịch sử Git và cấu hình remote `upstream` theo [hướng dẫn khởi tạo bài làm](GETTING_STARTED.md#fork-starter-và-khởi-tạo-bài-làm).
@@ -91,6 +91,7 @@ Tạo `.env` từ file mẫu ở lần chạy đầu. Nếu đã có `.env`, ch�
 
 ```sh
 cp .env.example .env
+# Đặt BETTER_AUTH_SECRET trong .env (ít nhất 32 ký tự ngẫu nhiên), ví dụ tạo bằng: openssl rand -base64 32
 docker compose --env-file .env -p insighthub-c07-starter up --build -d --wait
 ```
 
@@ -172,7 +173,7 @@ GEMINI_API_KEY=<your-gemini-api-key>
 Khởi động bằng tên Compose project và cổng riêng để dữ liệu embedding thật tách khỏi fixture:
 
 ```sh
-API_PORT=8117 WEB_PORT=3117 docker compose --env-file .env -p insighthub-c07-real up --build -d --wait
+API_PORT=8117 WEB_PORT=3117 DB_PORT=5435 docker compose --env-file .env -p insighthub-c07-real up --build -d --wait
 ```
 
 Truy cập Web tại [localhost:3117](http://localhost:3117). API và runtime profile tương ứng ở cổng `8117`. Tải lại tài liệu vào môi trường này; vector tạo bằng fixture không dùng thay cho embedding thật. Khi dừng môi trường real, dùng cùng tên project `insighthub-c07-real`.
@@ -181,7 +182,7 @@ Truy cập Web tại [localhost:3117](http://localhost:3117). API và runtime pr
 
 ## Email local (Mailpit)
 
-Phần Auth/Email dùng mail catcher Mailpit chạy local (Compose profile `mail`, SMTP `127.0.0.1:1025`, giao diện `127.0.0.1:8025`) và adapter SMTP tối thiểu `api/app/core/mailer.py`. Starter chưa có luồng xác minh hoặc reset mật khẩu. Xem [hướng dẫn Mailpit](GETTING_STARTED.md#email-local-với-mailpit-tùy-chọn).
+Phần Auth/Email dùng mail catcher Mailpit chạy local (Compose profile `mail`, SMTP `127.0.0.1:1025`, giao diện `127.0.0.1:8025`) và adapter SMTP tối thiểu `api/app/core/mailer.py`. Starter chưa có luồng xác minh email (EML-001, việc của học viên); endpoint reset và đổi mật khẩu của Better Auth bị tắt vì là Extended. Xem [hướng dẫn Mailpit](GETTING_STARTED.md#email-local-với-mailpit-tùy-chọn).
 
 ## Cấu trúc repository
 
@@ -217,16 +218,20 @@ Chạy các lệnh từ thư mục gốc repository.
 **Backend, Web và công cụ hỗ trợ:** dùng Compose project test riêng, giữ chế độ fixture.
 
 ```sh
-make COMPOSE="docker compose --env-file .env.example -p insighthub-c07-check" test
+DB_PORT=5434 make COMPOSE="docker compose --env-file .env.example -p insighthub-c07-check" test
 ```
 
-Lệnh trên chạy backend unit/integration tests, Web typecheck/tests và tests cho công cụ hỗ trợ. Backend integration tests tạo schema riêng để kiểm tra.
+Lệnh trên chạy backend unit/integration tests, Web typecheck/tests và tests cho công cụ hỗ trợ. Backend integration tests tạo schema riêng để kiểm tra. `DB_PORT=5434` tránh trùng cổng PostgreSQL `5433` của project `insighthub-c07-starter` khi hai project chạy cùng lúc ([Runbook](docs/Runbook_Starter_v1.md#preflight)).
 
 **Smoke test:** chạy sau khi môi trường fixture ở `8107/3107` đã sẵn sàng.
 
 ```sh
 make API_URL=http://127.0.0.1:8107 WEB_URL=http://127.0.0.1:3107 smoke
 ```
+
+Từ M3.1, khi endpoint đã yêu cầu đăng nhập, đặt `INSIGHTHUB_SESSION_COOKIE` bằng `scripts/session_cookie.py` trước khi chạy smoke, eval và AEV ([Runbook](docs/Runbook_Starter_v1.md#kiem-tra-sau-khi-bao-ve-endpoint)).
+
+**Browser E2E:** khi stack fixture đang chạy, `cd web && npm run test:pw` chạy Playwright Test trong `web/e2e/`; `npm run test:e2e` là script E2E cũ của rc.3.
 
 **Tính nhất quán của tài liệu và phiên bản:**
 
@@ -235,7 +240,7 @@ python3 scripts/check_project.py
 git diff --check
 ```
 
-[App CI](.github/workflows/app-ci.yml) chạy trên push vào `main` và trên pull request. Job `governance` (không cần Docker) kiểm bảng trace, chặn thay đổi test đã duyệt thiếu trailer `Test-Change-Approved` và chạy test công cụ/hook. Job `application` build, chạy backend/web/tool tests, smoke, Playwright E2E và `npm audit`. Workflow này không kiểm version, hash tài liệu hoặc đóng gói, nên học viên được đổi version và tài liệu của bài làm. [Starter release gate](.github/workflows/starter-release.yml) chỉ chạy thủ công cho người bảo trì Starter. Kết quả CI cần xem theo đúng commit trên GitHub. Các lệnh E2E, đánh giá AI và sao lưu/khôi phục được hướng dẫn tại [Runbook](docs/Runbook_Starter_v1.md) và [Getting Started](GETTING_STARTED.md). Đóng gói Starter là việc của người bảo trì: [Release Starter](docs/maintainer/Release_Starter.md), [release checklist](docs/release/Starter_Readiness_v1.0.0.md).
+[App CI](.github/workflows/app-ci.yml) chạy trên push vào `main` và trên pull request. Job `governance` (không cần Docker) kiểm bảng trace, chặn thay đổi test đã duyệt thiếu trailer `Test-Change-Approved` và chạy test công cụ/hook. Job `application` build, chạy backend/web/tool tests, smoke, bước `eval-fixture` (chế độ báo cáo, chuyển thành bắt buộc ở LR-23), E2E cũ `test:e2e`, Playwright Test `test:pw` và `npm audit`. Workflow này không kiểm version, hash tài liệu hoặc đóng gói, nên học viên được đổi version và tài liệu của bài làm. [Starter release gate](.github/workflows/starter-release.yml) chỉ chạy thủ công cho người bảo trì Starter. Kết quả CI cần xem theo đúng commit trên GitHub. Các lệnh E2E, đánh giá AI và sao lưu/khôi phục được hướng dẫn tại [Runbook](docs/Runbook_Starter_v1.md) và [Getting Started](GETTING_STARTED.md). Đóng gói Starter là việc của người bảo trì: [Release Starter](docs/maintainer/Release_Starter.md), [readiness rc.3](docs/release/Starter_Readiness_v1.0.0.md). Checklist phát hành bài làm (LR-25): [Release Checklist Template](docs/release/Release_Checklist_Template.md).
 
 ## Giới hạn và lưu ý khi mở rộng
 
