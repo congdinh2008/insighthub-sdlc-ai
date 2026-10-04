@@ -61,15 +61,15 @@ SRS ghi rõ không coi giá trị mặc định của thư viện là đã đáp
 | LIM-07: hết hạn sau 2 giờ không hoạt động hoặc tối đa 24 giờ; thu hồi trong 60 giây | Thời hạn session và chu kỳ làm mới theo mặc định thư viện | Cấu hình idle; tự kiểm giới hạn tuyệt đối 24 giờ; API tra trạng thái session |
 | Tài khoản `PendingVerification` không truy cập dữ liệu nghiệp vụ | Scaffold để `requireEmailVerification: false` (mặc định thư viện). Chế độ bắt buộc xác minh email thường chặn đăng nhập, không có phiên hạn chế | Core: chặn dữ liệu nghiệp vụ (IH-AUTH-001-AC01). Phiên hạn chế là Extended (IH-AUTH-002-AC02) |
 | LIM-09: đếm sai theo tài khoản và IP, sliding window | Rate limit của thư viện theo cửa sổ và đường dẫn | Extended (IH-AUTH-003-AC02, IH-AUTH-006-AC02): tự xây bộ đếm |
-| LIM-19: bằng chứng mật khẩu dùng một lần, tối đa 5 phút | Đổi mật khẩu nhận mật khẩu hiện tại trong cùng request | Extended (IH-AUTH-010, IH-NFR-001-AC04, IH-NFR-011-AC02): ghi trong fit-gap cách đáp ứng khi làm |
+| LIM-19: bằng chứng mật khẩu dùng một lần, tối đa 5 phút | Đổi mật khẩu nhận mật khẩu hiện tại trong cùng request | Extended (IH-AUTH-010, IH-NFR-001-AC04, nhánh tái xác thực của IH-NFR-011-AC02): ghi trong fit-gap cách đáp ứng khi làm |
 | EML-001..005 | Có callback cho xác minh và reset (scaffold nối sẵn tới stub); không có sẵn thông báo đổi mật khẩu, hướng dẫn tài khoản chỉ dùng Google | EML-001 là Core; EML-002 (đi cùng khôi phục mật khẩu), EML-003, EML-004 (đi cùng Google) và EML-005 thuộc Extended |
 
 ## 4. Phạm vi chấm AUTH (quyết định 28/09/2026, cập nhật 04/10/2026 theo Requirements 1.3)
 
 | Tầng | AC |
 | --- | --- |
-| Core (chấm) | IH-AUTH-001-AC01/02, 002-AC01, 003-AC01, 008-AC01/02; IH-MSG-003-AC01 (D5: email EML-001), IH-MSG-003-AC02 |
-| Extended (Stretch, không trừ điểm) | IH-AUTH-002-AC02, 003-AC02, 004-AC01/02 (đăng nhập Google), 005-AC01..04 (liên kết danh tính), 006-AC01/02, 007-AC01..03 (khôi phục, đặt lại mật khẩu), 009-AC01/02 (hồ sơ), 010-AC01/02 (đổi mật khẩu); IH-NFR-001-AC04, IH-NFR-011-AC02 (tái xác thực, chặn yêu cầu giả mạo, bằng chứng cookie và CSRF); IH-MSG-003-AC03 (gồm EML-005); EML-002, EML-003, EML-004 |
+| Core (chấm) | IH-AUTH-001-AC01/02, 002-AC01, 003-AC01, 008-AC01/02; IH-MSG-003-AC01 (D5: email EML-001), IH-MSG-003-AC02; IH-NFR-011-AC02 (chặn yêu cầu giả mạo, bằng chứng cookie và CSRF; nhánh tái xác thực không áp dụng khi chưa làm Extended) |
+| Extended (Stretch, không trừ điểm) | IH-AUTH-002-AC02, 003-AC02, 004-AC01/02 (đăng nhập Google), 005-AC01..04 (liên kết danh tính), 006-AC01/02, 007-AC01..03 (khôi phục, đặt lại mật khẩu), 009-AC01/02 (hồ sơ), 010-AC01/02 (đổi mật khẩu); IH-NFR-001-AC04 (tái xác thực); IH-MSG-003-AC03 (gồm EML-005); EML-002, EML-003, EML-004 |
 
 Hành trình mặc định là email và mật khẩu. Nếu làm đăng nhập Google mà chưa làm liên kết, đăng nhập Google bằng email trùng tài khoản mật khẩu phải **bị từ chối an toàn**, không tự liên kết và không cấp phiên. Khôi phục và đổi mật khẩu là Extended từ Requirements 1.3; khi chưa làm, giao diện không hiển thị các chức năng này. Nguồn đầy đủ: cột `tier` trong [trace/ac-trace.csv](../trace/ac-trace.csv).
 

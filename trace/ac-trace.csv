@@ -157,7 +157,7 @@ IH-NFR-009-AC02,IH-NFR-009,NFR,A,Core,R1,LR-26,M5,UAT-16,docs/learner/02_SRS_Ins
 IH-NFR-010-AC01,IH-NFR-010,NFR,A,Core,R2,LR-25,M5,UAT-16,docs/learner/02_SRS_InsightHub_v1.1.md#req-ih-nfr-010,R2,,,,,Unverified,,,,,,,,NotRun,
 IH-NFR-010-AC02,IH-NFR-010,NFR,A,Core,R2,LR-25,M5,UAT-16,docs/learner/02_SRS_InsightHub_v1.1.md#req-ih-nfr-010,R2,,,,,Unverified,,,,,,,,NotRun,
 IH-NFR-011-AC01,IH-NFR-011,NFR,A,Core,R1,LR-14/LR-24,M4,"UAT-04, UAT-13, UAT-21",docs/learner/02_SRS_InsightHub_v1.1.md#req-ih-nfr-011,R1,,,,,Unverified,,,,,,,,NotRun,
-IH-NFR-011-AC02,IH-NFR-011,NFR,A,Extended,R1,LR-14/LR-24,M4,"UAT-04, UAT-13, UAT-21",docs/learner/02_SRS_InsightHub_v1.1.md#req-ih-nfr-011,R1,,,,,Unverified,,,,,,,,NotRun,
+IH-NFR-011-AC02,IH-NFR-011,NFR,A,Core,R1,LR-14/LR-24,M4,"UAT-04, UAT-13, UAT-21",docs/learner/02_SRS_InsightHub_v1.1.md#req-ih-nfr-011,R1,,,,,Unverified,,,,,,,,NotRun,
 IH-REL-001-AC01,IH-REL-001,REL,D4,Core,R2,LR-25,M5,"UAT-01, UAT-21",docs/learner/02_SRS_InsightHub_v1.1.md#req-ih-rel-001,R2,,,,,Unverified,,,,,,,,NotRun,
 IH-REL-001-AC02,IH-REL-001,REL,A,Core,R1,LR-25,M5,"UAT-01, UAT-21",docs/learner/02_SRS_InsightHub_v1.1.md#req-ih-rel-001,R1,,,,,Unverified,,,,,,,,NotRun,
 IH-REL-002-AC01,IH-REL-002,REL,A,Core,R3,LR-25/LR-26,M5,UAT-16,docs/learner/02_SRS_InsightHub_v1.1.md#req-ih-rel-002,R3,,,,,Unverified,,,,,,,,NotRun,

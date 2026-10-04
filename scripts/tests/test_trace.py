@@ -45,8 +45,8 @@ class TraceTests(unittest.TestCase):
 
     def test_core_list_is_published(self):
         applied = [r for r in self.rows if r["scope"] != "N"]
-        self.assertEqual(sum(r["tier"] == "Core" for r in applied), 91)
-        self.assertEqual(sum(r["tier"] == "Extended" for r in applied), 62)
+        self.assertEqual(sum(r["tier"] == "Core" for r in applied), 92)
+        self.assertEqual(sum(r["tier"] == "Extended" for r in applied), 61)
         self.assertFalse(any(r["tier"] == "Pending" for r in applied))
         self.assertTrue(all(r["tier"] == "Extended" for r in applied if r["group"] == "NOTE"))
         self.assertEqual(self.row("IH-QUIZ-002-AC01")["tier"], "Core")
@@ -57,6 +57,8 @@ class TraceTests(unittest.TestCase):
         # Requirements 1.3: LIM-10 cho Summary, Quiz (D8); đường truy cập cũ chỉ áp dụng tài liệu đã xóa (D9).
         self.assertEqual((self.row("IH-INT-004-AC02")["tier"], self.row("IH-INT-004-AC02")["scope"]), ("Core", "D8"))
         self.assertEqual((self.row("IH-DATA-002-AC04")["tier"], self.row("IH-DATA-002-AC04")["scope"]), ("Core", "D9"))
+        # Chặn yêu cầu giả mạo, cookie và CSRF giữ Core (quyết định 04/10/2026 sau review Requirements 1.3).
+        self.assertEqual(self.row("IH-NFR-011-AC02")["tier"], "Core")
         # Xóa tài liệu giữ Core (LR-21, LR-22 kiểm nguồn đã xóa).
         self.assertEqual(self.row("IH-DOC-006-AC01")["tier"], "Core")
 

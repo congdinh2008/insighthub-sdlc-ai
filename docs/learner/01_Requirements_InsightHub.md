@@ -7,7 +7,7 @@ Tài liệu xác định các chức năng InsightHub học viên phải xây, c
 
 > **Thay đổi so với bản 1.2 (04/10/2026):**
 >
-> - Phạm vi: 15 AC Core chuyển Extended, gồm khôi phục, đặt lại, đổi mật khẩu và hồ sơ, xóa Notebook và xóa kết quả AI, chặn công bố câu trả lời Chat và trạng thái tác vụ khi nguồn đổi giữa chừng, đo 10 thao tác không gọi AI. Core còn 91 AC, email tầng Core còn EML-001 (mục 1.1, 2.1.5).
+> - Phạm vi: 14 AC Core chuyển Extended, gồm khôi phục, đặt lại, đổi mật khẩu và hồ sơ, xóa Notebook và xóa kết quả AI, chặn công bố câu trả lời Chat và trạng thái tác vụ khi nguồn đổi giữa chừng, đo 10 thao tác không gọi AI. Core còn 92 AC, email tầng Core còn EML-001 (mục 1.1, 2.1.5).
 > - Chat giữ cơ chế operation của Starter, không chuyển vào AI Job scaffold. LIM-10 áp dụng cho Tóm tắt và Quiz (mã D8). Thêm mã D9 cho đường truy cập cũ của tài liệu đã xóa (mục 15.1).
 > - Gọn đầu ra ở các LR: backlog 8 đến 10 issue, một ADR hai phương án, 19 UAT tầng Core, bốn ca hardening, review bất đồng bộ một lần ở M2. Không bỏ LR nào (mục 3 đến 12).
 > - Tự học khoảng 59 giờ, đã gồm Quiz và bản chuẩn bị. Học theo nhịp "đi trước một buổi" với nhịp tuần mẫu (mục 1.3, 2.1).
@@ -69,7 +69,7 @@ Học viên hoàn thiện mỗi nhóm chức năng qua các phần UI, API và d
 
 Starter `learner-r1.3` cung cấp Next.js, FastAPI, PostgreSQL/pgvector, Docker Compose, ingestion, embedding/index, RAG cơ bản, dữ liệu mẫu và công cụ kiểm, cùng ba phần nền: **Auth scaffold**, **AI Job scaffold** và **nền UI**. Các scaffold chỉ là cơ chế dùng chung, không chứa nghiệp vụ và không làm AC nào tự đạt. Starter được cấp một lần trước buổi 1; trong khóa chỉ có hotfix cho lỗi chặn theo [mục 2.9](#chinh-sach-thay-doi). Học viên kiểm lại các phần này sau khi tích hợp; kết quả của Starter không tự xác nhận phần mở rộng đã đạt.
 
-[SRS InsightHub v1.1](02_SRS_InsightHub_v1.1.md) là spec (đặc tả) hành vi sản phẩm. Bài tập áp dụng **153 AC** cho phạm vi trên, gồm **91 AC Core** và **62 AC Extended**; [bảng phạm vi](#pham-vi-truy-vet) chỉ rõ 12 tiêu chí ngoài phạm vi bắt buộc. Các AC áp dụng được phân tầng Core và Extended theo [mục 2.1.5](#core-extended). Mindmap, Slide và Báo cáo không bắt buộc. Không yêu cầu triển khai hạ tầng cloud cho vận hành thực tế hoặc Kubernetes.
+[SRS InsightHub v1.1](02_SRS_InsightHub_v1.1.md) là spec (đặc tả) hành vi sản phẩm. Bài tập áp dụng **153 AC** cho phạm vi trên, gồm **92 AC Core** và **61 AC Extended**; [bảng phạm vi](#pham-vi-truy-vet) chỉ rõ 12 tiêu chí ngoài phạm vi bắt buộc. Các AC áp dụng được phân tầng Core và Extended theo [mục 2.1.5](#core-extended). Mindmap, Slide và Báo cáo không bắt buộc. Không yêu cầu triển khai hạ tầng cloud cho vận hành thực tế hoặc Kubernetes.
 
 Phần [thiết kế dữ liệu và API](#data-api) xác định đầu ra cần thực hiện và cách tích hợp Starter. Tra [glossary](#glossary) để phân biệt các thuật ngữ như test case, test scenario, schema và migration.
 
@@ -222,12 +222,12 @@ Khi review, dùng hồ sơ hiện có để trả lời: yêu cầu nào chi ph�
 
 #### 2.1.5. Phân tầng AC Core và Extended (D7)
 
-AC áp dụng được chia hai tầng để học viên tập trung vào sản phẩm cốt lõi và vừa ngân sách tự học. **Danh sách công bố ngày 29/09/2026, cập nhật ngày 04/10/2026** (Requirements 1.2: Google sang Extended, thêm IH-AI-005, IH-UX-003-AC01 lên Core với phạm vi D6; Requirements 1.3: 15 AC chuyển Extended, thêm mã D8, D9), có hiệu lực từ M1; cột `tier` trong `trace/ac-trace.csv` và cột Tầng tại [mục 15.4](#pham-vi-truy-vet) ghi tầng của từng AC.
+AC áp dụng được chia hai tầng để học viên tập trung vào sản phẩm cốt lõi và vừa ngân sách tự học. **Danh sách công bố ngày 29/09/2026, cập nhật ngày 04/10/2026** (Requirements 1.2: Google sang Extended, thêm IH-AI-005, IH-UX-003-AC01 lên Core với phạm vi D6; Requirements 1.3: 14 AC chuyển Extended, thêm mã D8, D9), có hiệu lực từ M1; cột `tier` trong `trace/ac-trace.csv` và cột Tầng tại [mục 15.4](#pham-vi-truy-vet) ghi tầng của từng AC.
 
 | Tầng | Ý nghĩa | Cách chấm |
 | --- | --- | --- |
-| **Core (91 AC)** | Auth email và mật khẩu ở mức đăng ký, xác minh, đăng nhập, phiên và đăng xuất, Notebook (gồm Document, Chat/Conversation), Summary, Quiz, phần AI Job/Output để hai công cụ chạy (gồm fallback và usage IH-AI-005), bàn phím và focus trên hành trình M3.1 và màn làm Quiz, cùng yêu cầu bảo mật, dữ liệu, kiểm chứng và phát hành cần cho M4, M5. Trong đó khoảng 20 AC Starter đã có sẵn, học viên chỉ cần kiểm lại sau khi tích hợp. | Được chấm trong rubric chức năng M3, M4 và Capstone. |
-| **Extended (62 AC)** | Khôi phục, đặt lại, đổi mật khẩu và tái xác thực, hồ sơ, Note, xóa Notebook, quản lý kết quả AI (xóa, đổi tên, tạo lại), đăng nhập và liên kết Google và các nhánh tài khoản nâng cao, EML-002 đến EML-005, version conflict, chặn công bố câu trả lời Chat khi nguồn đổi giữa chừng, đo 10 thao tác không gọi AI, các yêu cầu UX, thông báo và contract test mở rộng. Làm khi phần Core đã đạt. | Không trừ điểm khi chưa làm. Nếu làm, ghi evidence như Core; nếu chưa làm, traceability matrix ghi `Extended-NotDone`, không ghi đạt. |
+| **Core (92 AC)** | Auth email và mật khẩu ở mức đăng ký, xác minh, đăng nhập, phiên và đăng xuất, Notebook (gồm Document, Chat/Conversation), Summary, Quiz, phần AI Job/Output để hai công cụ chạy (gồm fallback và usage IH-AI-005), bàn phím và focus trên hành trình M3.1 và màn làm Quiz, cùng yêu cầu bảo mật, dữ liệu, kiểm chứng và phát hành cần cho M4, M5. Trong đó khoảng 20 AC Starter đã có sẵn, học viên chỉ cần kiểm lại sau khi tích hợp. | Được chấm trong rubric chức năng M3, M4 và Capstone. |
+| **Extended (61 AC)** | Khôi phục, đặt lại, đổi mật khẩu và tái xác thực, hồ sơ, Note, xóa Notebook, quản lý kết quả AI (xóa, đổi tên, tạo lại), đăng nhập và liên kết Google và các nhánh tài khoản nâng cao, EML-002 đến EML-005, version conflict, chặn công bố câu trả lời Chat khi nguồn đổi giữa chừng, đo 10 thao tác không gọi AI, các yêu cầu UX, thông báo và contract test mở rộng. Làm khi phần Core đã đạt. | Không trừ điểm khi chưa làm. Nếu làm, ghi evidence như Core; nếu chưa làm, traceability matrix ghi `Extended-NotDone`, không ghi đạt. |
 
 **Danh sách AC Extended:**
 
@@ -245,11 +245,11 @@ AC áp dụng được chia hai tầng để học viên tập trung vào sản 
 | DATA | DATA-001-AC01, DATA-001-AC03, DATA-001-AC05, DATA-001-AC06, DATA-002-AC02 |
 | UX | UX-001-AC02, UX-002-AC02, UX-003-AC02, UX-004-AC01 |
 | INT | INT-001-AC01, INT-001-AC02, INT-004-AC01 |
-| NFR | NFR-001-AC04, NFR-006-AC01, NFR-006-AC02, NFR-011-AC02 |
+| NFR | NFR-001-AC04, NFR-006-AC01, NFR-006-AC02 |
 
 - Mọi AC áp dụng không có trong bảng trên thuộc Core. Khi checklist ở các milestone mô tả một phần thuộc Extended, bảng này có hiệu lực.
 - M2.1 và M2 phân tích và thiết kế phần Core; phần Extended chỉ cần ghi giả định và điểm mở rộng. Không thiết kế chi tiết Note, quản lý Output, khôi phục mật khẩu hay xóa Notebook nếu không làm.
-- Khôi phục, đặt lại và đổi mật khẩu cùng tái xác thực (IH-AUTH-006-AC01, IH-AUTH-007-AC01, IH-AUTH-007-AC02, IH-AUTH-010, IH-NFR-001-AC04), hồ sơ (IH-AUTH-009) và EML-002 là Extended. IH-NFR-011-AC02 (bằng chứng tái xác thực, chặn yêu cầu giả mạo và bằng chứng cấu hình cookie, CSRF) là Extended; UAT-21 tầng Core kiểm IH-NFR-011-AC01. Cấu hình cookie của Auth scaffold vẫn giữ, không nới. Khi chưa làm, giao diện không hiển thị các chức năng này và traceability matrix ghi `Extended-NotDone`; chống lộ tài khoản ở đăng nhập (IH-NFR-001-AC05) vẫn Core.
+- Khôi phục, đặt lại và đổi mật khẩu cùng tái xác thực (IH-AUTH-006-AC01, IH-AUTH-007-AC01, IH-AUTH-007-AC02, IH-AUTH-010, IH-NFR-001-AC04), hồ sơ (IH-AUTH-009) và EML-002 là Extended. IH-NFR-011-AC02 giữ Core cho phần chặn yêu cầu thay đổi dữ liệu giả mạo và bằng chứng cấu hình cookie, CSRF (UAT-21); nhánh bằng chứng tái xác thực của AC này ghi "không áp dụng khi chưa làm Extended". Không nới cấu hình cookie của Auth scaffold. Khi chưa làm, giao diện không hiển thị các chức năng này và traceability matrix ghi `Extended-NotDone`; chống lộ tài khoản ở đăng nhập (IH-NFR-001-AC05) vẫn Core.
 - Đăng nhập Google và liên kết danh tính là Extended. Khi không làm, ứng dụng không hiển thị đăng nhập Google. Nếu làm đăng nhập Google mà chưa làm liên kết, email trùng tài khoản có mật khẩu phải bị từ chối an toàn, không tự liên kết và không cấp phiên (IH-AUTH-005-AC02). Hướng dẫn thư viện và fit-gap tại [Auth Integration Guide](../Auth_Integration_Guide.md).
 - Email tầng Core là EML-001 (mã D5, mục 15.1). EML-002 đi cùng khôi phục mật khẩu, EML-004 đi cùng đăng nhập Google nên thuộc Extended.
 - Xóa tài liệu (IH-DOC-006-AC01) vẫn Core vì LR-21, LR-22 kiểm nguồn đã xóa và dữ liệu cũ; IH-DATA-002-AC04 áp dụng cho tài liệu đã xóa (mã D9). Xóa Notebook, xóa kết quả AI kèm lần làm Quiz và xóa dữ liệu phụ thuộc (IH-NB-003, IH-OUT-003-AC01, IH-DATA-002-AC02) là Extended.
@@ -1682,7 +1682,7 @@ Cột mốc ghi thời điểm hoàn thiện và kiểm tổng hợp của AC. P
 | IH-NFR-010 | IH-NFR-010-AC01 | A | Core | LR-25 | M5 | UAT-16 |
 | IH-NFR-010 | IH-NFR-010-AC02 | A | Core | LR-25 | M5 | UAT-16 |
 | IH-NFR-011 | IH-NFR-011-AC01 | A | Core | LR-14/LR-24 | M4 | UAT-04, UAT-13, UAT-21 |
-| IH-NFR-011 | IH-NFR-011-AC02 | A | Extended | LR-14/LR-24 | M4 | UAT-04, UAT-13, UAT-21 |
+| IH-NFR-011 | IH-NFR-011-AC02 | A | Core | LR-14/LR-24 | M4 | UAT-04, UAT-13, UAT-21 |
 | IH-REL-001 | IH-REL-001-AC01 | D4 | Core | LR-25 | M5 | UAT-01, UAT-21 |
 | IH-REL-001 | IH-REL-001-AC02 | A | Core | LR-25 | M5 | UAT-01, UAT-21 |
 | IH-REL-002 | IH-REL-002-AC01 | A | Core | LR-25/LR-26 | M5 | UAT-16 |
