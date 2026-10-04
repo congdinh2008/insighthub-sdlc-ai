@@ -6,8 +6,8 @@
 
 | Nhóm | Cột | Ý nghĩa |
 | --- | --- | --- |
-| Giảng viên cấp | `ac_id`, `req_id`, `group`, `scope`, `lr`, `due`, `uat`, `srs_ref` | Lấy từ Requirements mục 15.4; không sửa. `scope` là mã A, D1-D6, N tại Requirements mục 15.1 |
-| Giảng viên cấp | `tier` | `Core` (chấm, 106 AC), `Extended` (Stretch, 47 AC), `OutOfScope` (12 AC). Tầng công bố 29/09/2026, cập nhật 04/10/2026 theo Requirements 1.2 và SRS v1.1. `Pending` chỉ dùng khi giảng viên chưa công bố tầng |
+| Giảng viên cấp | `ac_id`, `req_id`, `group`, `scope`, `lr`, `due`, `uat`, `srs_ref` | Lấy từ Requirements mục 15.4; không sửa. `scope` là mã A, D1 đến D9 (trừ D7), N tại Requirements mục 15.1 |
+| Giảng viên cấp | `tier` | `Core` (chấm, 91 AC), `Extended` (Stretch, 62 AC), `OutOfScope` (12 AC). Tầng công bố 29/09/2026, cập nhật 04/10/2026 theo Requirements 1.3 và SRS v1.1. `Pending` chỉ dùng khi giảng viên chưa công bố tầng |
 | Giảng viên cấp | `risk_suggested` | Mức rủi ro gợi ý R1/R2/R3 |
 | Học viên | `risk`, `risk_reason` | Mức rủi ro áp dụng; hạ mức so với gợi ý phải ghi lý do |
 | Học viên | `branches`, `expected` | Nhánh cần kiểm, input và expected result theo SRS |
@@ -29,7 +29,7 @@
 
 | Mốc | Việc | Lệnh |
 | --- | --- | --- |
-| M2.1 LR-08 | Skill `ac-drafter` viết nháp `branches`/`expected` cho AC áp dụng, ghi `draft_by=AI`. Kiểm 100% AC của hành trình M3.1. Phân tích sâu 1-2 AC kèm Gherkin. Lấy mẫu phần còn lại | `python3 scripts/trace_sample.py --seed <mã học viên + ngày> --size 10` |
+| M2.1 LR-08 | Skill `ac-drafter` viết nháp `branches`/`expected` cho AC áp dụng, ghi `draft_by=AI`. Kiểm 100% AC R1 của hành trình M3.1; AC R2 của hành trình kiểm đúng lúc trong DoD của PR. Phân tích sâu 1-2 AC kèm Gherkin. Lấy mẫu phần còn lại | `python3 scripts/trace_sample.py --seed <mã học viên + ngày> --size 10` |
 | M2.1 LR-08 | Ghi `result` OK/Error cho từng dòng mẫu; đánh giá. Tỷ lệ lỗi từ 20% trở lên: sửa context pack hoặc prompt của skill, sinh lại nhóm lỗi, lấy mẫu vòng mới. Ghi tỷ lệ lỗi vào Delivery Log | `python3 scripts/trace_sample.py --evaluate` |
 | M3.1-M3 | Trước khi giao agent một task: chuyển AC R1/R2 của task sang `Human-verified` (mục DoD của PR) | `python3 scripts/trace_check.py` |
 | M4 LR-20 | Kết luận từng AC Core đến hạn | `python3 scripts/trace_check.py --gate M4` |

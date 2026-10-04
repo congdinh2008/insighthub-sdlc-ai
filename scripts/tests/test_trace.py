@@ -1,5 +1,6 @@
 import csv
 import io
+import re
 import sys
 import tempfile
 import unittest
@@ -9,7 +10,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import trace_check  # noqa: E402
 import trace_sample  # noqa: E402
-from trace_lib import TRACE, read_rows, requirement_scopes, write_rows  # noqa: E402
+from trace_lib import REQUIREMENTS, TRACE, read_rows, requirement_scopes, write_rows  # noqa: E402
 
 
 class TraceTests(unittest.TestCase):
@@ -33,15 +34,19 @@ class TraceTests(unittest.TestCase):
     def test_auth_tiers_follow_decision(self):
         auth = [r for r in self.rows if r["group"] == "AUTH"]
         # Requirements 1.2: đăng nhập Google và liên kết danh tính là Extended (quyết định 04/10/2026).
-        self.assertEqual(sum(r["tier"] == "Core" for r in auth), 12)
+        # Requirements 1.3: khôi phục, đặt lại, đổi mật khẩu và hồ sơ là Extended (cân tải 04/10/2026).
+        self.assertEqual(sum(r["tier"] == "Core" for r in auth), 6)
         self.assertEqual(self.row("IH-AUTH-003-AC02")["tier"], "Extended")
         for ac in ("IH-AUTH-004-AC01", "IH-AUTH-004-AC02", "IH-AUTH-005-AC02"):
+            self.assertEqual(self.row(ac)["tier"], "Extended")
+        for ac in ("IH-AUTH-006-AC01", "IH-AUTH-007-AC01", "IH-AUTH-007-AC02", "IH-AUTH-009-AC01",
+                   "IH-AUTH-010-AC01", "IH-AUTH-010-AC02"):
             self.assertEqual(self.row(ac)["tier"], "Extended")
 
     def test_core_list_is_published(self):
         applied = [r for r in self.rows if r["scope"] != "N"]
-        self.assertEqual(sum(r["tier"] == "Core" for r in applied), 106)
-        self.assertEqual(sum(r["tier"] == "Extended" for r in applied), 47)
+        self.assertEqual(sum(r["tier"] == "Core" for r in applied), 91)
+        self.assertEqual(sum(r["tier"] == "Extended" for r in applied), 62)
         self.assertFalse(any(r["tier"] == "Pending" for r in applied))
         self.assertTrue(all(r["tier"] == "Extended" for r in applied if r["group"] == "NOTE"))
         self.assertEqual(self.row("IH-QUIZ-002-AC01")["tier"], "Core")
@@ -49,6 +54,22 @@ class TraceTests(unittest.TestCase):
         for ac in ("IH-AI-005-AC01", "IH-AI-005-AC02"):
             self.assertEqual((self.row(ac)["tier"], self.row(ac)["risk_suggested"]), ("Core", "R2"))
         self.assertEqual((self.row("IH-UX-003-AC01")["tier"], self.row("IH-UX-003-AC01")["scope"]), ("Core", "D6"))
+        # Requirements 1.3: LIM-10 cho Summary, Quiz (D8); đường truy cập cũ chỉ áp dụng tài liệu đã xóa (D9).
+        self.assertEqual((self.row("IH-INT-004-AC02")["tier"], self.row("IH-INT-004-AC02")["scope"]), ("Core", "D8"))
+        self.assertEqual((self.row("IH-DATA-002-AC04")["tier"], self.row("IH-DATA-002-AC04")["scope"]), ("Core", "D9"))
+        # Xóa tài liệu giữ Core (LR-21, LR-22 kiểm nguồn đã xóa).
+        self.assertEqual(self.row("IH-DOC-006-AC01")["tier"], "Core")
+
+    def test_requirements_publish_same_tiers(self):
+        text = REQUIREMENTS.read_text(encoding="utf-8")
+        table = dict(re.findall(r"^\| IH-[A-Z]+-\d{3} \| (IH-[A-Z]+-\d{3}-AC\d{2}) \| (?:A|D\d|N) \| ([^|]+?) \|", text, re.M))
+        self.assertEqual(len(table), 165)
+        for r in self.rows:
+            expected = "Ngoài phạm vi" if r["tier"] == "OutOfScope" else r["tier"]
+            self.assertEqual(table[r["ac_id"]], expected, r["ac_id"])
+        section = text.split('<a id="core-extended"></a>', 1)[1].split('<a id="ai-kit"></a>', 1)[0]
+        listed = {"IH-" + ac for ac in re.findall(r"\b([A-Z]+-\d{3}-AC\d{2})\b", section.split("**Danh sách AC Extended:**", 1)[1].split("\n\n- ", 1)[0])}
+        self.assertEqual(listed, {r["ac_id"] for r in self.rows if r["tier"] == "Extended"})
 
     def test_passed_requires_commit_evidence_and_verification(self):
         self.row("IH-NB-004-AC01")["verdict"] = "Passed"

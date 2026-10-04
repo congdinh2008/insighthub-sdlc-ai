@@ -62,9 +62,9 @@ def main():
     mapped = set(re.findall(r'\| `?(IH-[A-Z]+-\d{3})`? \|', mapping))
     assert requirements == mapped and len(requirements) == 73, 'Incomplete requirement mapping'
     assert acceptance <= set(re.findall(r'IH-[A-Z]+-\d{3}-AC\d{2}', mapping)) and len(acceptance) == 165, 'Incomplete AC mapping'
-    rows = re.findall(r'^\| (IH-[A-Z]+-\d{3}) \| (IH-[A-Z]+-\d{3}-AC\d{2}) \| (A|D[1-6]|N) \|', mapping, re.M)
+    rows = re.findall(r'^\| (IH-[A-Z]+-\d{3}) \| (IH-[A-Z]+-\d{3}-AC\d{2}) \| (A|D[1-9]|N) \|', mapping, re.M)
     assert len(rows) == 165 and {row[1] for row in rows} == acceptance, 'Incomplete AC table'
-    assert {scope: sum(row[2] == scope for row in rows) for scope in ['A', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'N']} == {'A': 136, 'D1': 9, 'D2': 3, 'D3': 2, 'D4': 1, 'D5': 1, 'D6': 1, 'N': 12}, 'Assignment scope drift'
+    assert {scope: sum(row[2] == scope for row in rows) for scope in ['A', 'D1', 'D2', 'D3', 'D4', 'D5', 'D6', 'D7', 'D8', 'D9', 'N']} == {'A': 134, 'D1': 9, 'D2': 3, 'D3': 2, 'D4': 1, 'D5': 1, 'D6': 1, 'D7': 0, 'D8': 1, 'D9': 1, 'N': 12}, 'Assignment scope drift'
     assert re.findall(r'<a id="lr-(\d+)">', mapping) == [f'{i:02}' for i in range(1, 30)], 'Learning task drift'
     broken = []
     markdown = list(ROOT.glob('*.md'))
