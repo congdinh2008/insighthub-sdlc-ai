@@ -19,6 +19,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
+          # Kiểm đúng commit của PR, không kiểm merge commit tạm (refs/pull/N/merge) vốn không có trailer.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Trace consistency
         run: python3 scripts/trace_check.py
       - name: Approved tests changed only with trailer

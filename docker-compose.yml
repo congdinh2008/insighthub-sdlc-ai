@@ -24,6 +24,8 @@ services:
       CORS_ORIGINS: '["http://localhost:${WEB_PORT:-3107}","http://127.0.0.1:${WEB_PORT:-3107}"]'
       DATABASE_URL: postgresql://insighthub:insighthub@postgres:5432/insighthub
       RAG_MODE: ${RAG_MODE:-fixture}
+      # Giả lập lỗi provider ở chế độ fixture, ví dụ deepseek:timeout (docs/AI_Job_Framework.md mục 6).
+      AI_FIXTURE_FAULTS: ${AI_FIXTURE_FAULTS:-}
       RAG_PROFILE: ${RAG_PROFILE:-}
       LLM_PROVIDER: ${LLM_PROVIDER:-}
       EMBEDDING_PROVIDER: ${EMBEDDING_PROVIDER:-}

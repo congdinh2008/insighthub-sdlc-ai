@@ -10,12 +10,17 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import trace_check  # noqa: E402
 import trace_sample  # noqa: E402
-from trace_lib import REQUIREMENTS, TRACE, read_rows, requirement_scopes, write_rows  # noqa: E402
+from trace_lib import INSTRUCTOR_COLUMNS, REQUIREMENTS, TRACE, read_rows, requirement_scopes, write_rows  # noqa: E402
+
+# Skeleton giảng viên cấp, chụp lại ở bản phát hành. Test công cụ chạy trên bản này để không fail khi học viên
+# điền dần trace/ac-trace.csv (đổi risk có lý do, Human-verified, verdict). Khi giảng viên đổi tầng hoặc rủi ro
+# theo Requirements mục 2.9, cập nhật cả trace/ac-trace.csv và file này.
+SKELETON = Path(__file__).resolve().parent / "fixtures" / "ac-trace.skeleton.csv"
 
 
 class TraceTests(unittest.TestCase):
     def setUp(self):
-        self.fields, self.rows = read_rows(TRACE)
+        self.fields, self.rows = read_rows(SKELETON)
         self.scopes = requirement_scopes()
 
     def row(self, ac):
@@ -112,8 +117,8 @@ class TraceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             log = Path(tmp) / "log.csv"
             with redirect_stdout(io.StringIO()):
-                trace_sample.main(["--seed", "7", "--log", str(log)])
-                trace_sample.main(["--seed", "8", "--log", str(log)])
+                trace_sample.main(["--file", str(SKELETON), "--seed", "7", "--log", str(log)])
+                trace_sample.main(["--file", str(SKELETON), "--seed", "8", "--log", str(log)])
             rounds = {r["round"] for r in csv.DictReader(log.open(encoding="utf-8"))}
             self.assertEqual(rounds, {"1", "2"})
 
@@ -124,6 +129,17 @@ class TraceTests(unittest.TestCase):
             write_rows(path, fields, [{k: r[k] for k in fields} for r in self.rows])
             with redirect_stdout(io.StringIO()):
                 self.assertEqual(trace_check.main(["--file", str(path)]), 1)
+
+
+    def test_live_trace_keeps_instructor_columns(self):
+        # trace/ac-trace.csv của bài làm: học viên chỉ điền cột bên phải, cột giảng viên cấp giữ nguyên.
+        fields, live = read_rows(TRACE)
+        self.assertEqual(fields[:len(INSTRUCTOR_COLUMNS)], INSTRUCTOR_COLUMNS)
+        skeleton = {r["ac_id"]: r for r in self.rows}
+        self.assertEqual(sorted(r["ac_id"] for r in live), sorted(skeleton))
+        for r in live:
+            for column in INSTRUCTOR_COLUMNS:
+                self.assertEqual(r[column], skeleton[r["ac_id"]][column], f"{r['ac_id']}: cột {column} do giảng viên cấp")
 
 
 if __name__ == "__main__":
