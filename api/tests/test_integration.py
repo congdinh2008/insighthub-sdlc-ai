@@ -516,6 +516,50 @@ class IntegrationTests(unittest.TestCase):
             self.assertEqual(conn.execute("SELECT status,error_code FROM ingestion_attempts").fetchone(), ("failed", "interrupted"))
             self.assertEqual(conn.execute("SELECT status,error_code,http_status FROM operation_records").fetchone(), ("failed", "interrupted", 500))
 
+    def _auth_session(self, *, expires_in="1 hour", email=None):
+        email = email or f"user-{uuid.uuid4().hex[:8]}@insighthub.test"
+        token = uuid.uuid4().hex
+        with psycopg.connect(self.dsn, options=f"-csearch_path={self.schema},public") as conn:
+            user_id = conn.execute(
+                "INSERT INTO auth_user(name,email,email_verified) VALUES('Test',%s,true) RETURNING id::text", (email,)
+            ).fetchone()[0]
+            conn.execute(
+                "INSERT INTO auth_session(expires_at,token,updated_at,user_id) VALUES(now()+%s::interval,%s,now(),%s)",
+                (expires_in, token, user_id),
+            )
+        return user_id, token
+
+    @staticmethod
+    def _signed(token, secret):
+        import base64, hashlib, hmac
+        signature = base64.b64encode(hmac.new(secret.encode(), token.encode(), hashlib.sha256).digest()).decode()
+        from urllib.parse import quote
+        return quote(f"{token}.{signature}", safe="")
+
+    def test_auth_me_requires_valid_session(self):
+        self.assertEqual(self.client.get("/auth/me").status_code, 401)
+        user_id, token = self._auth_session()
+        with patch.dict(os.environ, {"BETTER_AUTH_SECRET": "test-secret"}):
+            cookie = {"insighthub.session_token": self._signed(token, "test-secret")}
+            ok = self.client.get("/auth/me", cookies=cookie)
+            self.assertEqual(ok.status_code, 200, ok.text)
+            self.assertEqual(ok.json()["id"], user_id)
+            forged = self.client.get("/auth/me", cookies={"insighthub.session_token": self._signed(token, "other-secret")})
+            self.assertEqual(forged.status_code, 401)
+            self.assertEqual(forged.json()["code"], "not_authenticated")
+
+    def test_auth_me_rejects_expired_and_revoked_sessions(self):
+        _, expired = self._auth_session(expires_in="-1 minute")
+        with patch.dict(os.environ, {"BETTER_AUTH_SECRET": "test-secret"}):
+            response = self.client.get("/auth/me", cookies={"insighthub.session_token": self._signed(expired, "test-secret")})
+            self.assertEqual(response.status_code, 401)
+            _, token = self._auth_session()
+            cookie = {"insighthub.session_token": self._signed(token, "test-secret")}
+            self.assertEqual(self.client.get("/auth/me", cookies=cookie).status_code, 200)
+            with psycopg.connect(self.dsn, options=f"-csearch_path={self.schema},public") as conn:
+                conn.execute("DELETE FROM auth_session WHERE token=%s", (token,))
+            self.assertEqual(self.client.get("/auth/me", cookies=cookie).status_code, 401)
+
     def test_mcp_readonly_role_reads_documents_but_cannot_write(self):
         with psycopg.connect(self.dsn, options=f"-csearch_path={self.schema},public") as conn:
             conn.execute("SET ROLE insighthub_readonly")

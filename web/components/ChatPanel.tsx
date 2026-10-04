@@ -3,6 +3,9 @@ import { useCallback, useEffect, useState } from "react";
 import type { ChatResult, Document } from "@/lib/api";
 import { beginOperation, pendingOperations, reconcileOperation, sendOperation, operationError, type OperationResult } from "@/lib/operations";
 import SourceView from "./SourceView";
+import { scopedKey } from "@/lib/client-state";
+
+const SOURCES_KEY = scopedKey("sources.v1");
 
 export default function ChatPanel() {
   const [question, setQuestion] = useState("");
@@ -36,7 +39,7 @@ export default function ChatPanel() {
 
   useEffect(() => {
     let active = true;
-    try { setSelected(JSON.parse(sessionStorage.getItem("insighthub.sources.v1") || "[]")); } catch { /* Empty selection. */ }
+    try { setSelected(JSON.parse(sessionStorage.getItem(SOURCES_KEY) || "[]")); } catch { /* Empty selection. */ }
     const load = async () => {
       try {
         const res = await fetch("/api/documents", { cache: "no-store" });
@@ -57,7 +60,7 @@ export default function ChatPanel() {
   function select(id: number, checked: boolean) {
     const next = checked ? [...selected, id] : selected.filter(item => item !== id);
     setSelected(next);
-    try { sessionStorage.setItem("insighthub.sources.v1", JSON.stringify(next)); } catch { /* Selection remains in memory. */ }
+    try { sessionStorage.setItem(SOURCES_KEY, JSON.stringify(next)); } catch { /* Selection remains in memory. */ }
   }
 
   async function ask() {

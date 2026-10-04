@@ -3,7 +3,7 @@ PYTHON ?= python3
 API_URL ?= http://127.0.0.1:8107
 WEB_URL ?= http://127.0.0.1:3107
 
-.PHONY: mcp-role mcp-check trace-check trace-sample eval ai-bom delivery-report up down build test test-db test-backend test-web test-tools test-e2e test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
+.PHONY: seed-users mcp-role mcp-check trace-check trace-sample eval ai-bom delivery-report up down build test test-db test-backend test-web test-tools test-e2e test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
 up:
 	$(COMPOSE) up --build -d --wait
 
@@ -62,7 +62,7 @@ aev:
 	$(PYTHON) scripts/run_aev.py --api-url "$(API_URL)"
 
 backup-restore-check:
-	$(PYTHON) scripts/backup_restore_check.py --project "$${COMPOSE_PROJECT_NAME:?Set COMPOSE_PROJECT_NAME}" --env-file "$${ENV_FILE:-.env.example}"
+	$(PYTHON) scripts/backup_restore_check.py --project "$${COMPOSE_PROJECT_NAME:?Set COMPOSE_PROJECT_NAME}" --env-file "$${ENV_FILE:-$$([ -f .env ] && echo .env || echo .env.example)}"
 
 # AI Engineering Kit (docs/ai/README.md)
 trace-check:
@@ -96,3 +96,7 @@ mcp-role:
 
 mcp-check:
 	uv run --no-project --python 3.12 --with mcp==2.2.0 --with "psycopg[binary]==3.3.5" tools/mcp/insighthub_db_readonly.py --check
+
+# Auth scaffold: tạo tài khoản thử A và B đã xác minh (cần stack đang chạy).
+seed-users:
+	$(PYTHON) scripts/seed_auth_users.py --web-url "$(WEB_URL)" --compose "$(COMPOSE)"

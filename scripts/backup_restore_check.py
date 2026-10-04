@@ -34,7 +34,7 @@ def resolve_tables(extra=None, environ=None):
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--project',required=True)
-    parser.add_argument('--env-file',default='.env.example')
+    parser.add_argument('--env-file',default='.env' if (ROOT/'.env').exists() else '.env.example')
     parser.add_argument('--output-dir',default='reports/backup-restore')
     parser.add_argument('--keep-backup',action='store_true')
     parser.add_argument('--extra-tables',default=None,help=f'Comma-separated extra tables to fingerprint (default: ${EXTRA_TABLES_ENV})')

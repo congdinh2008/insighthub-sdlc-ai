@@ -108,3 +108,9 @@ class MailDeliveryError(ServiceError):
     status_code = 502
     code = "mail_delivery_error"
     message = "Không gửi được email. Hãy thử lại sau."
+
+
+class NotAuthenticated(ServiceError):
+    status_code = 401
+    code = "not_authenticated"
+    message = "Phiên đăng nhập không hợp lệ hoặc đã hết hạn. Hãy đăng nhập lại."

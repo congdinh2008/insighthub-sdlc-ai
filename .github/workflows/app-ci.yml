@@ -34,6 +34,8 @@ jobs:
       RAG_MODE: fixture
       LLM_PROVIDER: fixture
       EMBEDDING_PROVIDER: fixture
+      # Khóa chỉ dùng trong CI cho stack fixture, không phải secret thật.
+      BETTER_AUTH_SECRET: ci-only-not-a-secret-0123456789abcdef
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020

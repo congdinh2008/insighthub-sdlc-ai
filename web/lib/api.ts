@@ -42,8 +42,8 @@ export interface RuntimeProfile {
   disclosure: { external_data_transfer: boolean; notice: string; policy_url: string | null };
 }
 
-export async function listDocuments(): Promise<Document[]> {
-  const res = await fetch(`${API_URL}/documents`, { cache: "no-store", signal: AbortSignal.timeout(10000) });
+export async function listDocuments(headers: Record<string, string> = {}): Promise<Document[]> {
+  const res = await fetch(`${API_URL}/documents`, { cache: "no-store", headers, signal: AbortSignal.timeout(10000) });
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   return res.json();
 }
