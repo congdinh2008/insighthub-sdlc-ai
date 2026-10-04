@@ -47,6 +47,13 @@ jobs:
         run: make test
       - name: Smoke test
         run: make smoke
+      - name: Eval suites are valid
+        run: for suite in evaluation/harness/suites/*.json; do python3 evaluation/harness/run_eval.py --suite "$suite" --validate || exit 1; done
+      # eval-fixture: kiểm pipeline của tính năng AI ở chế độ fixture, không gọi provider, không cần secret.
+      # Starter để ở chế độ báo cáo. LR-23: khi đã có golden set Summary/Quiz, bỏ continue-on-error để chặn merge.
+      - name: eval-fixture
+        continue-on-error: true
+        run: python3 evaluation/harness/run_eval.py --suite evaluation/harness/suites/fixture-pipeline.json --allow-fixture --min-pass-hat-k 1.0 --output reports/evaluation/ci-fixture.json
       - name: Install web dependencies
         run: npm ci --prefix web
       - name: Playwright E2E
