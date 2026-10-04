@@ -105,7 +105,7 @@ Việc của bạn khi tích hợp:
 6. **Thử lại sau thất bại:** gửi `retry_of=<id job Failed>` với key mới (BR-10).
 7. **Notebook:** thêm khóa ngoại `ai_jobs.notebook_id` tới bảng Notebook bằng migration forward.
 
-`record_usage` chỉ nhận các trường `provider`, `model`, `attempt`, `fallback`, `outcome`, `input_tokens`, `output_tokens`, `latency_ms`, `finish_reason`, `estimated_cost_usd`, `error_code` với giá trị đơn. Không có chỗ cho prompt, nội dung nguồn hay body của provider.
+`record_usage` chỉ nhận các trường `provider`, `model`, `prompt_version`, `attempt`, `fallback`, `outcome`, `input_tokens`, `output_tokens`, `latency_ms`, `finish_reason`, `estimated_cost_usd`, `error_code` với giá trị đơn. Không có chỗ cho prompt, nội dung nguồn hay body của provider.
 
 ## 5. Phía web
 

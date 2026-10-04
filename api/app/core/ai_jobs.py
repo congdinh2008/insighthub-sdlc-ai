@@ -59,7 +59,7 @@ JOB_TYPE_PATTERN = re.compile(r"^[a-z][a-z0-9_]{1,31}$")
 TERMINAL_STATUSES = frozenset({"Succeeded", "NoEvidence", "Failed"})
 # Trường được phép trong một bản ghi usage. Không có chỗ cho prompt, nội dung nguồn hay body của provider.
 USAGE_FIELDS = frozenset({
-    "provider", "model", "attempt", "fallback", "outcome", "input_tokens", "output_tokens",
+    "provider", "model", "prompt_version", "attempt", "fallback", "outcome", "input_tokens", "output_tokens",
     "latency_ms", "finish_reason", "estimated_cost_usd", "error_code",
 })
 
