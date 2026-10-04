@@ -52,7 +52,8 @@ def main():
     reference = local_file(manifest['api_schema_reference'])
     parent = ROOT.parent / manifest['requirements_source']
     if parent.exists():
-        expected = parent.read_text().replace('../02_Solution/Contract_R1_v0.2_20260923/README.md', reference.name).replace('Manifest_ThamChieu_SRS_v1.0_20260923.json', reference.name).replace('[manifest tham chiếu]', '[manifest tham chiếu trong gói API/Schema]')
+        expected = re.sub(r'\.\./02_Solution/Contract_R1_v[0-9.]+_\d{8}/README\.md', reference.name, parent.read_text())
+        expected = re.sub(r'Manifest_ThamChieu_SRS_v[0-9.]+_\d{8}\.json', reference.name, expected).replace('[manifest tham chiếu]', '[manifest tham chiếu trong gói API/Schema]')
         assert srs.read_text() == expected, 'SRS snapshot differs from authoring source'
     check_reference(reference, srs)
     mapping = learner.read_text()
