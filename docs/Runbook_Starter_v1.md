@@ -38,7 +38,7 @@ Thư mục `reports/` bị `.gitignore` để báo cáo nháp không vào Git. E
 
 ## Kiểm tra sau khi bảo vệ endpoint (từ M3.1)
 
-Khi `/documents`, `/chat`, `/operations` đã yêu cầu phiên đăng nhập, smoke, eval adapter và AEV gửi kèm cookie phiên của tài khoản thử:
+Khi `/documents`, `/chat`, `/operations` đã yêu cầu phiên đăng nhập, smoke, eval adapter và AEV gửi kèm cookie phiên của tài khoản thử. Đặt `SEED_USER_PASSWORD` trong `.env` trước (bỏ dấu `#`, ít nhất 15 ký tự); `seed-users` và `session_cookie.py` cùng đọc biến này:
 
 ```sh
 make COMPOSE="docker compose --env-file .env -p insighthub-c07-starter" seed-users
