@@ -26,17 +26,17 @@ InsightHub cung cấp luồng tải tài liệu, tìm kiếm theo ngữ nghĩa v
 
 | Nhóm chức năng | Kết quả cần xây dựng |
 | --- | --- |
-| Auth và Account | **Core:** đăng ký, xác minh email, đăng nhập email và mật khẩu, quản lý session, recovery, đổi mật khẩu và profile, xây trên Auth scaffold. **Extended:** đăng nhập Google, liên kết danh tính, phiên chờ xác minh, giới hạn thử. |
-| Transactional Email | **Core:** xác minh (EML-001), reset mật khẩu (EML-002). **Extended:** thông báo liên kết Google (EML-003), hướng dẫn tài khoản chỉ dùng Google (EML-004), thông báo thay đổi mật khẩu (EML-005). Starter cấp Mailpit và adapter SMTP tối thiểu. |
-| Notebook | **Core:** tạo, liệt kê, mở, cập nhật và xóa; ownership, giới hạn, pagination. **Extended:** version conflict. |
+| Auth và Account | **Core:** đăng ký, xác minh email, đăng nhập email và mật khẩu, quản lý session và đăng xuất, xây trên Auth scaffold. **Extended:** khôi phục, đặt lại và đổi mật khẩu, profile, đăng nhập Google, liên kết danh tính, phiên chờ xác minh, giới hạn thử. |
+| Transactional Email | **Core:** xác minh (EML-001). **Extended:** reset mật khẩu (EML-002), thông báo liên kết Google (EML-003), hướng dẫn tài khoản chỉ dùng Google (EML-004), thông báo thay đổi mật khẩu (EML-005). Starter cấp Mailpit và adapter SMTP tối thiểu. |
+| Notebook | **Core:** tạo, liệt kê, mở và cập nhật; ownership, giới hạn, pagination. **Extended:** xóa Notebook cùng tài nguyên con, version conflict. |
 | Document | Tích hợp upload, trạng thái, retry, citation và xóa của Starter với Notebook, quyền và vòng đời dữ liệu. |
-| Chat và Conversation | **Core:** hỏi đáp theo nguồn được phép; giữ lịch sử conversation độc lập với operation TTL. **Extended:** đổi tên, xóa conversation. |
+| Chat và Conversation | **Core:** hỏi đáp theo nguồn được phép trên cơ chế operation của Starter (scope theo người dùng); giữ lịch sử conversation độc lập với operation TTL. **Extended:** đổi tên, xóa conversation, chặn công bố câu trả lời khi nguồn đổi giữa chừng. |
 | Note (Extended) | Tạo, xem, sửa, xóa; lưu câu trả lời hoặc Summary thành bản sao độc lập có provenance. |
 | Summary | Chọn nguồn/độ dài, tạo nội dung có căn cứ, lưu và mở lại. Chuyển thành Note là Extended. |
 | Quiz | Tạo đề, làm/nộp bài, chấm tại server, bảo vệ đáp án và lưu lịch sử lần làm. |
-| AI Job và Output | **Core:** policy, executor và Output trên AI Job scaffold; theo dõi AI job, xem, mở lại, xóa kết quả; nguồn bị xóa; fallback provider và usage (IH-AI-005). **Extended:** lọc, rename, regenerate. |
+| AI Job và Output | **Core:** policy, executor và Output của Summary, Quiz trên AI Job scaffold; theo dõi AI job, xem, lọc theo loại, mở lại kết quả; nguồn bị xóa; fallback provider và usage (IH-AI-005). **Extended:** xóa kết quả, rename, regenerate. |
 
-Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các chức năng dùng chung trong bảng trên. Mindmap, Slide và Báo cáo chỉ được triển khai ở giai đoạn mở rộng cuối khi mentor cho phép. Học viên còn thực hiện UI/UX, test, release local và một thay đổi sau phát hành; phạm vi có 153 AC áp dụng trong [traceability matrix](docs/learner/01_Requirements_InsightHub.md#pham-vi-truy-vet). AC được phân tầng **106 Core** (chấm) và **47 Extended** (Stretch, không trừ điểm), công bố ngày 29/09/2026 và cập nhật ngày 04/10/2026 ([Core và Extended](docs/learner/01_Requirements_InsightHub.md#core-extended)). Học viên tập trung hoàn thiện Auth, Notebook (gồm Document và Chat) và hai AI Tools; phần Extended làm khi Core đã đạt.
+Hai AI Tools bắt buộc là **Summary (Tóm tắt) và Quiz**, cùng các chức năng dùng chung trong bảng trên. Mindmap, Slide và Báo cáo chỉ được triển khai ở giai đoạn mở rộng cuối khi mentor cho phép. Học viên còn thực hiện UI/UX, test, release local và một thay đổi sau phát hành; phạm vi có 153 AC áp dụng trong [traceability matrix](docs/learner/01_Requirements_InsightHub.md#pham-vi-truy-vet). AC được phân tầng **91 Core** (chấm) và **62 Extended** (Stretch, không trừ điểm), công bố ngày 29/09/2026 và cập nhật ngày 04/10/2026 ([Core và Extended](docs/learner/01_Requirements_InsightHub.md#core-extended)). Học viên tập trung hoàn thiện Auth cơ bản, Notebook (gồm Document và Chat) và hai AI Tools; phần Extended làm khi Core đã đạt. Tải tự học khoảng 59 giờ, 2 đến 2,5 giờ mỗi ngày theo [nhịp tuần mẫu](docs/learner/01_Requirements_InsightHub.md#nhip-tuan-mau).
 
 [Requirements](docs/learner/01_Requirements_InsightHub.md) là tài liệu giao việc chính, gồm chức năng, 29 công việc, mười milestone, dữ liệu/API, rubric và evidence. [Ma trận tiến độ sản phẩm](docs/learner/01_Requirements_InsightHub.md#ma-tran-chuc-nang) chỉ rõ mức hoàn thành từng nhóm: M3.1 chạy hành trình Auth - Notebook - Document - Chat; M3 hoàn thiện phạm vi; M4 kiểm tổng hợp; M5 phát hành R1 rồi thực hiện thay đổi R1.1. Mỗi milestone nối kết quả sản phẩm với cách áp dụng SDLC và AI.
 
@@ -250,7 +250,7 @@ git diff --check
 | Nhu cầu | Tài liệu |
 | --- | --- |
 | Cài đặt, fork repository và chạy ứng dụng | [Getting Started](GETTING_STARTED.md) |
-| Bắt đầu bài tập, xem lộ trình và cách nộp | [Requirements học viên 1.2](docs/learner/01_Requirements_InsightHub.md) |
+| Bắt đầu bài tập, xem lộ trình và cách nộp | [Requirements học viên 1.3](docs/learner/01_Requirements_InsightHub.md) |
 | Tra hành vi sản phẩm và acceptance criteria (AC) | [SRS InsightHub v1.1](docs/learner/02_SRS_InsightHub_v1.1.md) |
 | Thiết kế dữ liệu, API và tích hợp phần mở rộng | [Hướng dẫn tích hợp](docs/learner/01_Requirements_InsightHub.md#data-api) |
 | Hiểu mã nguồn nền và giao tiếp hiện có | [Kiến trúc](docs/Architecture_Starter_v1.md), [API Starter](docs/API_Contract_Starter_v1.md) |

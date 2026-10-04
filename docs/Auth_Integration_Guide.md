@@ -1,6 +1,6 @@
 # Hướng dẫn tích hợp Auth và Email
 
-Dùng cho M2.1 (LR-09 spike), M2 (LR-11 thiết kế, ADR), M3.1 (LR-12) và M3 (LR-14). Tài liệu nêu **quyết định mặc định, fit-gap và điểm kiểm**; không phải lời giải. Hành vi phải đạt vẫn theo [SRS](learner/02_SRS_InsightHub_v1.1.md#req-ih-auth-001) và [Requirements mục 14](learner/01_Requirements_InsightHub.md#auth-email).
+Dùng cho M2.1 (LR-09 spike), M2 (LR-11 thiết kế, fit-gap và ADR khi thay scaffold), M3.1 (LR-12) và M3 (LR-14). Tài liệu nêu **quyết định mặc định, fit-gap và điểm kiểm**; không phải lời giải. Hành vi phải đạt vẫn theo [SRS](learner/02_SRS_InsightHub_v1.1.md#req-ih-auth-001) và [Requirements mục 14](learner/01_Requirements_InsightHub.md#auth-email).
 
 ## 0. Auth scaffold trong Starter `learner-r1.3`
 
@@ -15,19 +15,19 @@ Starter cấp sẵn phần **plumbing** cho phương án mặc định (Better A
 | Chuyển phiên web sang API | `web/lib/forward.ts` | Route handler chỉ chuyển cookie phiên InsightHub, không chuyển toàn bộ cookie |
 | Trạng thái client | `web/lib/client-state.ts` | Khóa `sessionStorage` gắn người dùng; đăng xuất xóa mọi khóa `insighthub.*` |
 | Giao diện | `web/app/login/`, `web/components/app/app-header.tsx`, `requireSession()` | Trang `/login` tối thiểu, menu người dùng và đăng xuất, helper chuyển về `/login` cho Server Component |
-| Email | `web/lib/auth/email.ts`, `mailer.ts` | Adapter SMTP (Mailpit hoặc dịch vụ thật). Hook EML-001, EML-002 là stub báo chưa triển khai |
+| Email | `web/lib/auth/email.ts`, `mailer.ts` | Adapter SMTP (Mailpit hoặc dịch vụ thật). Hook EML-001, EML-002 là stub báo chưa triển khai (EML-002 chỉ cần khi làm Extended) |
 | Dữ liệu thử | `make seed-users` | Hai tài khoản A, B đã xác minh, chỉ cho môi trường local |
 
 **Việc của học viên trên scaffold** (đối chiếu mục 3):
 
 | Nhóm | Việc phải làm |
 | --- | --- |
-| Chính sách tài khoản | Bật bắt buộc xác minh email, chặn dữ liệu nghiệp vụ khi `PendingVerification`; độ dài mật khẩu LIM-01; thời hạn phiên LIM-07 (idle 2 giờ, tuyệt đối 24 giờ); thu hồi phiên khi đổi hoặc đặt lại mật khẩu |
-| Email | Trigger, nội dung, liên kết, thời hạn, dùng một lần và trạng thái gửi EML-001, EML-002 (Core) |
-| Màn hình | Đăng ký, xác minh, quên và đặt lại mật khẩu, đổi mật khẩu, hồ sơ theo prototype M2; trang `/login` của Starter thay theo prototype |
+| Chính sách tài khoản | Bật bắt buộc xác minh email, chặn dữ liệu nghiệp vụ khi `PendingVerification`; độ dài mật khẩu LIM-01; thời hạn phiên LIM-07 (idle 2 giờ, tuyệt đối 24 giờ); thu hồi phiên khi đăng xuất. Thu hồi phiên khi đổi hoặc đặt lại mật khẩu thuộc phần Extended |
+| Email | Trigger, nội dung, liên kết, thời hạn, dùng một lần và trạng thái gửi EML-001 (Core); EML-002 khi làm khôi phục mật khẩu (Extended) |
+| Màn hình | Đăng ký, xác minh theo prototype M2; trang `/login` của Starter thay theo prototype. Quên, đặt lại, đổi mật khẩu và hồ sơ khi làm Extended |
 | Quyền | Bảo vệ endpoint và trang demo kế thừa (đang công khai) bằng `current_user`; ownership Notebook và mọi tài nguyên con; không tin `owner_id` do client gửi |
 | Kiểm chứng | Test AC Auth và quyền A/B trên bài làm; scaffold có test mẫu cho `current_user` nhưng không thay evidence AC |
-| Mở rộng | Google, liên kết danh tính, rate limit, phiên chờ xác minh hạn chế là Extended |
+| Mở rộng | Khôi phục, đặt lại, đổi mật khẩu, hồ sơ, Google, liên kết danh tính, rate limit, phiên chờ xác minh hạn chế là Extended |
 
 Muốn thay scaffold bằng phương án khác (mục 1), ghi ADR so sánh với scaffold và giữ hợp đồng `current_user` hoặc thay đồng bộ các điểm dùng.
 
@@ -41,7 +41,7 @@ Muốn thay scaffold bằng phương án khác (mục 1), ghi ADR so sánh với
 
 Pin phiên bản thư viện trong `package-lock.json`. Giá trị mặc định có thể đổi theo phiên bản: kiểm lại bằng spike LR-09, không dựa vào tài liệu này hoặc câu trả lời của AI.
 
-## 2. Kiến trúc cần quyết định trong ADR (M2)
+## 2. Kiến trúc cần quyết định ở M2 (fit-gap, ADR khi thay scaffold)
 
 | Câu hỏi | Lựa chọn thường gặp | Điểm kiểm |
 | --- | --- | --- |
@@ -61,17 +61,17 @@ SRS ghi rõ không coi giá trị mặc định của thư viện là đã đáp
 | LIM-07: hết hạn sau 2 giờ không hoạt động hoặc tối đa 24 giờ; thu hồi trong 60 giây | Thời hạn session và chu kỳ làm mới theo mặc định thư viện | Cấu hình idle; tự kiểm giới hạn tuyệt đối 24 giờ; API tra trạng thái session |
 | Tài khoản `PendingVerification` không truy cập dữ liệu nghiệp vụ | Scaffold để `requireEmailVerification: false` (mặc định thư viện). Chế độ bắt buộc xác minh email thường chặn đăng nhập, không có phiên hạn chế | Core: chặn dữ liệu nghiệp vụ (IH-AUTH-001-AC01). Phiên hạn chế là Extended (IH-AUTH-002-AC02) |
 | LIM-09: đếm sai theo tài khoản và IP, sliding window | Rate limit của thư viện theo cửa sổ và đường dẫn | Extended (IH-AUTH-003-AC02, IH-AUTH-006-AC02): tự xây bộ đếm |
-| LIM-19: bằng chứng mật khẩu dùng một lần, tối đa 5 phút | Đổi mật khẩu nhận mật khẩu hiện tại trong cùng request | Ghi trong ADR cách đáp ứng IH-AUTH-010 và IH-NFR-011-AC02 |
-| EML-001..005 | Có callback cho xác minh và reset (scaffold nối sẵn tới stub); không có sẵn thông báo đổi mật khẩu, hướng dẫn tài khoản chỉ dùng Google | EML-001, EML-002 là Core; EML-003, EML-004 (đi cùng Google) và EML-005 thuộc Extended |
+| LIM-19: bằng chứng mật khẩu dùng một lần, tối đa 5 phút | Đổi mật khẩu nhận mật khẩu hiện tại trong cùng request | Extended (IH-AUTH-010, IH-NFR-001-AC04, IH-NFR-011-AC02): ghi trong fit-gap cách đáp ứng khi làm |
+| EML-001..005 | Có callback cho xác minh và reset (scaffold nối sẵn tới stub); không có sẵn thông báo đổi mật khẩu, hướng dẫn tài khoản chỉ dùng Google | EML-001 là Core; EML-002 (đi cùng khôi phục mật khẩu), EML-003, EML-004 (đi cùng Google) và EML-005 thuộc Extended |
 
-## 4. Phạm vi chấm AUTH (quyết định 28/09/2026, cập nhật 04/10/2026)
+## 4. Phạm vi chấm AUTH (quyết định 28/09/2026, cập nhật 04/10/2026 theo Requirements 1.3)
 
 | Tầng | AC |
 | --- | --- |
-| Core (chấm) | IH-AUTH-001-AC01/02, 002-AC01, 003-AC01, 006-AC01, 007-AC01/02, 008-AC01/02, 009-AC01, 010-AC01/02; IH-MSG-003-AC01 (D5: hai email EML-001, EML-002), IH-MSG-003-AC02 |
-| Extended (Stretch, không trừ điểm) | IH-AUTH-002-AC02, 003-AC02, 004-AC01/02 (đăng nhập Google), 005-AC01..04 (liên kết danh tính), 006-AC02, 007-AC03, 009-AC02; IH-MSG-003-AC03 (gồm EML-005); EML-003, EML-004 |
+| Core (chấm) | IH-AUTH-001-AC01/02, 002-AC01, 003-AC01, 008-AC01/02; IH-MSG-003-AC01 (D5: email EML-001), IH-MSG-003-AC02 |
+| Extended (Stretch, không trừ điểm) | IH-AUTH-002-AC02, 003-AC02, 004-AC01/02 (đăng nhập Google), 005-AC01..04 (liên kết danh tính), 006-AC01/02, 007-AC01..03 (khôi phục, đặt lại mật khẩu), 009-AC01/02 (hồ sơ), 010-AC01/02 (đổi mật khẩu); IH-NFR-001-AC04, IH-NFR-011-AC02 (tái xác thực, chặn yêu cầu giả mạo, bằng chứng cookie và CSRF); IH-MSG-003-AC03 (gồm EML-005); EML-002, EML-003, EML-004 |
 
-Hành trình mặc định là email và mật khẩu. Nếu làm đăng nhập Google mà chưa làm liên kết, đăng nhập Google bằng email trùng tài khoản mật khẩu phải **bị từ chối an toàn**, không tự liên kết và không cấp phiên. IH-AUTH-006-AC01 vẫn Core; nhánh tài khoản chỉ dùng Google ghi "không áp dụng" khi chưa làm Google. Nguồn đầy đủ: cột `tier` trong [trace/ac-trace.csv](../trace/ac-trace.csv).
+Hành trình mặc định là email và mật khẩu. Nếu làm đăng nhập Google mà chưa làm liên kết, đăng nhập Google bằng email trùng tài khoản mật khẩu phải **bị từ chối an toàn**, không tự liên kết và không cấp phiên. Khôi phục và đổi mật khẩu là Extended từ Requirements 1.3; khi chưa làm, giao diện không hiển thị các chức năng này. Nguồn đầy đủ: cột `tier` trong [trace/ac-trace.csv](../trace/ac-trace.csv).
 
 ## 5. Chuẩn bị và dữ liệu
 
@@ -82,7 +82,7 @@ Hành trình mặc định là email và mật khẩu. Nếu làm đăng nhập 
 ## 6. Điểm kiểm tối thiểu trước khi báo Auth đạt
 
 - Tài khoản B không đọc, sửa, xóa được tài nguyên của A khi gọi thẳng API bằng ID của A.
-- Logout, đổi mật khẩu, reset mật khẩu làm request dùng phiên cũ bị từ chối trong giới hạn LIM-07.
-- Phản hồi đăng nhập và quên mật khẩu không tiết lộ tài khoản tồn tại (IH-NFR-001-AC05).
+- Logout làm request dùng phiên cũ bị từ chối trong giới hạn LIM-07 (đổi, reset mật khẩu cũng vậy nếu đã làm Extended).
+- Phản hồi đăng nhập (và quên mật khẩu nếu đã làm) không tiết lộ tài khoản tồn tại (IH-NFR-001-AC05).
 - Log, lỗi và report không chứa mật khẩu, token, link reset (IH-NFR-008-AC02).
 - `/security-review` đã chạy trên PR Auth; finding đã phân loại theo [Review Workflow](ai/Review_Workflow.md).

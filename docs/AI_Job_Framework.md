@@ -1,6 +1,6 @@
 # AI Job Framework (learner-r1.3)
 
-Cơ chế dùng chung cho hỏi đáp và công cụ AI: tiếp nhận có idempotency theo người dùng, giới hạn LIM-10, deadline LIM-11, giữ key LIM-12, publish fence BR-08 và BR-09, ghi usage. Quyết định thiết kế: [ADR-004](adr/ADR-004-AI-Job-Framework.md).
+Cơ chế dùng chung cho công cụ AI (trong bài tập: Tóm tắt và Quiz; hỏi đáp giữ cơ chế operation, xem mục 4 bước 5): tiếp nhận có idempotency theo người dùng, giới hạn LIM-10, deadline LIM-11, giữ key LIM-12, publish fence BR-08 và BR-09, ghi usage. Quyết định thiết kế: [ADR-004](adr/ADR-004-AI-Job-Framework.md).
 
 **Ranh giới:** Starter cấp cơ chế, không chứa nghiệp vụ. Không có prompt, schema đầu ra, bảng Output, Quiz attempt hay endpoint Summary và Quiz. Policy mặc định từ chối: chưa có policy của bạn thì job không đọc lại và không công bố được. Scaffold không làm AC nào tự đạt; mọi AC vẫn kết luận bằng test và evidence trên sản phẩm của bạn.
 
@@ -101,7 +101,7 @@ Việc của bạn khi tích hợp:
 2. **Policy:** `can_read` và `can_publish` theo nghiệp vụ. Thao tác xóa nguồn hoặc Notebook phải khóa cùng dòng (`FOR UPDATE`) để chống race với `can_publish`.
 3. **Executor:** gọi model, kiểm cấu trúc đầu ra, trả `JobOutcome("Succeeded")` hoặc `JobOutcome("NoEvidence")`. Ghi `record_usage` cho từng lần gọi model, kể cả lần lỗi và lần fallback (IH-AI-005-AC02). Áp trần token.
 4. **Fallback (IH-AI-005-AC01):** retry có giới hạn đã có trong `providers.post_json`. Khi hết retry với provider chính, executor chuyển sang provider dự phòng trong deadline còn lại.
-5. **Chat:** đưa Chat của Starter vào `ai_jobs` với `job_type="chat"` để LIM-10 tính chung.
+5. **Chat:** trong bài tập R1, Chat giữ cơ chế `operation_records` của Starter (idempotency, deadline LIM-11) và không chuyển vào `ai_jobs`; LIM-10 áp dụng cho Summary và Quiz (Requirements mục 15.1, mã D8). Nhánh `chat` của scaffold (deadline 60 giây) được giữ cho trường hợp tích hợp sau này.
 6. **Thử lại sau thất bại:** gửi `retry_of=<id job Failed>` với key mới (BR-10).
 7. **Notebook:** thêm khóa ngoại `ai_jobs.notebook_id` tới bảng Notebook bằng migration forward.
 
@@ -134,5 +134,5 @@ Lệnh: `make test-backend` (cần PostgreSQL), `cd web && npm test`.
 
 - Đồng bộ trong request: request giữ kết nối tới deadline. Không có queue, worker, streaming, circuit breaker.
 - Khởi động lại API đánh dấu mọi job đang chạy là `interrupted`, giả định một tiến trình API.
-- Chưa tích hợp Chat thì LIM-10 chưa tính chung hỏi đáp và công cụ.
+- Chat không nằm trong `ai_jobs` nên LIM-10 chỉ tính chung Summary và Quiz. Đây là điều chỉnh phạm vi D8 của bài tập; SRS LIM-10 gốc tính chung hỏi đáp và công cụ.
 - `GET /ai-jobs/...` trả 404 cho tới khi bạn đăng ký policy cho loại job đó.

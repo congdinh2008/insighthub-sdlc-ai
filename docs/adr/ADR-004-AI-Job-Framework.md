@@ -35,7 +35,7 @@ Chọn A. Bảng `ai_jobs` (migration 005) và module `api/app/core/ai_jobs.py`:
 - `publish` khóa dòng job, kiểm còn hạn, gọi `policy.can_publish` và `write_result` trong cùng transaction.
 - `JobPolicy` mặc định `DenyAllPolicy`. Học viên đăng ký policy theo loại job.
 - Đồng bộ trong request như ADR-001. Client mất kết nối đối soát bằng `GET /ai-jobs/{id}` hoặc theo key.
-- Chat của Starter giữ trên `operation_records`. Học viên đưa Chat vào `ai_jobs` ở M3.1 để quota tính chung.
+- Chat của Starter giữ trên `operation_records`. Trong R1 của bài tập, Chat không chuyển vào `ai_jobs` (mã D8, đính chính 04/10/2026 tại mục Nhật ký).
 
 ## Hệ quả
 
@@ -44,9 +44,13 @@ Chọn A. Bảng `ai_jobs` (migration 005) và module `api/app/core/ai_jobs.py`:
   - Request giữ kết nối tới 120 giây. Proxy web đặt timeout 125 giây (`web/lib/jobs-server.ts`).
   - Khóa theo người dùng tuần tự hóa các lần tiếp nhận của cùng người, không ảnh hưởng người khác.
   - Startup đánh dấu mọi job `Processing` là `interrupted`, giả định một tiến trình API. Chạy nhiều worker cần thiết kế lại (ADR mới).
-  - Chat chưa nằm trong `ai_jobs` thì LIM-10 chưa tính chung, cho tới khi học viên tích hợp.
+  - Chat chưa nằm trong `ai_jobs` thì LIM-10 chưa tính chung hỏi đáp và công cụ. Trong bài tập R1, đây là phạm vi đã chốt (mã D8), không phải việc học viên phải tích hợp.
   - `notebook_id` chưa có khóa ngoại; học viên thêm khi tạo bảng Notebook.
 - Test chứng minh: `api/tests/test_integration.py` các test `test_ai_job_*` (hai request đồng thời, key trùng khác dữ liệu, quota không tính request bị từ chối, quá hạn giải phóng suất và chặn công bố, fence rollback kết quả, endpoint kiểm phiên, chủ sở hữu và policy, restart). `api/tests/test_unit_ai_jobs.py` cho envelope lỗi và giả lập lỗi provider.
+
+## Nhật ký
+
+- 04/10/2026 (Requirements 1.3): Chat ở lại `operation_records` trong R1 của bài tập để cân tải tự học; LIM-10 áp dụng cho Summary và Quiz (mã D8). Quyết định A không đổi; dòng về Chat ở mục Quyết định đã đính chính (trước đây yêu cầu học viên đưa Chat vào `ai_jobs` ở M3.1).
 
 ## Vai trò của AI
 

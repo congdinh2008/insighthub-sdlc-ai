@@ -60,7 +60,7 @@ Xem trực quan tại `/dev/ui-kit` (trang tham khảo cho người phát triể
 
 Bảo vệ trang cần đăng nhập: gọi `requireSession()` (`web/lib/auth/server.ts`) ở đầu Server Component. Đây chỉ là lớp giao diện, API vẫn phải kiểm phiên và quyền phía FastAPI.
 
-Không gồm (bài của học viên): đăng ký, xác minh email, quên và đặt lại mật khẩu, hồ sơ, IA và điều hướng, toàn bộ màn hình nghiệp vụ, danh mục thông báo MSG của SRS.
+Không gồm (bài của học viên): đăng ký, xác minh email (Core), quên và đặt lại mật khẩu, đổi mật khẩu, hồ sơ (Extended), IA và điều hướng, toàn bộ màn hình nghiệp vụ, danh mục thông báo MSG của SRS.
 
 ## 5. Từ prototype sang code
 

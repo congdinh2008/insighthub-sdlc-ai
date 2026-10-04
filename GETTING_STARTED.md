@@ -64,6 +64,17 @@ cp .env.example .env
 
 Mở `.env` bằng trình soạn thảo và điền `BETTER_AUTH_SECRET` (khóa ký cookie phiên của Auth scaffold, tối thiểu 32 ký tự). Tạo giá trị bằng `openssl rand -base64 32` rồi dán vào file; không in `.env` ra terminal hoặc gửi cho công cụ AI. Thiếu biến này thì Compose dừng với thông báo hướng dẫn.
 
+### Chuẩn bị trước buổi 1: kéo image và build sẵn
+
+Làm bước này ngay khi nhận Starter, trên mạng ổn định, để không phải chờ tải image hoặc build trong lúc làm M0.1 và trên lớp. Lần đầu có thể mất vài phút đến vài chục phút tùy tốc độ mạng.
+
+```sh
+docker compose --env-file .env -p insighthub-c07-starter pull postgres
+docker compose --env-file .env -p insighthub-c07-starter build
+```
+
+Sau đó lệnh `up --build` bên dưới dùng lại image và cache build đã có nên chạy nhanh. Nếu build lỗi do mạng hoặc proxy, ghi lỗi vào checklist setup buổi 1 để mentor hỗ trợ. Lịch tự học gợi ý theo ngày nằm ở [nhịp tuần mẫu](docs/learner/01_Requirements_InsightHub.md#nhip-tuan-mau) của Requirements.
+
 ```sh
 docker compose --env-file .env -p insighthub-c07-starter up --build -d --wait
 ```
@@ -110,7 +121,7 @@ Nếu giảng viên cung cấp revision Starter mới, giữ commit nền cũ, r
 
 ## Email local với Mailpit (tùy chọn)
 
-Starter cấp hạ tầng tối thiểu cho phần Auth/Email của bài làm: mail catcher Mailpit (Compose profile `mail`), adapter SMTP [`api/app/core/mailer.py`](api/app/core/mailer.py) và adapter gửi thư của Auth scaffold (`web/lib/auth/mailer.ts`). Hook gửi EML-001, EML-002 của Better Auth mới là stub báo chưa triển khai; nội dung, trigger, thời hạn liên kết và chính sách xác minh là việc của học viên theo Requirements.
+Starter cấp hạ tầng tối thiểu cho phần Auth/Email của bài làm: mail catcher Mailpit (Compose profile `mail`), adapter SMTP [`api/app/core/mailer.py`](api/app/core/mailer.py) và adapter gửi thư của Auth scaffold (`web/lib/auth/mailer.ts`). Hook gửi EML-001, EML-002 (EML-002 khi làm Extended) của Better Auth mới là stub báo chưa triển khai; nội dung, trigger, thời hạn liên kết và chính sách xác minh là việc của học viên theo Requirements.
 
 ```sh
 make COMPOSE="docker compose --env-file .env -p insighthub-c07-starter" mail-up
