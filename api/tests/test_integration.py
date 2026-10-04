@@ -516,6 +516,17 @@ class IntegrationTests(unittest.TestCase):
             self.assertEqual(conn.execute("SELECT status,error_code FROM ingestion_attempts").fetchone(), ("failed", "interrupted"))
             self.assertEqual(conn.execute("SELECT status,error_code,http_status FROM operation_records").fetchone(), ("failed", "interrupted", 500))
 
+    def test_mcp_readonly_role_reads_documents_but_cannot_write(self):
+        with psycopg.connect(self.dsn, options=f"-csearch_path={self.schema},public") as conn:
+            conn.execute("SET ROLE insighthub_readonly")
+            conn.execute("SELECT count(*) FROM documents").fetchone()
+            with self.assertRaises(psycopg.errors.InsufficientPrivilege):
+                conn.execute("INSERT INTO documents(filename,status) VALUES('x.txt','pending')")
+        with psycopg.connect(self.dsn, options=f"-csearch_path={self.schema},public") as conn:
+            conn.execute("SET ROLE insighthub_readonly")
+            with self.assertRaises(psycopg.errors.InsufficientPrivilege):
+                conn.execute("SELECT count(*) FROM operation_records")
+
     def test_forward_migration_preserves_legacy_document_and_chunk(self):
         schema = "migration_" + uuid.uuid4().hex
         legacy = (Path(__file__).with_name("legacy_schema.sql")).read_text()

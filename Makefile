@@ -3,7 +3,7 @@ PYTHON ?= python3
 API_URL ?= http://127.0.0.1:8107
 WEB_URL ?= http://127.0.0.1:3107
 
-.PHONY: trace-check trace-sample eval ai-bom delivery-report up down build test test-db test-backend test-web test-tools test-e2e test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
+.PHONY: mcp-role mcp-check trace-check trace-sample eval ai-bom delivery-report up down build test test-db test-backend test-web test-tools test-e2e test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
 up:
 	$(COMPOSE) up --build -d --wait
 
@@ -85,3 +85,14 @@ reranker-local-up:
 
 reranker-local-down:
 	docker compose -f infra/reranker/docker-compose.yml down
+
+# MCP chỉ đọc (LR-05): bật đăng nhập cho role insighthub_readonly bằng mật khẩu trong .env.
+# Không in mật khẩu. Chạy lại khi đổi mật khẩu.
+mcp-role:
+	@pw=$$(grep -E '^MCP_DB_READONLY_PASSWORD=' .env 2>/dev/null | cut -d= -f2-); \
+	if [ -z "$$pw" ]; then echo "Thiếu MCP_DB_READONLY_PASSWORD trong .env"; exit 1; fi; \
+	printf "ALTER ROLE insighthub_readonly LOGIN PASSWORD :'pw';\n" | \
+	$(COMPOSE) exec -T postgres psql -q -v ON_ERROR_STOP=1 -v pw="$$pw" -U insighthub -d insighthub && echo "Đã bật đăng nhập cho insighthub_readonly"
+
+mcp-check:
+	uv run --no-project --python 3.12 --with mcp==2.2.0 --with "psycopg[binary]==3.3.5" tools/mcp/insighthub_db_readonly.py --check
