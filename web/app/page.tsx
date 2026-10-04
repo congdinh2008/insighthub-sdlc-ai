@@ -19,6 +19,7 @@ export default async function Home() {
   }
 
   return (
+    <div className="starter-demo">
     <div className="container">
       <header>
         <h1>InsightHub SDLC</h1>
@@ -35,6 +36,7 @@ export default async function Home() {
       <footer>
         InsightHub SDLC - Không gian thực hành phát triển phần mềm.
       </footer>
+    </div>
     </div>
   );
 }

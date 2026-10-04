@@ -82,9 +82,9 @@ for (const viewport of [{width:1440,height:900},{width:390,height:844}]) {
     let notify;const posted=new Promise(resolve=>{notify=resolve;});let release;const held=new Promise(resolve=>{release=resolve;});mutations=0;
     await page.route('**/api/proxy?target=chat',async route=>{mutations++;await route.fetch();notify();await held;try{await route.abort();}catch{}});
     await page.getByLabel('Câu hỏi về tài liệu').fill('Beta after reload?');await page.getByRole('button',{name:'Hỏi',exact:true}).click();await posted;
-    const saved=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('insighthub.pending.v1')));assert.equal(saved.filter(v=>v.type==='chat').length,1);
+    const saved=await page.evaluate(()=>JSON.parse(sessionStorage.getItem('insighthub.anon.pending.v1')));assert.equal(saved.filter(v=>v.type==='chat').length,1);
     await page.reload();release();await page.locator('.answer').waitFor();assert.equal(mutations,1);
-    assert.equal(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('insighthub.pending.v1')).length),0);
+    assert.equal(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('insighthub.anon.pending.v1')).length),0);
     record('reload restores pending chat with the original key');
     await page.unroute('**/api/proxy?target=chat');
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true);

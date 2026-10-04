@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { nextCookies } from "better-auth/next-js";
 import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { Pool } from "pg";
 import { authOptions } from "./config";
 
@@ -25,4 +26,12 @@ export async function getSessionUser(): Promise<SessionUser | null> {
   if (!session) return null;
   const { id, email, name, emailVerified } = session.user;
   return { id, email, name, emailVerified };
+}
+
+// Dùng ở đầu Server Component của trang cần đăng nhập: chưa có phiên thì chuyển về /login.
+// Chỉ là lớp giao diện. API vẫn phải tự kiểm phiên và quyền (current_user + policy phía FastAPI).
+export async function requireSession(): Promise<SessionUser> {
+  const user = await getSessionUser();
+  if (!user) redirect("/login");
+  return user;
 }
