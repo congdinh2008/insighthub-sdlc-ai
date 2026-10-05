@@ -48,6 +48,19 @@ Chọn A. Bảng `ai_jobs` (migration 005) và module `api/app/core/ai_jobs.py`:
   - `notebook_id` chưa có khóa ngoại; học viên thêm khi tạo bảng Notebook.
 - Test chứng minh: `api/tests/test_integration.py` các test `test_ai_job_*` (hai request đồng thời, key trùng khác dữ liệu, quota không tính request bị từ chối, quá hạn giải phóng suất và chặn công bố, fence rollback kết quả, endpoint kiểm phiên, chủ sở hữu và policy, restart). `api/tests/test_unit_ai_jobs.py` cho envelope lỗi và giả lập lỗi provider.
 
+## Điều kiện xem lại
+
+Mở lại quyết định và chuyển sang phương án B (queue và worker nền) khi có một trong các điều kiện:
+
+| Điều kiện | Ngưỡng | Lý do |
+| --- | --- | --- |
+| Cần chạy hơn một tiến trình API | Bất kỳ | Startup đánh dấu `interrupted` giả định một tiến trình |
+| Proxy hoặc hạ tầng phía trước không giữ được kết nối | Timeout dưới 125 giây | Request đồng bộ giữ kết nối tới deadline 120 giây |
+| Thời gian chờ tác vụ AI tăng | p95 vượt 60 giây trong 7 ngày | Người dùng giữ kết nối lâu, tăng tỉ lệ mất phản hồi |
+| SRS cho phép nhiều tác vụ AI đồng thời mỗi người dùng | Thay đổi LIM-10 | Khóa theo người dùng không còn phù hợp |
+
+Contract phía client (gửi job, đối soát theo id hoặc key, polling trạng thái) giữ nguyên khi chuyển sang B.
+
 ## Nhật ký
 
 - 04/10/2026 (Requirements 1.3): Chat ở lại `operation_records` trong R1 của bài tập để cân tải tự học; LIM-10 áp dụng cho Summary và Quiz (mã D8). Quyết định A không đổi; dòng về Chat ở mục Quyết định đã đính chính (trước đây yêu cầu học viên đưa Chat vào `ai_jobs` ở M3.1).

@@ -2,7 +2,7 @@
 
 Đọc `README.md`, `GETTING_STARTED.md`, `docs/Architecture_Starter_v1.md` và `docs/API_Contract_Starter_v1.md` trước khi sửa.
 
-- Tài liệu bài tập sử dụng [Requirements học viên 1.3](docs/learner/01_Requirements_InsightHub.md) và SRS v1.1 đính kèm trong cùng thư mục. Bộ học viên gồm một Requirements chính, một SRS và một ZIP API/Schema tham khảo. Hợp đồng API tham khảo là thiết kế để đối chiếu; không tự thay giao tiếp runtime. Manifest của gói mã nguồn chỉ xác nhận đúng phiên bản gói được kiểm.
+- Tài liệu bài tập sử dụng [Requirements học viên 1.4](docs/learner/01_Requirements_InsightHub.md) và SRS v1.1 đính kèm trong cùng thư mục. Bộ học viên gồm một Requirements chính, một SRS và một ZIP API/Schema tham khảo. Hợp đồng API tham khảo là thiết kế để đối chiếu; không tự thay giao tiếp runtime. Manifest của gói mã nguồn chỉ xác nhận đúng phiên bản gói được kiểm.
 - Giữ kiến trúc đồng bộ Web/API/PostgreSQL và HTTP 201 sau ingestion thành công, trừ khi có quyết định mới được ghi bằng ADR.
 - Không làm yếu checksum, embedding identity, idempotency, deadline, citation validation, locks hoặc transaction để test pass.
 - Mọi thay đổi schema dùng forward migration. Không yêu cầu xóa volume như cách nâng cấp.
@@ -15,6 +15,13 @@
 - Không chạy script đóng gói/phát hành Starter (`make package`, `make verify-package`, `make test-release`, `scripts/package_starter.py`, `scripts/verify_package.py`); đó là việc của người bảo trì ([Release Starter](docs/maintainer/Release_Starter.md)).
 - Không đọc, in hoặc gửi `.env`, API key, token; chỉ tham chiếu tên biến trong `README.md`.
 - Fixture xác nhận behavior của phần mềm, không phải semantic evaluation của AI thật.
+
+## Glossary và invariant nghiệp vụ
+
+Học viên bổ sung ở M2 (LR-11). Mỗi invariant có nơi enforce chính và cách kiểm; lời nhắc trong prompt không phải enforcement point.
+
+| Mã | Invariant | Enforcement point | Cách kiểm |
+| --- | --- | --- | --- |
 
 ## AI Engineering Kit
 

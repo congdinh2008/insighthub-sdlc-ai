@@ -25,6 +25,17 @@ Kit là phần repository ghi lại **cách dự án làm việc với AI**: quy
 
 Truy vết yêu cầu (`trace/ac-trace.csv`) có cột nguồn gốc bản nháp và người kiểm; xem [trace/README](../../trace/README.md).
 
+## Mức AI và cột `agent_mode`
+
+Delivery Log ghi mức tự chủ giao cho AI ở cột `agent_mode`. Chọn mức theo hậu quả khi sai và khả năng rollback, không theo năng lực agent.
+
+| Mức AI | Cách dùng | Giá trị `agent_mode` |
+| --- | --- | --- |
+| 1 | Trợ lý hội thoại viết nháp từ thông tin được đưa vào | `chat` |
+| 2 | Agent đọc repo và đề xuất ở plan mode, không sửa file | `plan` |
+| 3 | Agent sửa file, chạy lệnh trong quyền và thư mục được giới hạn | `edit` |
+| 4 | Agent chạy trong CI hoặc nền, không theo dõi từng bước | `auto` |
+
 ## Quy tắc chung
 
 - Kit phục vụ dự án InsightHub cụ thể. Quy tắc chung chung không gắn repo, lệnh hoặc cách kiểm không được tính.

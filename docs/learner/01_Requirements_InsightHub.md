@@ -1,9 +1,17 @@
 # Requirements - Dự án cá nhân InsightHub
 
-B2B C07 - SDLC with AI | Phiên bản 1.3, 04/10/2026 (tầng Core/Extended công bố 29/09/2026, cập nhật theo yêu cầu thay đổi và cân tải tự học 04/10/2026). Thay đổi sau khi phát hành áp dụng [chính sách thay đổi đề bài](#chinh-sach-thay-doi)
+B2B C07 - SDLC with AI | Phiên bản 1.4, 06/10/2026 (tầng Core/Extended công bố 29/09/2026, cân tải tự học 04/10/2026, đồng bộ Mốc với Curriculum 0.9.2 ngày 06/10/2026). Thay đổi sau khi phát hành áp dụng [chính sách thay đổi đề bài](#chinh-sach-thay-doi)
 Học trực tuyến, thực hiện cá nhân | 10 buổi, 25 giờ trên lớp và khoảng 59 giờ tự học (2 đến 2,5 giờ mỗi ngày, trần 3 giờ)
 
 Tài liệu xác định các chức năng InsightHub học viên phải xây, cách áp dụng SDLC và AI vào 29 công việc, cùng kết quả cần đạt qua 10 buổi. Phạm vi, thiết kế và tích hợp, rubric, cách nộp bài và mẫu evidence được trình bày trong cùng tài liệu. Học viên bắt đầu tại mục 1-2, thực hiện milestone tương ứng và tra các mục chuyên đề ngay trong tài liệu.
+
+> **Thay đổi so với bản 1.3 (06/10/2026):**
+>
+> - Bảng 2.1 thêm cột Mốc theo Curriculum. Slide và Knowledge Content dùng tên Mốc, tài liệu này giữ mã milestone và LR.
+> - M1: kế hoạch cá nhân có bảng gate 6 pha và bản đồ AI theo pha, Charter cập nhật RACI và 2 stop condition enforced, baseline từ AI Delivery Log. Rubric M1 thêm tiêu chí Lifecycle Board 20 điểm. Timebox không đổi vì phần nháp làm ở Lab buổi 3 (mục 5).
+> - M2.1: `spec.md` của Quiz có yêu cầu EARS, AC 3 nhánh, NFR có số đo và clarification log (mục 6). Lab buổi 4 luyện trên ví dụ Tóm tắt, không chấm.
+> - M2: hồ sơ thiết kế có C4 Context và Container, bảng khớp prototype, sequence, OpenAPI, ERD, AC cho một hành trình. ADR có mục Điều kiện xem lại. Threat model có cột điều kiện lethal trifecta đã cắt (mục 7).
+> - Không đổi phạm vi AC, tầng Core/Extended, timebox và trọng số điểm khóa.
 
 > **Thay đổi so với bản 1.2 (04/10/2026):**
 >
@@ -98,18 +106,18 @@ Phần [thiết kế dữ liệu và API](#data-api) xác định đầu ra cầ
 
 ### 2.1. Lộ trình và thời hạn
 
-| Buổi | Milestone | Kết quả chính | Tự học | Hạn hoàn thiện |
-| --- | --- | --- | --- | --- |
-| 1 | M0.1 | Starter chạy upload, hỏi đáp và citation; một phân tích yêu cầu bằng AI đã được kiểm | 4,3 giờ | Trước buổi 2 ít nhất 12 giờ |
-| 2 | M0.2 | Agent workflow trên InsightHub có giới hạn quyền, xử lý lỗi và chạy lại được | 4,9 giờ | Trước buổi 3 ít nhất 12 giờ |
-| 3 | M1 | Backlog chín nhóm chức năng, dependency, kế hoạch cá nhân và Git/CI | 4,4 giờ | Trước buổi 4 ít nhất 12 giờ |
-| 4 | M2.1 | Yêu cầu và test case theo chức năng; kết quả spike chính sách Auth, email EML-001 và AI (Google tùy chọn) | 5,5 giờ | Trước buổi 5 ít nhất 12 giờ |
-| 5 | M2 | Prototype thiết kế (Figma hoặc HTML), API, schema, ADR và threat model sơ bộ cho các chức năng bài tập | 6,1 giờ | Trước buổi 6 ít nhất 12 giờ |
-| 6 | M3.1 | Đăng nhập → Notebook → upload → hỏi đáp → citation → mở lại conversation | 8 giờ | Trước buổi 7 ít nhất 12 giờ |
-| 7 | M3 | Auth và email tầng Core, Notebook/Document/Conversation, Summary, Quiz và AI Output tầng Core; refactor. Extended theo mục 2.1.5 (ví dụ khôi phục và đổi mật khẩu, hồ sơ, Note, xóa Notebook, quản lý Output, đăng nhập và liên kết Google) khi Core đã đạt | 8,9 giờ | Chức năng: trước buổi 8 ít nhất 12 giờ; bài refactor: trước buổi 9 ít nhất 12 giờ |
-| 8 | M4 | Kết quả kiểm từng chức năng, quyền, hardening AI Job, eval AI, threat model cập nhật và lỗi đã sửa | 9,3 giờ | Trước buổi 9 ít nhất 12 giờ |
-| 9 | M5 | R1 cài được, dữ liệu khôi phục được và thay đổi R1.1 có regression test | 4,6 giờ | Trước buổi 10 ít nhất 12 giờ |
-| 10 | Capstone | Demo sản phẩm hoàn chỉnh, truy vết quyết định và kế hoạch áp dụng 30 ngày | 2,8 giờ | Hồ sơ trước buổi 10 ít nhất 2 giờ; sửa theo review trong 24 giờ sau khi kết thúc buổi 10 |
+| Buổi | Milestone | Mốc (Curriculum) | Kết quả chính | Tự học | Hạn hoàn thiện |
+| --- | --- | --- | --- | --- | --- |
+| 1 | M0.1 | Mốc 0 | Starter chạy upload, hỏi đáp và citation; một phân tích yêu cầu bằng AI đã được kiểm | 4,3 giờ | Trước buổi 2 ít nhất 12 giờ |
+| 2 | M0.2 | Mốc 0 | Agent workflow trên InsightHub có giới hạn quyền, xử lý lỗi và chạy lại được | 4,9 giờ | Trước buổi 3 ít nhất 12 giờ |
+| 3 | M1 | Mốc 1 | Backlog chín nhóm chức năng, dependency, kế hoạch cá nhân có bảng gate và bản đồ AI, Charter cập nhật, Git/CI | 4,4 giờ | Trước buổi 4 ít nhất 12 giờ |
+| 4 | M2.1 | Mốc 2 | Yêu cầu và test case theo chức năng, spec của Quiz; kết quả spike chính sách Auth, email EML-001 và AI (Google tùy chọn) | 5,5 giờ | Trước buổi 5 ít nhất 12 giờ |
+| 5 | M2 | Mốc 3 | Prototype thiết kế (Figma hoặc HTML), API, schema, ADR và threat model sơ bộ cho các chức năng bài tập | 6,1 giờ | Trước buổi 6 ít nhất 12 giờ |
+| 6 | M3.1 | Mốc 4 | Đăng nhập → Notebook → upload → hỏi đáp → citation → mở lại conversation | 8 giờ | Trước buổi 7 ít nhất 12 giờ |
+| 7 | M3 | Mốc 5 | Auth và email tầng Core, Notebook/Document/Conversation, Summary, Quiz và AI Output tầng Core; refactor. Extended theo mục 2.1.5 (ví dụ khôi phục và đổi mật khẩu, hồ sơ, Note, xóa Notebook, quản lý Output, đăng nhập và liên kết Google) khi Core đã đạt | 8,9 giờ | Chức năng: trước buổi 8 ít nhất 12 giờ; bài refactor: trước buổi 9 ít nhất 12 giờ |
+| 8 | M4 | Mốc 6 | Kết quả kiểm từng chức năng, quyền, hardening AI Job, eval AI, threat model cập nhật và lỗi đã sửa | 9,3 giờ | Trước buổi 9 ít nhất 12 giờ |
+| 9 | M5 | Mốc 7 | R1 cài được, dữ liệu khôi phục được và thay đổi R1.1 có regression test | 4,6 giờ | Trước buổi 10 ít nhất 12 giờ |
+| 10 | Capstone | Capstone | Demo sản phẩm hoàn chỉnh, truy vết quyết định và kế hoạch áp dụng 30 ngày | 2,8 giờ | Hồ sơ trước buổi 10 ít nhất 2 giờ; sửa theo review trong 24 giờ sau khi kết thúc buổi 10 |
 
 Bản chuẩn bị của buổi 1-9 gửi trước giờ bắt đầu buổi học ít nhất 2 giờ. Đây là tiến độ thực tế để nhận hỗ trợ, chưa yêu cầu hoàn tất cả milestone. Ngày, giờ cụ thể và kênh nộp bài do giảng viên công bố theo lịch lớp, múi giờ Việt Nam (UTC+07:00); không suy ra ngày học từ ngày trên tài liệu.
 
@@ -193,9 +201,9 @@ Dùng bảng này để trình bày kết quả trong PR/bản nộp hiện có,
 | --- | --- | --- | --- |
 | **M0.1 / B1 / LR-01..03** | Khảo sát hệ thống và kiểm chứng AI. Fork Starter, môi trường fixture, SRS. | Chạy upload → Chat → mở citation; đăng nhập thử tài khoản seed A và B; context pack và một lượt A/B có token; kiểm JSON và ý nghĩa của một phân tích AC; chỉ ra, sửa và kiểm lại một lỗi AI rồi biến nó thành rule `AGENTS.md` có cách kiểm. | Có baseline chạy được và hiểu phần nền để lập kế hoạch. Chưa xây Auth/Notebook/tool; fixture chưa chứng minh chất lượng model thật. |
 | **M0.2 / B2 / LR-04..05** | Thiết lập cách làm việc với agent. Repo chạy được, Claude Code và MCP PostgreSQL bằng role chỉ đọc. | AI Usage Charter và workflow cho một task project thực chạy qua MCP; chỉ ra success, lỗi công cụ, lệnh ghi bị database từ chối và cách chạy lại. | Có workflow/quy tắc dùng tiếp xuyên khóa. Chưa yêu cầu feature mới hoặc tự xây một nền tảng agent. |
-| **M1 / B3 / LR-06..07** | Khởi tạo, lập kế hoạch và kiểm soát thay đổi. Baseline M0 và chín nhóm chức năng. | Mở backlog để giải thích phần kế thừa/phải xây, dependency, AC, estimate; mở PR theo PR template có tự review và AI review (`/code-review`), kết quả CI (test, lint, scan) đúng commit; dòng đầu tiên của AI Delivery Log. | Backlog và quy trình Git/CI làm đầu vào M2.1. Kế hoạch được cập nhật theo phân tích/spike; chưa kết luận chức năng đã hoàn thành. |
-| **M2.1 / B4 / LR-08..09** | Phân tích yêu cầu, thiết kế test và giảm rủi ro. Backlog, SRS, quyền email/AI (Google nếu làm Extended). | Bảng trace 165 AC (153 áp dụng/12 ngoài phạm vi) từ khung giảng viên cấp: AI viết nháp, 100% AC R1 của hành trình M3.1 được kiểm, phần còn lại lấy mẫu có seed và tỷ lệ lỗi; `spec.md` của Quiz; giải thích 1-2 yêu cầu rủi ro kèm Gherkin; trình bày kết quả spike (chính sách Auth, EML-001, AI) và quyết định có căn cứ. | Bàn giao yêu cầu, test design, khả năng/giới hạn giải pháp và việc còn mở cho M2. Code giới hạn ở spike; chưa cần UI sản phẩm hoặc toàn bộ test tự động. |
-| **M2 / B5 / LR-10..11** | Thiết kế giải pháp. Yêu cầu/test design, spike và hợp đồng tham khảo. | Đi xuyên prototype (Figma hoặc HTML) → flow/state → AC → API → dữ liệu; kiểm hai viewport/keyboard; OpenAPI và ERD dạng phần chênh so với Reference 1.1; giải thích một ADR hai phương án, fit-gap Auth scaffold, migration và module cần characterization; threat model sơ bộ có trust boundary và luồng dữ liệu ra nước ngoài; `plan.md`/`tasks.md` của Quiz; finding của subagent `design-reviewer` đã xác minh. | Thiết kế đủ để triển khai hành trình M3.1 và phần còn lại M3. Prototype thiết kế, kể cả prototype HTML, chưa phải chức năng đã chạy trên ứng dụng. |
+| **M1 / B3 / LR-06..07** | Khởi tạo, lập kế hoạch và kiểm soát thay đổi. Baseline M0 và chín nhóm chức năng. | Mở backlog để giải thích phần kế thừa/phải xây, dependency, AC, estimate; kế hoạch cá nhân có bảng gate 6 pha và bản đồ AI theo pha; Charter có RACI và 2 stop condition enforced; mở PR theo PR template có tự review và AI review (`/code-review`), kết quả CI (test, lint, scan) đúng commit; dòng đầu tiên của AI Delivery Log. | Backlog và quy trình Git/CI làm đầu vào M2.1. Kế hoạch được cập nhật theo phân tích/spike; chưa kết luận chức năng đã hoàn thành. |
+| **M2.1 / B4 / LR-08..09** | Phân tích yêu cầu, thiết kế test và giảm rủi ro. Backlog, SRS, quyền email/AI (Google nếu làm Extended). | Bảng trace 165 AC (153 áp dụng/12 ngoài phạm vi) từ khung giảng viên cấp: AI viết nháp, 100% AC R1 của hành trình M3.1 được kiểm, phần còn lại lấy mẫu có seed và tỷ lệ lỗi; `spec.md` của Quiz có yêu cầu EARS, AC 3 nhánh, NFR có số đo và clarification log; giải thích 1-2 yêu cầu rủi ro kèm Gherkin; trình bày kết quả spike (chính sách Auth, EML-001, AI) và quyết định có căn cứ. | Bàn giao yêu cầu, test design, khả năng/giới hạn giải pháp và việc còn mở cho M2. Code giới hạn ở spike; chưa cần UI sản phẩm hoặc toàn bộ test tự động. |
+| **M2 / B5 / LR-10..11** | Thiết kế giải pháp. Yêu cầu/test design, spike và hợp đồng tham khảo. | Đi xuyên prototype (Figma hoặc HTML) → flow/state → AC → API → dữ liệu bằng bảng khớp một hành trình; C4 Context và Container; kiểm hai viewport/keyboard; OpenAPI và ERD dạng phần chênh so với Reference 1.1; giải thích một ADR hai phương án có điều kiện xem lại, fit-gap Auth scaffold, migration và module cần characterization; threat model sơ bộ có trust boundary và luồng dữ liệu ra nước ngoài; `plan.md`/`tasks.md` của Quiz; finding của subagent `design-reviewer` đã xác minh. | Thiết kế đủ để triển khai hành trình M3.1 và phần còn lại M3. Prototype thiết kế, kể cả prototype HTML, chưa phải chức năng đã chạy trên ứng dụng. |
 | **M3.1 / B6 / LR-12..13** | Triển khai và test hành trình đầu tiên. Thiết kế M2; characterization trước lần sửa nền. | A đăng nhập thật → Notebook → upload → Chat/citation → mở lại conversation sau reload/restart; API chặn B; trình bày TDD red-green-regression; test đã duyệt được hook và CI bảo vệ. | Có hành trình mới chạy qua UI/API/DB trên Auth scaffold; Chat giữ cơ chế operation của Starter đã scope theo người dùng (mã D8). Phần Auth tầng Core còn lại (phiên, đăng xuất), Summary/Quiz trên AI Job scaffold hoàn thiện tại M3. |
 | **M3 / B7 / LR-14..19** | Hoàn thiện chức năng, tích hợp và refactor. Hành trình M3.1 và thiết kế phần dùng chung. | Chín nhóm chức năng hoạt động theo tầng Core/Extended, Auth và email theo tầng đã chốt, Summary/Quiz, Output/lifecycle; test theo nhánh; refactor có baseline/diff/regression; review một PR do agent tạo. | Bản tích hợp và evidence cho M4. ASG01 vẫn hoàn thiện trước B9; có đủ tính năng chưa đồng nghĩa đã nghiệm thu mọi AC. |
 | **M4 / B8 / LR-20..24** | Kiểm tổng hợp, chất lượng và bảo mật. Bản M3, test tích lũy, corpus/oracle. | Kết luận từng AC đến hạn (`trace_check --gate M4`), nối 19 UAT tầng Core (UAT-02 Google và UAT-03 khôi phục, đổi mật khẩu là Extended); bốn ca hardening AI Job test-first; 12 lượt nội dung AI chạy qua eval harness cùng ngoại lệ và ca fallback; `eval-fixture` làm CI đỏ khi không đạt; threat model cập nhật, `/security-review`, AI-BOM sinh tự động, UI, thời hạn xử lý và security, defect và retest có căn cứ. | Candidate cùng kết luận đủ/chưa đủ điều kiện phát hành. AC release/restore thuộc M5 còn ghi chưa kiểm/chưa đến hạn nếu chưa có evidence. |
@@ -395,7 +403,7 @@ Phân bổ trong đề bài: tham dự chiếm 10 điểm phần trăm toàn kh�
 
 ### 2.9. Chính sách thay đổi đề bài
 
-Requirements 1.3, SRS v1.1 và Starter `learner-r1.3` là baseline của lớp từ buổi 1. Thay đổi sau đó được xử lý như một yêu cầu thay đổi (CR), đúng cách học viên làm ở M5:
+Requirements 1.4, SRS v1.1 và Starter `learner-r1.3` là baseline của lớp từ buổi 1. Thay đổi sau đó được xử lý như một yêu cầu thay đổi (CR), đúng cách học viên làm ở M5:
 
 | Loại thay đổi | Cách công bố | Ảnh hưởng tới bài làm |
 | --- | --- | --- |
@@ -557,6 +565,8 @@ Có kế hoạch cá nhân cho đầy đủ chín nhóm chức năng tại mục
 
 1. **Lập hồ sơ dự án và backlog.** Ghi người dùng, hành trình chính và phần cần bổ sung vào Starter cho các nhóm chức năng tại mục 1.1, tách phần Core và Extended theo mục 2.1.5. Chia công việc theo **hành trình và kết quả chức năng**, khoảng 8 đến 10 issue tầng Core cho toàn dự án theo mục 2.1.5 (ví dụ: Auth cơ bản và EML-001; Notebook và quyền A/B; Document và Chat trong Notebook; AI Job và Output; Summary; Quiz; kiểm M4; phát hành M5) cộng 1 đến 2 issue `extended`, mỗi issue có checklist AC bên trong; không tạo mỗi AC một issue. Phần Extended gom vào vài issue có nhãn `extended`. Gắn các bước phân tích, thiết kế, code, test và release tương ứng. Mỗi công việc có kết quả cần đạt, AC, phụ thuộc, ước lượng theo công kiểm chứng (mục 2.1.4) và cách kiểm. Trong fit-gap, ghi phần Starter đã cấp: Auth scaffold (plumbing email và mật khẩu), AI Job scaffold (cơ chế, chưa có policy, executor, Output) và nền UI là Fit hoặc Partial, không phải phần đã hoàn thành. Đối chiếu ước lượng với ngân sách tự học khoảng 59 giờ tại mục 2.1, bao gồm đọc tài liệu, phát triển, test, sửa lỗi và chuẩn bị bảo vệ. Ghi phần vượt ngân sách và căn cứ để trao đổi với giảng viên; không giảm ước lượng hoặc bỏ tiêu chí để làm kế hoạch có vẻ vừa thời gian. Ưu tiên xác thực và quyền trước luồng nhiều người dùng.
 
+   Kế hoạch cá nhân gồm **bảng gate 6 pha** (entry, exit criteria kiểm được, evidence, người duyệt) và **bản đồ AI theo pha** (việc AI làm, Mức AI 1 đến 4 chọn theo hậu quả và khả năng rollback, sensor, người duyệt). Hai bảng làm bản nháp ở Lab buổi 3 và hoàn thiện trong timebox LR-06. Cập nhật `docs/ai/AI_Usage_Charter.md` đã lập ở M0.2: RACI cho các quyết định chính ở mục 3 (mỗi dòng đúng một người chịu trách nhiệm cuối, coding agent không giữ vai này) và 2 stop condition có cơ chế công cụ chặn (`deny`, hook hoặc CI) ở mục 2 và 4. Ghi giá trị khởi điểm của số đo trong AI Delivery Log (thời gian review, số vòng sửa, kết quả CI lần đầu) làm baseline cho các mốc sau.
+
 <a id="lr-07"></a>
 
 2. **Thiết lập quy trình phát triển.** Tạo issue theo [issue template](../../.github/ISSUE_TEMPLATE/feature.md) và Pull Request theo [PR template](../../.github/pull_request_template.md) (tự rà soát bốn góc tính đúng, bảo mật, quy ước mã nguồn, thiết kế; mục AI usage; Definition of Done). Giữ mỗi PR khoảng 400 dòng diff trở xuống, không tính file sinh tự động, để vừa khả năng review; PR lớn hơn phải tách hoặc ghi lý do. Chạy Continuous Integration (CI) trên repository cá nhân, gồm test, lint, secret scan và dependency scan cho cả Web và API theo công nghệ thực tế. Workflow [`app-ci.yml`](../../.github/workflows/app-ci.yml) của Starter đã chạy test, smoke, E2E và `npm audit`; học viên thêm lint, secret scan và dependency scan bằng action có sẵn theo [hướng dẫn lint và scan M1](../M1_Lint_Scan_Guide.md), dùng một cấu hình chung cho Web và API, khoanh phạm vi vào file thay đổi và triage finding có sẵn của Starter. Kiểm bước `eval-fixture` (trong job `application` của App CI) chạy được trên fork (chế độ báo cáo `continue-on-error`; chuyển thành bước bắt buộc ở LR-23). Lưu liên kết lần chạy và đúng commit được kiểm; phân biệt lỗi quy trình CI với lỗi ứng dụng. Chạy AI reviewer theo [Review Workflow](../ai/Review_Workflow.md): tự review trước, sau đó `/code-review --comment <số PR>` trong session Claude Code mới (tách writer và reviewer); phân loại finding Fix, Reject hoặc Defer; tự xác minh một finding bằng phép kiểm độc lập. Không yêu cầu tìm đủ một lỗi cho mỗi góc rà soát. Với dependency mới do AI đề xuất, kiểm package tồn tại thật theo [hướng dẫn](../M1_Lint_Scan_Guide.md). Từ PR này, ghi mỗi PR một dòng vào `docs/ai/delivery-log.csv` với số đo thật (thời gian, finding AI, vòng sửa, kết quả CI lần đầu).
@@ -567,7 +577,9 @@ Có kế hoạch cá nhân cho đầy đủ chín nhóm chức năng tại mục
 - Mỗi công việc có AC liên quan, kết quả, dependency, ước lượng và cách kiểm; phân biệt phần cần chạy tại M3.1 với phần hoàn thiện tại M3.
 - Kế hoạch đối chiếu ngân sách tự học khoảng 59 giờ, ghi chênh lệch và căn cứ; không bỏ yêu cầu để làm vừa thời gian.
 - CI chạy trên đúng commit, có kết quả test, lint và scan Web/API và xử lý phát hiện phù hợp; một PR theo template có AI review với một finding đã được xác minh.
-- AI Delivery Log có dòng cho các PR của M1.
+- AI Delivery Log có dòng cho các PR của M1 và giá trị khởi điểm làm baseline.
+- Bảng gate 6 pha có tiêu chí kiểm được, evidence và người duyệt cho từng pha. Bản đồ AI theo pha có Mức AI và sensor.
+- Charter có RACI, mỗi quyết định đúng một người chịu trách nhiệm cuối, và 2 stop condition có cơ chế công cụ chặn.
 
 ### 5.4 Áp dụng SDLC và AI
 
@@ -589,7 +601,7 @@ Dùng Claude phân rã backlog rồi tự kiểm phạm vi và thứ tự. Yêu 
 
 ### 5.5 Evidence, cách nộp bài và thời hạn
 
-**Hạn hoàn thiện:** trước buổi 4 ít nhất 12 giờ. Gửi link PR nhánh `milestone/m1` và bản ghi nộp bài, gồm hồ sơ dự án, backlog, link issue, PR có AI review và lần chạy CI. Tài liệu có thể gộp trong một file Markdown.
+**Hạn hoàn thiện:** trước buổi 4 ít nhất 12 giờ. Gửi link PR nhánh `milestone/m1` và bản ghi nộp bài, gồm hồ sơ dự án, backlog, kế hoạch cá nhân (bảng gate, bản đồ AI), Charter đã cập nhật, link issue, PR có AI review và lần chạy CI. Tài liệu có thể gộp trong một file Markdown.
 
 Trong backlog hiện có, dùng trường nhóm chức năng và milestone để thể hiện tiến độ; không cần tạo thêm báo cáo kế hoạch riêng. Chỉ rõ một điều chỉnh do học viên quyết định sau khi phản biện đề xuất AI.
 
@@ -597,10 +609,11 @@ Trong backlog hiện có, dùng trường nhóm chức năng và milestone để
 
 | Tiêu chí | Điểm tối đa | Cách chấm điểm |
 | --- | --- | --- |
-| Phạm vi và phân tích starter | 25 | Người dùng và hành trình rõ: 5; phạm vi đúng: 10; chỉ rõ phần có sẵn và phải xây: 10. |
-| Backlog có thể thực hiện | 30 | Công việc gắn yêu cầu và kết quả: 10; ưu tiên và phụ thuộc đúng: 10; ước lượng có căn cứ, đối chiếu ngân sách và nhận diện chênh lệch: 10. |
-| Git và CI | 30 | Issue, Pull Request theo template (AI usage, DoD), tự review và `/code-review` có finding được xác minh: 10; test và lint thực chạy: 10; secret scan, dependency scan và xử lý kết quả: 10. |
-| Quyết định với AI và bài nộp | 15 | Phản biện được kế hoạch do AI đề xuất: 5; AI Delivery Log đã ghi và dùng để đối chiếu estimate: 5; hồ sơ có thể kiểm lại: 5. |
+| Phạm vi và phân tích starter | 20 | Người dùng và hành trình rõ: 5; phạm vi đúng: 5; chỉ rõ phần có sẵn và phải xây: 10. |
+| Backlog có thể thực hiện | 20 | Công việc gắn yêu cầu và kết quả: 5; ưu tiên và phụ thuộc đúng: 5; ước lượng có căn cứ, đối chiếu ngân sách và nhận diện chênh lệch: 10. |
+| Lifecycle Board và governance | 20 | Bảng gate 6 pha có tiêu chí kiểm được, evidence và người duyệt: 10; bản đồ AI theo pha có Mức AI theo rủi ro và sensor: 5; Charter có RACI đúng một người chịu trách nhiệm cuối và 2 stop condition enforced: 5. |
+| Git và CI | 25 | Issue, Pull Request theo template (AI usage, DoD), tự review và `/code-review` có finding được xác minh: 10; test và lint thực chạy: 10; secret scan, dependency scan và xử lý kết quả: 5. |
+| Quyết định với AI và bài nộp | 15 | Phản biện được kế hoạch do AI đề xuất: 5; AI Delivery Log đã ghi, có giá trị khởi điểm và dùng để đối chiếu estimate: 5; hồ sơ có thể kiểm lại: 5. |
 | **Tổng** | **100** | |
 
 Tiêu chí phạm vi và backlog được đối chiếu theo chín nhóm chức năng, dependency và ngân sách thực tế; số lượng issue hoặc số trang kế hoạch không thay tính đầy đủ.
@@ -621,7 +634,7 @@ Sản phẩm của mốc này là **bảng yêu cầu/test case và kết quả 
 
 <a id="lr-08"></a>
 
-1. **Lập traceability matrix yêu cầu và test case.** Dùng khung [`trace/ac-trace.csv`](../../trace/README.md) giảng viên cấp (165 AC, mức rủi ro gợi ý, tầng Core/Extended đã chốt) để quản lý 153 tiêu chí áp dụng và 12 tiêu chí ngoài bài tập; không tự dựng bảng khác. Xây skill `ac-drafter` để AI viết nháp nhánh, input và expected từ SRS, ghi `draft_by=AI`. Kiểm theo [mục 2.1.7](#kiem-chung-rui-ro): 100% AC R1 của hành trình M3.1 chuyển `Human-verified`, AC R2 của hành trình kiểm đúng lúc trong DoD của PR giao agent; phần còn lại lấy mẫu 10 dòng bằng `python3 scripts/trace_sample.py --seed <mã học viên + ngày>`, ghi OK/Error cho từng dòng mẫu và chạy `--evaluate`; tỷ lệ lỗi từ 20% trở lên thì sửa context pack hoặc prompt của skill, sinh lại nhóm lỗi và lấy mẫu vòng mới. Ghi phiên bản SRS, mã yêu cầu thành phần nếu có, điều kiện hoặc nhánh cần kiểm, công việc triển khai, đầu vào và expected result. Chọn 1-2 yêu cầu có rủi ro để phân tích sâu, sau đó rà đủ phần còn lại; không viết lại toàn bộ SRS. Viết AC của 1-2 yêu cầu phân tích sâu theo Gherkin (Given/When/Then); kịch bản này được dùng lại làm E2E tại M4. Lập `specs/quiz/spec.md` theo [template](../../specs/_template/spec.md) cho Quiz làm đầu vào của plan và task ở M2. Bao phủ luồng chính, edge case, sai quyền, đồng thời và lỗi dịch vụ. Yêu cầu về thời gian và giao diện phải có môi trường, cách đo. Dùng một bảng xuyên khóa theo [mẫu kết quả](#bang-ket-qua); chỉ kết luận một AC đạt khi mọi điều kiện áp dụng của AC đó đạt.
+1. **Lập traceability matrix yêu cầu và test case.** Dùng khung [`trace/ac-trace.csv`](../../trace/README.md) giảng viên cấp (165 AC, mức rủi ro gợi ý, tầng Core/Extended đã chốt) để quản lý 153 tiêu chí áp dụng và 12 tiêu chí ngoài bài tập; không tự dựng bảng khác. Xây skill `ac-drafter` để AI viết nháp nhánh, input và expected từ SRS, ghi `draft_by=AI`. Kiểm theo [mục 2.1.7](#kiem-chung-rui-ro): 100% AC R1 của hành trình M3.1 chuyển `Human-verified`, AC R2 của hành trình kiểm đúng lúc trong DoD của PR giao agent; phần còn lại lấy mẫu 10 dòng bằng `python3 scripts/trace_sample.py --seed <mã học viên + ngày>`, ghi OK/Error cho từng dòng mẫu và chạy `--evaluate`; tỷ lệ lỗi từ 20% trở lên thì sửa context pack hoặc prompt của skill, sinh lại nhóm lỗi và lấy mẫu vòng mới. Ghi phiên bản SRS, mã yêu cầu thành phần nếu có, điều kiện hoặc nhánh cần kiểm, công việc triển khai, đầu vào và expected result. Chọn 1-2 yêu cầu có rủi ro để phân tích sâu, sau đó rà đủ phần còn lại; không viết lại toàn bộ SRS. Viết AC của 1-2 yêu cầu phân tích sâu theo Gherkin (Given/When/Then); kịch bản này được dùng lại làm E2E tại M4. Lập `specs/quiz/spec.md` theo [template](../../specs/_template/spec.md) cho Quiz làm đầu vào của plan và task ở M2: yêu cầu viết theo mẫu EARS kèm nguồn SRS, AC 3 nhánh (thành công, lỗi, sai quyền) cho yêu cầu rủi ro cao, NFR có điều kiện và số đo, clarification log ghi câu hỏi mở và người quyết định. Lab buổi 4 luyện các kỹ thuật này trên ví dụ Tóm tắt với brief mô phỏng; phần đó không chấm. Bao phủ luồng chính, edge case, sai quyền, đồng thời và lỗi dịch vụ. Yêu cầu về thời gian và giao diện phải có môi trường, cách đo. Dùng một bảng xuyên khóa theo [mẫu kết quả](#bang-ket-qua); chỉ kết luận một AC đạt khi mọi điều kiện áp dụng của AC đó đạt.
 
    Ở mốc này, test case mô tả điều kiện, dữ liệu, hành động và kết quả ở mức nghiệp vụ đủ để kiểm được. Chi tiết endpoint, selector UI, schema lưu trữ và script tự động bổ sung theo thiết kế M2 và triển khai M3.1-M3. Giữ đầy đủ nhánh cần kiểm dù chưa có code; đánh dấu đã thiết kế/chưa chạy thay vì tạo kết quả giả. Một test có thể dùng chung cho nhiều AC khi chỉ rõ điều kiện nào được chứng minh.
 
@@ -643,7 +656,7 @@ Tái sử dụng SDK/thư viện, phần nền và dữ liệu mẫu được c�
 ### 6.3 Điều kiện hoàn thành
 
 - `trace/ac-trace.csv` đủ 165 AC, phân biệt 153 AC áp dụng và 12 AC ngoài phạm vi, ghi đúng nguồn gốc bản nháp; AC R1 của hành trình M3.1 `Human-verified`; có vòng lấy mẫu với seed, tỷ lệ lỗi và hành động theo ngưỡng; `python3 scripts/trace_check.py` đạt.
-- `specs/quiz/spec.md` dẫn mã AC và có Gherkin cho AC rủi ro.
+- `specs/quiz/spec.md` dẫn mã AC, có yêu cầu EARS kèm nguồn, AC 3 nhánh và Gherkin cho AC rủi ro cao, NFR có số đo, clarification log có người quyết định.
 - Làm rõ quyền, trạng thái và lỗi theo từng chức năng; không chỉ liệt kê mã AC hoặc ghi chung “CRUD”.
 - Spike Auth policy, email EML-001, AI (Google nếu làm) có giả thuyết, cấu hình, expected/actual, evidence đúng phiên bản/chế độ chạy và giới hạn; kết luận nêu rõ giữ, sửa hoặc cần thử lại phương án vì căn cứ nào.
 - Phần bị chặn có evidence và bước xử lý, không được ghi tích hợp Pass. Phân tích đã làm vẫn được ghi nhận theo rubric; kết quả tích hợp còn mở phải thể hiện riêng trong output milestone.
@@ -711,7 +724,7 @@ Có thiết kế nối được từ hành trình người dùng đến UI, API,
 
 <a id="lr-11"></a>
 
-2. **Thiết kế API và dữ liệu.** Mở đầu hồ sơ thiết kế bằng bảng architecture drivers và quality attributes (quyền dữ liệu, độ tin cậy nguồn, latency, maintainability) kèm cách đo. Dựa trên mục 3.3 và 3.7 của SRS, lập sơ đồ quan hệ, từ điển dữ liệu và OpenAPI cho phạm vi bài tập, viết dạng phần chênh so với [API/Schema Reference 1.1](03_API_Schema_Reference_v1.1.zip): chỉ bảng, endpoint và trường mới hoặc khác, kèm lý do. Contract Tóm tắt và Quiz ở mức schema (input, output, lỗi). Với mỗi đối tượng, xác định trường, kiểu dữ liệu, điều kiện bắt buộc, giá trị mặc định, quan hệ, quyền đọc hoặc sửa và vòng đời. AI job và kết quả AI ghi nhà cung cấp và mô hình thực tế, usage và `finish_reason` theo IH-AI-005; xuất phát từ bảng `ai_jobs` của AI Job scaffold và nêu phần giữ, mở rộng. Phân biệt schema dữ liệu logic, schema trao đổi qua API và schema lưu trữ vật lý; không mặc định mỗi đối tượng logic phải có một bảng riêng.
+2. **Thiết kế API và dữ liệu.** Mở đầu hồ sơ thiết kế bằng bảng architecture drivers và quality attributes (quyền dữ liệu, độ tin cậy nguồn, latency, maintainability) kèm cách đo, rồi sơ đồ C4 Context và Container của InsightHub đối chiếu [kiến trúc Starter](../Architecture_Starter_v1.md). Chọn một hành trình của Quiz, lập bảng khớp prototype, sequence, OpenAPI, ERD và AC; mỗi điểm lệch là finding phải xử lý trước khi code. Dựa trên mục 3.3 và 3.7 của SRS, lập sơ đồ quan hệ, từ điển dữ liệu và OpenAPI cho phạm vi bài tập, viết dạng phần chênh so với [API/Schema Reference 1.1](03_API_Schema_Reference_v1.1.zip): chỉ bảng, endpoint và trường mới hoặc khác, kèm lý do. Contract Tóm tắt và Quiz ở mức schema (input, output, lỗi). Với mỗi đối tượng, xác định trường, kiểu dữ liệu, điều kiện bắt buộc, giá trị mặc định, quan hệ, quyền đọc hoặc sửa và vòng đời. AI job và kết quả AI ghi nhà cung cấp và mô hình thực tế, usage và `finish_reason` theo IH-AI-005; xuất phát từ bảng `ai_jobs` của AI Job scaffold và nêu phần giữ, mở rộng. Phân biệt schema dữ liệu logic, schema trao đổi qua API và schema lưu trữ vật lý; không mặc định mỗi đối tượng logic phải có một bảng riêng.
 
    Xác định dữ liệu máy chủ quyết định, dữ liệu người dùng được nhập và dữ liệu nội bộ không được trả về. Tách nội dung Quiz trước và sau khi nộp. Phân biệt phiên bản cấu trúc `schema_version`, phiên bản thông tin mô tả `metadata_version`, tiêu đề nội dung `content.title` và tên hiển thị `display_name`. Thiết kế cách xử lý phiên bản không hỗ trợ, dữ liệu sai cấu trúc và cập nhật từ phiên bản cũ.
 
@@ -719,17 +732,18 @@ Có thiết kế nối được từ hành trình người dùng đến UI, API,
 
    Mô tả giao dịch và các điều kiện phải luôn đúng khi gửi lặp, nộp Quiz, xóa nguồn, công bố kết quả và khởi động lại. Bản ghi chống gửi lặp hết hạn không được làm mất dữ liệu nghiệp vụ. Có ví dụ dữ liệu hợp lệ và không hợp lệ cho những nhánh đang thiết kế, kế hoạch migration, cùng một ADR so sánh hai phương án. Đối chiếu [hướng dẫn thiết kế và tích hợp](#data-api) trước khi chọn cách áp dụng hợp đồng tham khảo vào Starter.
 
-   **Threat model sơ bộ.** Trong cùng hồ sơ thiết kế, vẽ data flow và trust boundary giữa trình duyệt, API, DB, tài liệu upload, RAG, provider AI, coding agent và MCP. Áp STRIDE cho các endpoint OpenAPI và thực thể ERD chính, ưu tiên Auth, ownership và Quiz. Đánh dấu luồng dữ liệu ra nước ngoài (Claude, provider AI chính và provider dự phòng học viên đã chọn như DeepSeek, Gemini, Anthropic hoặc gateway OpenAI-compatible; Ollama local nếu dùng thì không đi ra ngoài; Firebase hoặc dịch vụ Auth bên ngoài nếu dùng) và loại dữ liệu được phép đi qua theo AI Usage Charter. Tự phân loại mức rủi ro AI của InsightHub có lập luận. Threat model dùng [template](../security/Threat_Model_Template.md) và được cập nhật tại LR-24.
+   **Threat model sơ bộ.** Trong cùng hồ sơ thiết kế, vẽ data flow và trust boundary giữa trình duyệt, API, DB, tài liệu upload, RAG, provider AI, coding agent và MCP. Áp STRIDE cho các endpoint OpenAPI và thực thể ERD chính, ưu tiên Auth, ownership và Quiz. Đánh dấu luồng dữ liệu ra nước ngoài (Claude, provider AI chính và provider dự phòng học viên đã chọn như DeepSeek, Gemini, Anthropic hoặc gateway OpenAI-compatible; Ollama local nếu dùng thì không đi ra ngoài; Firebase hoặc dịch vụ Auth bên ngoài nếu dùng) và loại dữ liệu được phép đi qua theo AI Usage Charter. Tự phân loại mức rủi ro AI của InsightHub có lập luận. Ghi điều kiện lethal trifecta (dữ liệu riêng tư, nội dung không tin cậy, kênh gửi ra ngoài) đã cắt cho từng threat AI. Threat model dùng [template](../security/Threat_Model_Template.md) và được cập nhật tại LR-24.
 
-   **Spec chain và review thiết kế bằng subagent.** Từ `specs/quiz/spec.md`, lập `plan.md` và `tasks.md` của Quiz theo [template](../../specs/README.md); mỗi task đủ nhỏ cho một PR và có AC, lệnh kiểm, stop condition (điều kiện dừng). Tạo subagent `design-reviewer` chỉ có quyền đọc theo [template](../ai/templates/subagent.template.md), chạy review OpenAPI/ERD/threat model và xác minh ít nhất một finding. Bổ sung glossary và invariant nghiệp vụ vào `AGENTS.md`. Đánh giá cơ chế kế thừa (Auth scaffold) so với SRS ghi trong bảng fit-gap của hồ sơ thiết kế: cách API xác định người dùng, thời hạn và thu hồi phiên, phần giữ, sửa hoặc thay, theo [Auth Integration Guide](../Auth_Integration_Guide.md); chỉ viết ADR Auth riêng khi thay scaffold. Viết một ADR theo [template](../adr/ADR-000-Template.md) so sánh hai phương án, gợi ý chiến lược fallback provider hoặc mở rộng AI Job scaffold ([ADR-004](../adr/ADR-004-AI-Job-Framework.md)).
+   **Spec chain và review thiết kế bằng subagent.** Từ `specs/quiz/spec.md`, lập `plan.md` và `tasks.md` của Quiz theo [template](../../specs/README.md); mỗi task đủ nhỏ cho một PR và có AC, lệnh kiểm, stop condition (điều kiện dừng). Tạo subagent `design-reviewer` chỉ có quyền đọc theo [template](../ai/templates/subagent.template.md), chạy review OpenAPI/ERD/threat model và xác minh ít nhất một finding. Bổ sung glossary và invariant nghiệp vụ vào `AGENTS.md`. Đánh giá cơ chế kế thừa (Auth scaffold) so với SRS ghi trong bảng fit-gap của hồ sơ thiết kế: cách API xác định người dùng, thời hạn và thu hồi phiên, phần giữ, sửa hoặc thay, theo [Auth Integration Guide](../Auth_Integration_Guide.md); chỉ viết ADR Auth riêng khi thay scaffold. Viết một ADR theo [template](../adr/ADR-000-Template.md) so sánh hai phương án trên architecture driver, có mục Điều kiện xem lại, gợi ý chiến lược fallback provider hoặc mở rộng AI Job scaffold ([ADR-004](../adr/ADR-004-AI-Job-Framework.md)).
 
 ### 7.3 Điều kiện hoàn thành
 
 - Prototype (Figma hoặc HTML) bao phủ các Auth flow tầng Core, Notebook/workspace, Document, Conversation, Summary, Quiz, danh sách và xem Output trong UI-01 đến UI-08, với các trạng thái áp dụng. Note và thao tác quản lý Output (xóa, đổi tên, tạo lại) là Extended, chỉ ghi giả định theo mục 2.1.5.
 - API và schema thể hiện input/output, lỗi, session, ownership, pagination, version và dữ liệu nội bộ; không lộ đáp án Quiz trước khi nộp.
 - Thiết kế thể hiện quan hệ, transaction, persistence, xóa, gửi lặp và dữ liệu qua restart/migration; các lựa chọn giữ đúng hành vi SRS.
-- Có threat model sơ bộ với trust boundary, STRIDE trên API/dữ liệu và luồng dữ liệu ra nước ngoài.
-- Có ADR so sánh phương án và một nhận xét review có căn cứ; khác biệt giữa prototype, API và dữ liệu được xử lý trước code phần liên quan.
+- Có threat model sơ bộ với trust boundary, STRIDE trên API/dữ liệu, luồng dữ liệu ra nước ngoài và điều kiện lethal trifecta đã cắt.
+- Hồ sơ thiết kế có C4 Context và Container, bảng khớp prototype, sequence, OpenAPI, ERD và AC cho một hành trình Quiz.
+- Có ADR so sánh phương án, có điều kiện xem lại, và một nhận xét review có căn cứ; khác biệt giữa prototype, API và dữ liệu được xử lý trước code phần liên quan.
 - `specs/quiz/plan.md`, `tasks.md` nối thiết kế với task; subagent `design-reviewer` có một finding đã xác minh.
 
 ### 7.4 Áp dụng SDLC và AI
