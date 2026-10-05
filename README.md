@@ -255,7 +255,7 @@ git diff --check
 | Nhu cầu | Tài liệu |
 | --- | --- |
 | Cài đặt, fork repository và chạy ứng dụng | [Getting Started](GETTING_STARTED.md) |
-| Bắt đầu bài tập, xem lộ trình và cách nộp | [Requirements học viên 1.3](docs/learner/01_Requirements_InsightHub.md) |
+| Bắt đầu bài tập, xem lộ trình và cách nộp | [Requirements học viên 1.4](docs/learner/01_Requirements_InsightHub.md) |
 | Tra hành vi sản phẩm và acceptance criteria (AC) | [SRS InsightHub v1.1](docs/learner/02_SRS_InsightHub_v1.1.md) |
 | Thiết kế dữ liệu, API và tích hợp phần mở rộng | [Hướng dẫn tích hợp](docs/learner/01_Requirements_InsightHub.md#data-api) |
 | Hiểu mã nguồn nền và giao tiếp hiện có | [Kiến trúc](docs/Architecture_Starter_v1.md), [API Starter](docs/API_Contract_Starter_v1.md) |

@@ -1,6 +1,6 @@
 # Starter Readiness v1.0.0
 
-> Tài liệu lịch sử của technical candidate rc.3 (19/09/2026). Số liệu bên dưới (163 AC, 86 backend tests) thuộc thời điểm đó. Phạm vi hiện hành: Requirements 1.3, 153 AC áp dụng (92 Core, 61 Extended), Starter revision `learner-r1.3`. Checklist phát hành bài làm dùng [Release Checklist Template](Release_Checklist_Template.md).
+> Tài liệu lịch sử của technical candidate rc.3 (19/09/2026). Số liệu bên dưới (163 AC, 86 backend tests) thuộc thời điểm đó. Phạm vi hiện hành: Requirements 1.4, 153 AC áp dụng (92 Core, 61 Extended), Starter revision `learner-r1.3`. Checklist phát hành bài làm dùng [Release Checklist Template](Release_Checklist_Template.md).
 
 Ngày đánh giá: 19/09/2026. Technical candidate `v1.0.0-rc.3`. Phạm vi: nền RAG được cấp cho C07; chưa phải sản phẩm hoàn chỉnh hoặc quyết định phát hành lớp.
 

@@ -61,7 +61,7 @@ git fetch <nguồn nhánh release> release/learner-r1.3:release/learner-r1.3
 git checkout main && git merge --ff-only release/learner-r1.3
 python3 scripts/check_project.py && python3 scripts/trace_check.py
 git push origin main
-git tag -a learner-r1.3 -m "Starter learner-r1.3: Requirements 1.3"
+git tag -a learner-r1.3 -m "Starter learner-r1.3: Requirements 1.4"
 git push origin learner-r1.3
 ```
 
