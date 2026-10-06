@@ -142,7 +142,7 @@ Threshold 0,20 chưa được hiệu chỉnh bằng real AEV của lớp. Không
 
 ## Retry, provider dự phòng và usage (IH-AI-005)
 
-Starter chỉ cấp phần chung; fallback là việc của học viên ở LR-18. **Không sửa `validate_configuration` trong `config.py`** khi làm phần này: hàm là baseline của Assignment refactor. Cấu hình của provider dự phòng đặt trong module hoặc file cấu hình riêng của bài làm.
+Starter chỉ cấp phần chung; fallback là việc của học viên ở LR-18. **Không sửa `validate_configuration` trong `config.py`** khi làm phần này: hàm là baseline của phần legacy trong ASG01 ở M5. Cấu hình của provider dự phòng đặt trong module hoặc file cấu hình riêng của bài làm.
 
 | Phần | Starter có sẵn | Học viên làm |
 | --- | --- | --- |

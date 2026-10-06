@@ -1,6 +1,6 @@
 # Module legacy chỉ định cho bài Legacy Modernization
 
-Dùng cho buổi 7 (C02-U04-T05..T07): đọc legacy, characterization tests, refactor từng bước có rollback. Starter **không** refactor sẵn các module này; chúng được giữ nguyên để học viên thực hành.
+Dùng cho phần legacy của ASG01 ở M5 (buổi 9, C02-U07-T02, T05, T06): module map, characterization tests, refactor từng bước qua agent có rollback và review PR do agent tạo. Starter **không** refactor sẵn các module này; chúng được giữ nguyên để học viên thực hành. **Không sửa các module này trước M5**; khi làm M3.1, M3 mà cần sửa phần nền khác, viết regression test trước diff.
 
 ## Module chỉ định
 
@@ -20,11 +20,11 @@ Số liệu đo bằng `radon cc -s` trên Starter `v1.0.0-rc.3` ngày 27/09/202
 
 ## Chứng minh test bắt lỗi (mutation testing)
 
-Rubric Assignment (mức Đầy đủ) yêu cầu chứng minh test bắt lỗi. Cách gọn: chạy mutation testing trên đúng module đã chọn, ví dụ `mutmut` cho Python, giới hạn phạm vi file để thời gian chạy ngắn. Ghi số mutant sống, phân tích ít nhất một mutant sống (test thiếu assertion hay mutant tương đương), bổ sung test rồi chạy lại. Không đặt mục tiêu phần trăm mutation score cố định; giá trị nằm ở phân tích.
+Ở M3 (ASG01 phần kiểm thử), mutation chạy trên một file code học viên tự viết, không chạy trên module legacy. Ở M5, mutation trên module legacy là tùy chọn khi còn timebox. Cách gọn: chạy mutation testing trên đúng file đã chọn, ví dụ `mutmut` cho Python, giới hạn phạm vi file để thời gian chạy ngắn. Ghi số mutant sống, phân tích ít nhất một mutant sống (test thiếu assertion hay mutant tương đương), bổ sung test rồi chạy lại. Không đặt mục tiêu phần trăm mutation score cố định; giá trị nằm ở phân tích.
 
 ## Module không dùng cho bài Assignment
 
-Các module dưới đây đã được dùng làm ví dụ phân tích và refactor trong Knowledge Content buổi 7. Không chọn chúng cho ASG01 để bài làm thể hiện phân tích của chính học viên.
+Các module dưới đây đã được dùng làm ví dụ phân tích và refactor trong học liệu. Không chọn chúng cho ASG01 để bài làm thể hiện phân tích của chính học viên.
 
 | Module | Hàm hoặc phạm vi |
 | --- | --- |

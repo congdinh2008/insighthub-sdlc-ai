@@ -32,7 +32,7 @@
 | M2.1 LR-08 | Skill `ac-drafter` viết nháp `branches`/`expected` cho AC áp dụng, ghi `draft_by=AI`. Kiểm 100% AC R1 của hành trình M3.1; AC R2 của hành trình kiểm đúng lúc trong DoD của PR. Phân tích sâu 1-2 AC kèm Gherkin. Lấy mẫu phần còn lại | `python3 scripts/trace_sample.py --seed <mã học viên + ngày> --size 10` |
 | M2.1 LR-08 | Ghi `result` OK/Error cho từng dòng mẫu; đánh giá. Tỷ lệ lỗi từ 20% trở lên: sửa context pack hoặc prompt của skill, sinh lại nhóm lỗi, lấy mẫu vòng mới. Ghi tỷ lệ lỗi vào Delivery Log | `python3 scripts/trace_sample.py --evaluate` |
 | M3.1-M3 | Trước khi giao agent một task: chuyển AC R1/R2 của task sang `Human-verified` (mục DoD của PR) | `python3 scripts/trace_check.py` |
-| M4 LR-20 | Kết luận từng AC Core đến hạn | `python3 scripts/trace_check.py --gate M4` |
-| M5 | Bổ sung AC release/restore/CR | `python3 scripts/trace_check.py --gate M5` |
+| M4 LR-20, LR-25, LR-26 | Kết luận từng AC Core đến hạn, gồm phát hành và khôi phục R1 (IH-NFR-009, IH-NFR-010, IH-REL-001, IH-REL-002) | `python3 scripts/trace_check.py --gate M4` |
+| M5 LR-27 | Bổ sung AC thay đổi sau phát hành (IH-REL-003) và cập nhật phần bị ảnh hưởng ở R1.1 | `python3 scripts/trace_check.py --gate M5` |
 
 `trace_check.py` chạy trong CI trên mọi PR. Script chỉ kiểm tính nhất quán; điểm và verdict vẫn dựa trên minh chứng thật. Không đổi tên cột hoặc xóa dòng; có thể thêm cột riêng ở cuối.

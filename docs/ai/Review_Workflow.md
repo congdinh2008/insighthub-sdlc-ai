@@ -1,6 +1,6 @@
 # Quy trình review có AI trên Pull Request
 
-Áp dụng từ M1 (LR-07) cho mọi PR tính năng; bắt buộc với PR do agent tạo (M3 LR-19), PR bảo mật (M4 LR-24) và PR migration/CI (M5 LR-25..27). Tài khoản Claude Pro/Max dùng được toàn bộ quy trình mặc định; không cần GitHub App, secret hoặc phút GitHub Actions.
+Áp dụng từ M1 (LR-07) cho mọi PR tính năng; bắt buộc với PR bảo mật (M4 LR-24), PR cấu hình CI và phát hành (M4 LR-24..25), PR migration và PR do agent tạo (M5 LR-27). Tài khoản Claude Pro/Max dùng được toàn bộ quy trình mặc định; không cần GitHub App, secret hoặc phút GitHub Actions.
 
 ## Quy trình mặc định
 

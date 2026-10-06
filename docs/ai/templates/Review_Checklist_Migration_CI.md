@@ -1,6 +1,6 @@
 # Checklist review migration và cấu hình build/test do AI sinh
 
-<!-- Dùng ở M5 (LR-25..27) cho mọi PR có migration SQL, workflow CI, Dockerfile, Makefile hoặc cấu hình test do agent tạo hoặc sửa. -->
+<!-- Dùng ở M4 (LR-24..25) và M5 (LR-27) cho mọi PR có migration SQL, workflow CI, Dockerfile, Makefile hoặc cấu hình test do agent tạo hoặc sửa. -->
 
 | Nhóm | Câu hỏi kiểm | Kết quả và căn cứ |
 | --- | --- | --- |

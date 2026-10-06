@@ -255,14 +255,14 @@ git diff --check
 | Nhu cầu | Tài liệu |
 | --- | --- |
 | Cài đặt, fork repository và chạy ứng dụng | [Getting Started](GETTING_STARTED.md) |
-| Bắt đầu bài tập, xem lộ trình và cách nộp | [Requirements học viên 1.4](docs/learner/01_Requirements_InsightHub.md) |
+| Bắt đầu bài tập, xem lộ trình và cách nộp | [Requirements học viên 1.5](docs/learner/01_Requirements_InsightHub.md) |
 | Tra hành vi sản phẩm và acceptance criteria (AC) | [SRS InsightHub v1.1](docs/learner/02_SRS_InsightHub_v1.1.md) |
 | Thiết kế dữ liệu, API và tích hợp phần mở rộng | [Hướng dẫn tích hợp](docs/learner/01_Requirements_InsightHub.md#data-api) |
 | Hiểu mã nguồn nền và giao tiếp hiện có | [Kiến trúc](docs/Architecture_Starter_v1.md), [API Starter](docs/API_Contract_Starter_v1.md) |
 | Chọn cấu hình AI và kiểm chất lượng | [Model Profiles](docs/Model_Profiles_And_Reranking.md), [Evaluation](evaluation/README.md) |
-| Vận hành, khôi phục và xử lý lỗi | [Runbook](docs/Runbook_Starter_v1.md) |
+| Vận hành, khôi phục và xử lý lỗi | [Runbook](docs/Runbook_Starter_v1.md), [Operations Template](docs/release/Operations_Template.md) |
 | Thêm lint, secret scan, dependency scan (M1) | [M1 Lint/Scan Guide](docs/M1_Lint_Scan_Guide.md) |
-| Chọn module legacy cho characterization/refactor | [Module legacy](docs/Legacy_Modules.md) |
+| Chọn module legacy cho phần legacy của ASG01 (M5) | [Module legacy](docs/Legacy_Modules.md) |
 | Thành phần AI Engineering Kit theo milestone | [AI Engineering Kit](docs/ai/README.md), [Review Workflow](docs/ai/Review_Workflow.md) |
 | Tích hợp Auth, Google và email | [Hướng dẫn Auth](docs/Auth_Integration_Guide.md) |
 | Cơ chế AI job, quota, fallback và usage | [AI Job Framework](docs/AI_Job_Framework.md), [ADR-004](docs/adr/ADR-004-AI-Job-Framework.md) |
