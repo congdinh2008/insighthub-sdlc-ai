@@ -11,6 +11,7 @@ Tài liệu xác định các chức năng InsightHub học viên phải xây, c
 > - M1: kế hoạch cá nhân có bảng gate 6 pha và bản đồ AI theo pha, Charter cập nhật RACI và 2 stop condition enforced, baseline từ AI Delivery Log. Rubric M1 thêm tiêu chí Lifecycle Board 20 điểm. Timebox không đổi vì phần nháp làm ở Lab buổi 3 (mục 5).
 > - M2.1: `spec.md` của Quiz có yêu cầu EARS, AC 3 nhánh, NFR có số đo và clarification log (mục 6). Lab buổi 4 luyện trên ví dụ Tóm tắt, không chấm.
 > - M2: hồ sơ thiết kế có C4 Context và Container, bảng khớp prototype, sequence, OpenAPI, ERD, AC cho một hành trình. ADR có mục Điều kiện xem lại. Threat model có cột điều kiện lethal trifecta đã cắt (mục 7).
+> - Mục 15.2: LR-12..13 truy vết đủ C02-U04 T01-T06, vì M3.1 dùng cả DoD và PR (T04), agent task brief và hook bảo vệ test (T05), review diff do agent làm (T06).
 > - Không đổi phạm vi AC, tầng Core/Extended, timebox và trọng số điểm khóa.
 
 > **Thay đổi so với bản 1.2 (04/10/2026):**
@@ -1474,7 +1475,7 @@ Mã khóa học, đơn vị và chủ đề có tiền tố B2BC07. PLO là chu�
 | LR-06..07 | PLO-1 / C02-CLO-1 | C02-U01 T01-T04 | Hồ sơ dự án, backlog và CI | Phạm vi và kế hoạch |
 | LR-08..09 | PLO-2 / C02-CLO-2 | C02-U02 T01-T04 | Yêu cầu, test case và thử tích hợp | Spec và truy vết yêu cầu |
 | LR-10..11 | PLO-3 / C02-CLO-3 | C02-U03 T01-T05 | Prototype (Figma hoặc HTML), API, dữ liệu, quyết định kiến trúc và threat model sơ bộ | Thiết kế giao diện, API và dữ liệu |
-| LR-12..13 | PLO-4 / C02-CLO-4 | C02-U04 T01-T03 | Hành trình Auth - Notebook - Document - Chat và TDD | Chức năng và TDD |
+| LR-12..13 | PLO-4 / C02-CLO-4 | C02-U04 T01-T06 | Hành trình Auth - Notebook - Document - Chat và TDD | Chức năng và TDD |
 | LR-14..18 | PLO-4 / C02-CLO-4 | C02-U04 T01-T04; C02-U03-T02 | Auth, Email, Notebook/Document/Conversation, Summary, Quiz và AI Output tầng Core; Extended khi còn thời gian | Chức năng sản phẩm |
 | LR-19 | PLO-4 / C02-CLO-4 | C02-U04 T05-T08 | Module refactor và task tự động | Refactor, tự động hóa và Assignment |
 | LR-20..22 | PLO-5 / C02-CLO-5 | C02-U05 T01-T03 | Kết quả test và nghiệm thu | Test, nghiệm thu và phân quyền |
