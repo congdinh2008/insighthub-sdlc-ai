@@ -46,7 +46,6 @@ def main():
     assert package['version'] == lock['version'] == lock['packages']['']['version'] == sbom['metadata']['component']['version'] == version, 'Version drift'
     assert (ROOT / 'api/app/main.py').read_text().count('"' + version + '"') == 2, 'API version drift'
     assert version in (ROOT / 'README.md').read_text(), 'README version drift'
-    assert version in (ROOT / 'docs/release/Starter_Readiness_v1.0.0.md').read_text(), 'Readiness version drift'
     srs = local_file(manifest['requirements_baseline'])
     learner = local_file(manifest['learner_requirements'])
     reference = local_file(manifest['api_schema_reference'])

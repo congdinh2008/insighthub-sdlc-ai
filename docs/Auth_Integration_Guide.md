@@ -76,7 +76,7 @@ Hành trình mặc định là email và mật khẩu. Nếu làm đăng nhập 
 ## 5. Chuẩn bị và dữ liệu
 
 - Email **test riêng** cho khóa học. Khi làm Google (Extended): tài khoản Google test riêng, OAuth client ở chế độ testing với danh sách test user, callback trên `localhost`.
-- Mailpit cho kiểm local (`make mail-up`); thư nhận trên Mailpit qua SMTP của ứng dụng được chấp nhận làm evidence EML-001 (Requirements mục 14, mã D5). Provider email thật gửi tới inbox test là tùy chọn.
+- Mailpit cho kiểm local (`make mail-up`); thư nhận trên Mailpit qua SMTP của ứng dụng được chấp nhận làm evidence EML-001 (Requirements mục 14, mã D5). Gửi thư thật là tùy chọn: Gmail riêng cho khóa học qua App Password và biến `WEB_SMTP_*` ([GETTING_STARTED](../GETTING_STARTED.md#gửi-thư-thật-bằng-gmail-tùy-chọn)).
 - Client secret chỉ nằm trong `.env`; không dán vào Claude, log, issue hoặc ảnh chụp.
 
 ## 6. Điểm kiểm tối thiểu trước khi báo Auth đạt

@@ -13,8 +13,10 @@ Tài liệu xác định các chức năng InsightHub học viên phải xây, c
 > - M3: LR-19 thành kiểm thử đa tầng (ASG01 phần 1): test plan có exit criteria, test report có NotRun, E2E hành trình M3.1, golden set hỏi đáp chạy k = 2, mutation trên code tự viết, cùng tự động hóa một task (mục 9).
 > - M4 thành release gate, phát hành và vận hành: LR-25 phát hành R1 có go/no-go, LR-26 restore, 3 SLI, 1 SLO, diễn tập incident, postmortem, chặn lệnh phá dữ liệu hai lớp. 8 AC của IH-NFR-009, IH-NFR-010, IH-REL-001, IH-REL-002 đến hạn M4 (mục 10, 15.4).
 > - M5 thành bảo trì và tiến hóa trong LR-27: CR có thay đổi cấu trúc dữ liệu thành R1.1 với migration nâng cấp expand và contract, refactor module legacy qua agent và review PR do agent tạo (ASG01 phần 2) (mục 11).
-> - ASG01 "Legacy và kiểm thử đa tầng" (25%) nộp cùng hồ sơ Capstone trong 3 ngày sau buổi 10. Capstone chấm trên hồ sơ viết theo rubric 6 nhóm của Curriculum, review trực tiếp 4 đến 5 bài trên lớp, lộ trình 30/60/90 ngày (mục 2.5, 11.7, 12).
+> - ASG01 "Legacy và kiểm thử đa tầng" (25%) nộp cùng hồ sơ Capstone trong 3 ngày sau buổi 10. Capstone là sản phẩm hoàn thiện cùng bộ evidence đầy đủ, chấm theo rubric 6 nhóm của Curriculum; mentor chọn top 4 đến 5 học viên để Q&A trên lớp; lộ trình 30/60/90 ngày (mục 2.5, 11.7, 12).
 > - Đơn giản hóa cách làm, không đổi tầng AC: Conversation tự tạo ở lượt hỏi đầu; EML-001 văn bản thuần một mẫu; thư nhận trên Mailpit được chấp nhận làm evidence (provider email thật tùy chọn); màn làm Quiz hiện toàn bộ câu trên một trang; hardening "khởi động lại giữa tác vụ" kết luận qua test có sẵn của Starter cùng một lượt kiểm tay; gói R1 bằng `git archive` kèm SHA-256.
+> - Quiz 15 câu, 25 phút; bản chuẩn bị 10 phút, tổng 35 phút mỗi buổi không đổi (mục 2.1, 2.5).
+> - Email: Mailpit là mặc định; gửi thư thật bằng Gmail riêng cho khóa học qua App Password là tùy chọn, Starter cấp sẵn biến cấu hình (mục 14.1).
 > - Tổng tự học giữ khoảng 59 giờ, tuần 3 khoảng 26,2 giờ (mục 2.1). Không đổi phạm vi 153 AC, tầng Core/Extended và SRS.
 
 > **Thay đổi so với bản 1.3 (06/10/2026):**
@@ -130,7 +132,7 @@ Phần [thiết kế dữ liệu và API](#data-api) xác định đầu ra cầ
 | 7 | M3 | Mốc 5 | Auth và email tầng Core, Notebook/Document/Conversation, Summary, Quiz và AI Output tầng Core; kiểm thử đa tầng trên hành trình M3.1 (ASG01 phần 1). Extended theo mục 2.1.5 (ví dụ khôi phục và đổi mật khẩu, hồ sơ, Note, xóa Notebook, quản lý Output, đăng nhập và liên kết Google) khi Core đã đạt | 9,3 giờ | Trước buổi 8 ít nhất 12 giờ |
 | 8 | M4 | Mốc 6 | Release gate có quyết định go/no-go, R1 cài sạch có tag và checksum, dữ liệu khôi phục được, SLO và diễn tập incident | 8,9 giờ | Trước buổi 9 ít nhất 12 giờ |
 | 9 | M5 | Mốc 7 | Change request có thay đổi cấu trúc dữ liệu thành R1.1 (migration nâng cấp, rollback bảo toàn dữ liệu, regression); module legacy được refactor giữ hành vi (ASG01 phần 2) | 4,7 giờ | Trước buổi 10 ít nhất 12 giờ |
-| 10 | Capstone | Capstone | Hồ sơ Capstone viết: truy vết quyết định xuyên vòng đời, R1 và R1.1, báo cáo metric so với baseline, lộ trình áp dụng 30/60/90 ngày | 2,8 giờ | Bản nháp trước buổi 10 ít nhất 2 giờ; bản cuối cùng ASG01 trong 3 ngày sau buổi 10 |
+| 10 | Capstone | Capstone | Sản phẩm hoàn thiện và bộ evidence đầy đủ M1 đến M5: truy vết quyết định xuyên vòng đời, R1 và R1.1, báo cáo metric so với baseline, lộ trình áp dụng 30/60/90 ngày. Top 4 đến 5 học viên Q&A trên lớp | 2,8 giờ | Bản nháp trước buổi 10 ít nhất 2 giờ; bản cuối cùng ASG01 trong 3 ngày sau buổi 10 |
 
 Bản chuẩn bị của buổi 1-9 gửi trước giờ bắt đầu buổi học ít nhất 2 giờ. Đây là tiến độ thực tế để nhận hỗ trợ, chưa yêu cầu hoàn tất cả milestone. Ngày, giờ cụ thể và kênh nộp bài do giảng viên công bố theo lịch lớp, múi giờ Việt Nam (UTC+07:00); không suy ra ngày học từ ngày trên tài liệu.
 
@@ -145,7 +147,7 @@ Học liệu phát hành theo bốn đợt để học viên đi trước đư�
 
 <a id="timebox"></a>
 
-**Timebox gợi ý theo công việc.** Tổng giờ tự học theo bảng trên là khoảng 58,9 giờ, gồm đọc KC/TG 19,5 giờ, Quiz và bản chuẩn bị khoảng 5,6 giờ, Running Project khoảng 33,8 giờ. Theo nhóm buổi, tải lần lượt khoảng 9,3 giờ (buổi 1 và 2), 16 giờ (buổi 3 đến 5), 26,2 giờ (buổi 6 đến 8) và 7,5 giờ (buổi 9 và 10). Nhờ nhịp đi trước một buổi, tải theo tuần lịch dàn đều hơn tải theo nhóm buổi (xem nhịp tuần mẫu bên dưới). Cột "Đọc KC/TG" gồm đọc, tìm hiểu KC và đọc hiểu TG. Cột "Quiz, chuẩn bị" gồm làm Quiz (khoảng 20 phút) và soạn bản chuẩn bị (khoảng 15 phút); bản chuẩn bị buổi 10 là bản nháp hồ sơ Capstone, đã tính trong LR-28, LR-29. Phần làm theo TG (walkthrough) tạo một phần đầu ra của LR nên nằm trong timebox LR; timebox LR đã gồm phần sửa theo phản hồi sau buổi học.
+**Timebox gợi ý theo công việc.** Tổng giờ tự học theo bảng trên là khoảng 58,9 giờ, gồm đọc KC/TG 19,4 giờ, Quiz và bản chuẩn bị khoảng 5,7 giờ, Running Project khoảng 33,8 giờ. Theo nhóm buổi, tải lần lượt khoảng 9,3 giờ (buổi 1 và 2), 16 giờ (buổi 3 đến 5), 26,2 giờ (buổi 6 đến 8) và 7,5 giờ (buổi 9 và 10). Nhờ nhịp đi trước một buổi, tải theo tuần lịch dàn đều hơn tải theo nhóm buổi (xem nhịp tuần mẫu bên dưới). Cột "Đọc KC/TG" gồm đọc, tìm hiểu KC và đọc hiểu TG. Cột "Quiz, chuẩn bị" gồm làm Quiz (25 phút) và soạn bản chuẩn bị (khoảng 10 phút); bản chuẩn bị buổi 10 là bản nháp hồ sơ Capstone, đã tính trong LR-28, LR-29. Phần làm theo TG (walkthrough) tạo một phần đầu ra của LR nên nằm trong timebox LR; timebox LR đã gồm phần sửa theo phản hồi sau buổi học.
 
 | Buổi | Tự học | Đọc KC/TG | Quiz, chuẩn bị | Timebox LR (phút) |
 | --- | --- | --- | --- | --- |
@@ -158,7 +160,7 @@ Học liệu phát hành theo bốn đợt để học viên đi trước đư�
 | 7 | 9,3 giờ | 130 phút | 35 phút | LR-14: 25<br>LR-15: 55<br>LR-16: 50<br>LR-17: 95<br>LR-18: 85, gồm IH-AI-005<br>LR-19: 65, gồm kiểm thử đa tầng và tự động hóa một task<br>sửa theo phản hồi: 15 |
 | 8 | 8,9 giờ | 150 phút | 35 phút | LR-20: 50<br>LR-21: 20<br>LR-22: 55, gồm hardening AI Job<br>LR-23: 70<br>LR-24: 50<br>LR-25: 30<br>LR-26: 60, gồm restore và vận hành<br>sửa theo phản hồi: 15 |
 | 9 | 4,7 giờ | 100 phút | 35 phút | LR-27: 130, gồm CR và R1.1 45, migration nâng cấp 20, refactor legacy 65<br>sửa theo phản hồi: 15 |
-| 10 | 2,8 giờ | 60 phút | 20 phút (Quiz) | Trước buổi, LR-28: 40<br>Trước buổi, LR-29: 20<br>Sau buổi, sửa hồ sơ theo review: 30 |
+| 10 | 2,8 giờ | 55 phút | 25 phút (Quiz) | Trước buổi, LR-28: 40<br>Trước buổi, LR-29: 20<br>Sau buổi, sửa hồ sơ theo review: 30 |
 
 <a id="nhip-tuan-mau"></a>
 
@@ -221,7 +223,7 @@ Dùng bảng này để trình bày kết quả trong PR/bản nộp hiện có,
 | **M3 / B7 / LR-14..19** | Hoàn thiện chức năng và kiểm thử đa tầng. Hành trình M3.1 và thiết kế phần dùng chung. | Chín nhóm chức năng hoạt động theo tầng Core/Extended, Auth và email theo tầng đã chốt, Summary/Quiz, Output/lifecycle; test theo nhánh; test plan có exit criteria, E2E hành trình M3.1, golden set hỏi đáp chạy k = 2, mutation trên code tự viết và test report có NotRun (ASG01 phần 1); một task được tự động hóa. | Bản tích hợp, bộ test và exit criteria cho release gate M4. Có đủ tính năng chưa đồng nghĩa đã nghiệm thu mọi AC. |
 | **M4 / B8 / LR-20..26** | Release gate, phát hành và vận hành local. Bản M3, test tích lũy, test plan, corpus/oracle. | Kết luận từng AC đến hạn (`trace_check --gate M4`), nối 19 UAT tầng Core (UAT-02 Google và UAT-03 khôi phục, đổi mật khẩu là Extended); bốn ca hardening AI Job; 12 lượt nội dung AI chạy qua eval harness cùng ngoại lệ và ca fallback; `eval-fixture` làm CI đỏ khi không đạt; threat model cập nhật, `/security-review`, SBOM và AI-BOM sinh trong CI; go/no-go có ký theo exit criteria; R1 cài sạch có tag và checksum; restore có kiểm quyền A/B; 3 SLI, 1 SLO, diễn tập incident và postmortem; lệnh phá dữ liệu bị chặn ở hai lớp. | Tag R1, gói, runbook và evidence vận hành làm đầu vào M5. AC thay đổi sau phát hành (IH-REL-003) còn ghi chưa đến hạn M5. |
 | **M5 / B9 / LR-27** | Bảo trì và tiến hóa. R1 đã phát hành, dữ liệu nghiệp vụ và module legacy chỉ định. | Change request có thay đổi cấu trúc dữ liệu: impact analysis, tái hiện trước khi sửa, migration nâng cấp R1 lên R1.1 theo expand và contract có backup và rollback bảo toàn dữ liệu, regression, số đo usage trước và sau; module map, characterization test, refactor module legacy qua agent trong worktree, review PR do agent tạo, complexity trước và sau (ASG01 phần 2). | Tag R1.1, hồ sơ CR và phần legacy của ASG01 cho Capstone. Phạm vi triển khai là local trên máy cá nhân. |
-| **Capstone / B10 / LR-28..29** | Nghiệm thu, bàn giao và phản tư. Tag, source, sản phẩm và evidence thống nhất. | Hồ sơ viết: truy một nhu cầu xuyên vòng đời, R1 và R1.1, đề xuất AI đã bác bỏ, AI Engineering Kit đã dùng thật, báo cáo metric so với baseline từ AI Delivery Log; lộ trình áp dụng 30/60/90 ngày có owner, baseline, KPI và điều kiện dừng. Bài được chọn trình bày trực tiếp trên lớp. | Bàn giao project, evidence cá nhân và lộ trình. Lộ trình không giao thêm thời gian triển khai bắt buộc. |
+| **Capstone / B10 / LR-28..29** | Nghiệm thu, bàn giao và phản tư. Tag, source, sản phẩm và evidence thống nhất. | Sản phẩm hoàn thiện và bộ evidence đầy đủ: truy một nhu cầu xuyên vòng đời, R1 và R1.1, đề xuất AI đã bác bỏ, AI Engineering Kit đã dùng thật, báo cáo metric so với baseline từ AI Delivery Log; lộ trình áp dụng 30/60/90 ngày có owner, baseline, KPI và điều kiện dừng. Top 4 đến 5 học viên được chọn Q&A trực tiếp trên lớp. | Bàn giao project, evidence cá nhân và lộ trình. Lộ trình không giao thêm thời gian triển khai bắt buộc. |
 
 Phân biệt ba kết quả: output milestone đạt/chưa đạt; verdict từng AC theo mục 16.1; điểm phản hồi theo rubric. M0-M2 có thể hoàn thành output phân tích/thiết kế trong khi AC runtime chưa kiểm. Không lấy điểm rubric thay verdict AC hoặc dùng một nhánh đã đạt để kết luận toàn bộ AC đạt.
 
@@ -235,7 +237,7 @@ Milestone là điểm kiểm tiến độ học tập và sản phẩm. Trong m�
 - **Thiết kế phục vụ triển khai:** spike được dùng thiết kế tối thiểu để kiểm giả định; M2 hoàn thiện thiết kế tích hợp. Khi code khác thiết kế đã chọn, giải thích lý do và cập nhật các phần liên quan trong cùng PR.
 - **Chuyển tiếp theo dependency:** phần độc lập có đầu vào đủ được tiếp tục. Phần bị chặn ghi yêu cầu bị ảnh hưởng, cách đã thử, vai trò cần hỗ trợ và mốc/bước kiểm tiếp theo trong bản nộp; chưa được ghi hoàn thành hoặc tích hợp Pass. Không tự miễn AC.
 - **Thời gian có AI (estimate theo công kiểm chứng):** agent rút ngắn thời gian viết code, không rút ngắn thời gian học viên xác lập expected và review. Ước lượng mỗi công việc bằng tổng: xác lập và kiểm expected của AC (gợi ý R1 6 phút, R2 3 phút, R3 1 phút mỗi AC; AC Starter đã có chỉ cần kiểm lại 1 phút), viết brief và duyệt plan (khoảng 8 phút), theo dõi agent (khoảng 5 phút, chỉ tính lúc cần chú ý), review diff (khoảng 15 phút cho PR 300 dòng, nhân 1,5 với rủi ro R1), sửa lại (khoảng 30% thời gian review) và ghi evidence (khoảng 5 phút). Các tham số là mặc định để hiệu chỉnh bằng số đo trong AI Delivery Log, không phải định mức. Tái dùng kết quả đã làm trên lớp; ghi chênh lệch và việc còn lại để giảng viên hỗ trợ trong ngân sách tại mục 2.1. Tốc độ sinh code hoặc thời gian chạy test không đại diện thời gian hoàn thành của học viên.
-- **Ví dụ đối chiếu ngân sách khoảng 59 giờ:** ngân sách gồm đọc KC/TG 19,5 giờ, Quiz và bản chuẩn bị khoảng 5,6 giờ, Running Project khoảng 34 giờ (mục 2.1). Một issue "Notebook và quyền A/B" có 5 AC Core (2 R1, 3 R2) được ước lượng bằng 21 phút kiểm expected (2 × 6 + 3 × 3) + 8 phút brief và plan + 5 phút theo dõi agent + 23 phút review diff khoảng 300 dòng có R1 (15 × 1,5) + 7 phút sửa lại + 5 phút evidence, tổng khoảng 70 phút. Cộng các issue của M3.1 rồi so với timebox LR-12 (275 phút); chênh quá 20% thì ghi lý do, phần đã thử và trao đổi trong bản chuẩn bị, không cắt AC Core.
+- **Ví dụ đối chiếu ngân sách khoảng 59 giờ:** ngân sách gồm đọc KC/TG 19,4 giờ, Quiz và bản chuẩn bị khoảng 5,7 giờ, Running Project khoảng 34 giờ (mục 2.1). Một issue "Notebook và quyền A/B" có 5 AC Core (2 R1, 3 R2) được ước lượng bằng 21 phút kiểm expected (2 × 6 + 3 × 3) + 8 phút brief và plan + 5 phút theo dõi agent + 23 phút review diff khoảng 300 dòng có R1 (15 × 1,5) + 7 phút sửa lại + 5 phút evidence, tổng khoảng 70 phút. Cộng các issue của M3.1 rồi so với timebox LR-12 (275 phút); chênh quá 20% thì ghi lý do, phần đã thử và trao đổi trong bản chuẩn bị, không cắt AC Core.
 
 Khi review, dùng hồ sơ hiện có để trả lời: yêu cầu nào chi phối; expected lấy từ đâu; kết quả được kiểm bằng gì; vì sao chọn hoặc sửa giải pháp; phần còn mở ảnh hưởng bước tiếp theo thế nào. Đây là cách giải thích công việc theo SDLC, không thêm bài nộp, trọng số hoặc thủ tục phê duyệt cho mọi bước.
 
@@ -373,10 +375,10 @@ Tài liệu kiến thức (KC) và hướng dẫn công cụ (TG) theo từng bu
 
 | Thành phần | Trọng số | Cách xác định |
 | --- | --- | --- |
-| Quiz | 10% | Trung bình 10 quiz theo syllabus. Mỗi Quiz 15 câu, khoảng 20 phút, làm một lần trước buổi học, tự làm, không dùng AI. Quiz là reading-gate: đạt từ 70% (11/15 câu) cho thấy đã đọc KC/TG của buổi; dưới 70% thì đọc lại phần liên quan trước buổi học. Reading-gate không thêm điều kiện hoàn thành khóa |
+| Quiz | 10% | Trung bình 10 quiz theo syllabus. Mỗi Quiz 15 câu, 25 phút, làm một lần trước buổi học, tự làm, không dùng AI. Quiz là reading-gate: đạt từ 70% (11/15 câu) cho thấy đã đọc KC/TG của buổi; dưới 70% thì đọc lại phần liên quan trước buổi học. Reading-gate không thêm điều kiện hoàn thành khóa |
 | Chuẩn bị trước buổi học | 15% | Trung bình 10 bản chuẩn bị; chấm theo tiến độ và nội dung của buổi tương ứng |
 | ASG01 Legacy và kiểm thử đa tầng | 25% | Phần kiểm thử đa tầng làm sau buổi 7 (LR-19), phần legacy làm sau buổi 9 (LR-27); bản cuối nộp cùng hồ sơ Capstone trong 3 ngày sau buổi 10. Rubric tại [mục 11.7](#asg01) |
-| Capstone | 35% | Chấm trên hồ sơ viết theo rubric 6 nhóm tại Capstone; mentor có thể hỏi thêm bất đồng bộ khi cần xác minh |
+| Capstone | 35% | Chấm sản phẩm hoàn thiện và bộ evidence theo rubric 6 nhóm tại Capstone; top 4 đến 5 học viên Q&A trên lớp, mentor có thể hỏi thêm bất đồng bộ khi cần xác minh |
 | Chuyên cần và review | 15% | Tham dự và một lần review bất đồng bộ tại M2 |
 
 Quy tất cả điểm thành phần về thang 10. Điểm khóa bằng `0,10 × Quiz + 0,15 × Chuẩn bị + 0,25 × ASG01 + 0,35 × Capstone + 0,15 × Chuyên cần/review`.
@@ -1232,19 +1234,19 @@ Phần kiểm thử chấm trên hành trình M3.1 và code tự viết; phần 
 
 <a id="capstone"></a>
 
-## 12. Capstone - Hồ sơ nghiệm thu, giải thích quyết định và lộ trình áp dụng
+## 12. Capstone - Hoàn thiện sản phẩm, evidence và lộ trình áp dụng
 
 ### 12.1 Vai trò trong SDLC và kết quả cần đạt
 
 **Trọng tâm:** nghiệm thu, bàn giao, giải thích quyết định xuyên vòng đời sản phẩm và đo hiệu quả AI.
 
-Học viên nộp hồ sơ Capstone viết, chứng minh bằng evidence đã tích lũy từ M1 đến M5 cách một nhu cầu đi qua yêu cầu, thiết kế, code, test, R1 và R1.1; quyết định nào do AI đề xuất và đã được giữ, sửa hoặc bác bỏ; hiệu quả AI so với baseline. Lộ trình 30/60/90 ngày chuyển bài học sang công việc thực tế. Ở buổi 10, mentor chọn 4 đến 5 bài đại diện các mức kết quả để trình bày trực tiếp; học viên không được chọn nhận phản hồi bằng văn bản trên hồ sơ.
+Học viên hoàn thiện project và nộp đầy đủ evidence đã tích lũy từ M1 đến M5: sản phẩm chạy được đúng tag, cách một nhu cầu đi qua yêu cầu, thiết kế, code, test, R1 và R1.1, quyết định nào do AI đề xuất và đã được giữ, sửa hoặc bác bỏ, hiệu quả AI so với baseline. Lộ trình 30/60/90 ngày chuyển bài học sang công việc thực tế. Mentor chấm mọi bài trên sản phẩm và evidence, sau đó chọn top 4 đến 5 học viên để trình bày và Q&A trực tiếp ở buổi 10; học viên khác nhận phản hồi bằng văn bản.
 
 ### 12.2 Chức năng và công việc cần thực hiện
 
 <a id="lr-28"></a>
 
-1. **Hồ sơ Capstone.** Viết trong `docs/capstone/README.md` (một file Markdown, dẫn link tới evidence, không chép lại), gồm:
+1. **Hoàn thiện sản phẩm và nộp evidence.** Sản phẩm đạt phạm vi Core trên tag cuối, chạy lại được theo hướng dẫn. `docs/capstone/README.md` là mục lục evidence (dẫn link, không chép lại, không viết thành báo cáo dài), gồm:
    - Bảng tổng hợp một trang của dự án: 6 pha, artifact, gate, phần AI làm và metric.
    - Truy một nhu cầu xuyên vòng đời: AC, prototype, API, dữ liệu, code, test, tag R1 và thay đổi ở R1.1.
    - Hướng dẫn chạy lại bản phát hành đã nộp và evidence của hành trình chính: đăng nhập, Notebook, Document, Chat có citation, Summary, Quiz, một tình huống lỗi hoặc quyền, Auth flow và email tầng Core. Video demo ngắn không bắt buộc.
@@ -1273,14 +1275,14 @@ Học viên nộp hồ sơ Capstone viết, chứng minh bằng evidence đã t�
 - Truy từ yêu cầu đến thiết kế, mã nguồn, test và phiên bản phát hành.
 - Đánh giá hiệu quả ứng dụng AI bằng baseline, DORA metrics (gồm deployment rework rate), review load và chi phí; J-curve và điều kiện dừng.
 
-| Phần hồ sơ | Kết quả ứng dụng vào Running Project |
+| Phần evidence | Kết quả ứng dụng vào Running Project |
 | --- | --- |
 | Truy một nhu cầu | Mở AC, prototype, API, schema, code, test, R1 và R1.1; giải thích quyết định và trade-off. |
 | Phản biện việc dùng AI | Chỉ ra đề xuất đã giữ, sửa, bác bỏ, căn cứ kiểm độc lập và ảnh hưởng tới sản phẩm. |
 | Báo cáo metric | So số đo với baseline M1, nêu nguồn và giới hạn của proxy. |
 | Lộ trình | Chuyển bài học trong dự án thành kế hoạch cho đội, có KPI và điều kiện dừng. |
 
-Dùng Claude đóng vai reviewer để tìm điểm thiếu evidence và tổng hợp số đo từ AI Delivery Log. Học viên tự giải thích quyết định và chọn KPI; không chép câu trả lời AI để thay phần giải thích. Mentor có thể hỏi thêm bất đồng bộ khi cần xác minh.
+Dùng Claude đóng vai reviewer để tìm điểm thiếu evidence và tổng hợp số đo từ AI Delivery Log. Học viên tự giải thích quyết định và chọn KPI; không chép câu trả lời AI để thay phần giải thích. Mentor có thể hỏi thêm bất đồng bộ khi cần xác minh. Học viên thuộc top 4 đến 5 chuẩn bị trình bày 8 phút: một nhu cầu xuyên vòng đời, R1 và R1.1, một đề xuất AI đã bác bỏ, metric so với baseline.
 
 **Tài liệu dùng cho milestone:** [SRS: tiêu chí nghiệm thu](02_SRS_InsightHub_v1.1.md#sec-4-3); [SRS: bàn giao](02_SRS_InsightHub_v1.1.md#sec-4-4); hồ sơ đã xây dựng trong dự án.
 
@@ -1292,7 +1294,7 @@ Chuẩn bị đường dẫn mở nhanh đến evidence đã tích lũy ở M1 �
 
 ### 12.6 Rubric đánh giá
 
-**Rubric Capstone: 100 điểm, chiếm 35% điểm khóa**, theo 6 nhóm của Curriculum. Mỗi tiêu chí nhận 0% khi không có minh chứng hoặc vi phạm nghiêm trọng hành vi cần đánh giá; 40% khi mới làm một phần, chưa đạt mô tả cốt lõi; 70% khi đạt cột cốt lõi; 100% khi đạt thêm cột đầy đủ. Điểm bằng điểm tối đa nhân tỷ lệ, cộng các dòng rồi chia 10 để có điểm Capstone trên thang 10. Review trực tiếp 4 đến 5 bài ở buổi 10 không cộng điểm riêng.
+**Rubric Capstone: 100 điểm, chiếm 35% điểm khóa**, theo 6 nhóm của Curriculum. Mỗi tiêu chí nhận 0% khi không có minh chứng hoặc vi phạm nghiêm trọng hành vi cần đánh giá; 40% khi mới làm một phần, chưa đạt mô tả cốt lõi; 70% khi đạt cột cốt lõi; 100% khi đạt thêm cột đầy đủ. Điểm bằng điểm tối đa nhân tỷ lệ, cộng các dòng rồi chia 10 để có điểm Capstone trên thang 10. Q&A trực tiếp của top 4 đến 5 học viên ở buổi 10 không cộng điểm riêng.
 
 | Nhóm | Điểm tối đa | Đạt cốt lõi (70%) | Đầy đủ (100%) |
 | --- | --- | --- | --- |
@@ -1431,7 +1433,7 @@ Mục tiêu là chọn giải pháp xác thực có evidence đáp ứng SRS tr�
 | Đầu vào | Trách nhiệm |
 | --- | --- |
 | Quyền Google, tài khoản thử và cấu hình nhận kết quả xác thực (khi làm Extended) | Giảng viên hoặc quản trị lớp cấp môi trường được phép. Học viên cấu hình đúng địa chỉ callback của giải pháp đã chọn. |
-| Dịch vụ email và hộp thư nhận thử | Lớp cung cấp quyền hoặc phương án sử dụng được phép. Hộp thư Mailpit của Starter nhận thư qua SMTP thật của ứng dụng và được chấp nhận làm evidence thư nhận cho EML-001 (mã D5). Provider email và hộp thư bên ngoài là tùy chọn. |
+| Dịch vụ email và hộp thư nhận thử | Mặc định: hộp thư Mailpit của Starter nhận thư qua SMTP của ứng dụng, được chấp nhận làm evidence thư nhận cho EML-001 (mã D5). Tùy chọn gửi thư thật: Gmail riêng cho khóa học (không dùng tài khoản công ty) bật 2-Step Verification, tạo App Password, cấu hình `WEB_SMTP_*` theo [GETTING_STARTED](../../GETTING_STARTED.md#gửi-thư-thật-bằng-gmail-tùy-chọn); dùng plus-addressing (`ten+a@gmail.com`, `ten+b@gmail.com`) cho hai tài khoản A/B trong một hộp thư. App Password chỉ nằm trong `.env`, che địa chỉ email trong evidence. |
 | Thư viện hoặc dịch vụ xác thực | Học viên so sánh khả năng đăng nhập mật khẩu, xác minh và thu hồi phiên (Google, liên kết danh tính, tái xác thực nếu làm Extended); ghi phiên bản và phần cần bổ sung. |
 | Chính sách nghiệp vụ | Dùng BR-02/BR-03, LIM-01, LIM-07 đến LIM-09, LIM-19 và mục 3.2.4/3.2.6 của [SRS](02_SRS_InsightHub_v1.1.md). Giá trị mặc định của thư viện không thay yêu cầu. |
 | Dữ liệu thử | Hai tài khoản độc lập; các trường hợp có mật khẩu, chờ xác minh và chỉ dùng Google. Chỉ sử dụng email được phép và dữ liệu giả. |
@@ -1547,7 +1549,7 @@ Mã khóa học, đơn vị và chủ đề có tiền tố B2BC07. PLO là chu�
 | LR-25 | PLO-5 / C02-CLO-5 | C02-U06 T01, T02, T04, T05 | Go/no-go, bản phát hành R1 và ghi chú phát hành | Phát hành |
 | LR-26 | PLO-5 / C02-CLO-5 | C02-U06 T02, T03, T06 | Restore, SLI, SLO, incident, postmortem và chặn lệnh hai lớp | Khôi phục và vận hành |
 | LR-27 | PLO-4 / C02-CLO-4 | C02-U07 T01-T06; C02-U06-T02 | Change request có migration nâng cấp thành R1.1, refactor module legacy | Bảo trì, tiến hóa và ASG01 |
-| LR-28 | PLO-1..6 / C02-CLO-1..6 | C02-U08 T01, T03 | Hồ sơ Capstone | Giải thích quyết định và hiệu quả AI |
+| LR-28 | PLO-1..6 / C02-CLO-1..6 | C02-U08 T01, T03 | Sản phẩm hoàn thiện và bộ evidence Capstone | Giải thích quyết định và hiệu quả AI |
 | LR-29 | PLO-6 / C02-CLO-6 | C02-U08-T02 | Lộ trình áp dụng 30/60/90 ngày | Giải thích quyết định và hiệu quả AI |
 
 LR-01 đến LR-11 là chuẩn bị, phân tích và thiết kế; LR-20..24 kiểm các AC đã triển khai ở LR-12..18. Vì vậy một AC có thể tham chiếu thêm nhiều LR trong traceability matrix bài làm. Các hoạt động Foundation, TDD, kiểm thử đa tầng, refactor và hồ sơ Capstone không bị ép thành yêu cầu sản phẩm mới.
@@ -1585,7 +1587,7 @@ Mã LR là công việc học tập; mã IH là yêu cầu sản phẩm; AC là 
 | LR-25 | M4 | [Quyết định go/no-go và phát hành R1](#lr-25) |
 | LR-26 | M4 | [Khôi phục dữ liệu và vận hành tối thiểu](#lr-26) |
 | LR-27 | M5 | [Thực hiện thay đổi sau R1 và refactor module legacy](#lr-27) |
-| LR-28 | Capstone | [Hồ sơ Capstone](#lr-28) |
+| LR-28 | Capstone | [Hoàn thiện sản phẩm và nộp evidence](#lr-28) |
 | LR-29 | Capstone | [Lộ trình áp dụng AI 30/60/90 ngày](#lr-29) |
 
 ### 15.3. Trách nhiệm kế thừa và phát triển

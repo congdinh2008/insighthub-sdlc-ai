@@ -133,6 +133,18 @@ make COMPOSE="docker compose --env-file .env -p insighthub-c07-starter" mail-up
 
 Mailpit giữ thư trong máy, không gửi ra Internet. Chỉ dùng địa chỉ email test; không dùng email hoặc dữ liệu thật của công ty. Dừng bằng `make ... mail-down`.
 
+## Gửi thư thật bằng Gmail (tùy chọn)
+
+Thư nhận trên Mailpit đã đủ làm evidence EML-001 (Requirements mục 14.1). Chỉ làm phần này khi muốn kiểm thư tới hộp thư thật.
+
+1. Dùng một Gmail riêng cho khóa học (tạo mới hoặc tài khoản cá nhân phụ). Không dùng tài khoản công ty hoặc Google Workspace của đơn vị. App Password cho phép gửi thư thay tài khoản, nên không dùng Gmail cá nhân chính.
+2. Bật 2-Step Verification cho tài khoản, tạo App Password tại `myaccount.google.com/apppasswords`.
+3. Thêm vào `.env` (không commit, không dán vào công cụ AI): `WEB_SMTP_HOST=smtp.gmail.com`, `WEB_SMTP_PORT=587`, `WEB_SMTP_USER=<địa chỉ Gmail>`, `WEB_SMTP_PASSWORD=<App Password>`, `MAIL_FROM=InsightHub <địa chỉ Gmail>`. Cổng 587 dùng STARTTLS, giữ `WEB_SMTP_SECURE` mặc định `false`.
+4. Tạo lại container web: `make COMPOSE="docker compose --env-file .env -p insighthub-c07-starter" up`.
+5. Đăng ký hai tài khoản A/B bằng plus-addressing của cùng hộp thư, ví dụ `ten+a@gmail.com` và `ten+b@gmail.com`; thư của cả hai về một inbox.
+
+Gmail cá nhân giới hạn số thư gửi mỗi ngày (khoảng 500 người nhận), đủ cho bài tập. Che địa chỉ email và link xác minh còn hiệu lực trong ảnh hoặc log nộp bài. Xóa App Password sau khóa học.
+
 ## Kiểm tra
 
 ```sh

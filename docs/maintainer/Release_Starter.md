@@ -11,7 +11,7 @@ Tài liệu này dành cho người bảo trì Starter (giảng viên, Academic 
 
 | Bước | Lệnh | Kiểm gì |
 | --- | --- | --- |
-| 1 | `python3 scripts/check_project.py` | Version đồng bộ (manifest, web, lockfile, SBOM, API, README, Readiness); hash SRS khớp manifest trong ZIP API/Schema; 73 yêu cầu/165 AC (153 áp dụng, 12 ngoài phạm vi) được mapping; link Markdown nội bộ hợp lệ |
+| 1 | `python3 scripts/check_project.py` | Version đồng bộ (manifest, web, lockfile, SBOM, API, README); hash SRS khớp manifest trong ZIP API/Schema; 73 yêu cầu/165 AC (153 áp dụng, 12 ngoài phạm vi) được mapping; link Markdown nội bộ hợp lệ |
 | 2 | `make test` và `make test-release` | Test ứng dụng; `test-release` bật thêm delivery regression (`STARTER_RELEASE_CHECKS=1`) |
 | 3 | `make smoke`, `make test-e2e`, `make test-pw` | Smoke, E2E cũ và Playwright Test trên fixture |
 | 4 | `python3 scripts/seed_recovery_fixture.py --api-url http://127.0.0.1:8107` rồi `COMPOSE_PROJECT_NAME=insighthub-c07-starter ENV_FILE=.env make backup-restore-check` | Restore drill trên corpus có dữ liệu, một chat thành công và một failed attempt |
