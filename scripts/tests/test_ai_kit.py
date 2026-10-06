@@ -70,8 +70,12 @@ class HookTests(unittest.TestCase):
 
 
 class ApprovedTestsGuardTests(unittest.TestCase):
+    # Git mới (runner GitHub) tự chạy maintenance nền sau commit và ghi vào .git trong lúc
+    # TemporaryDirectory dọn dẹp, gây "Directory not empty". Tắt maintenance tự động cho repo tạm.
+    GIT_QUIET = ("-c", "maintenance.auto=false", "-c", "gc.auto=0")
+
     def git(self, *args):
-        return subprocess.run(["git", *args], cwd=self.repo, check=True, capture_output=True, text=True).stdout
+        return subprocess.run(["git", *self.GIT_QUIET, *args], cwd=self.repo, check=True, capture_output=True, text=True).stdout
 
     def commit(self, message):
         self.git("add", "-A")
