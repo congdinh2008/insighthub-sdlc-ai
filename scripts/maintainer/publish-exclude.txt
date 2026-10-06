@@ -5,6 +5,7 @@ scripts/package_starter.py
 scripts/verify_package.py
 scripts/tests/test_delivery.py
 maintainer.mk
+MAINTAINERS.md
 docs/maintainer/
 docs/archive/
 .github/workflows/starter-release.yml
