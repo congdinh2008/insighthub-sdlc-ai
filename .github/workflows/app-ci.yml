@@ -1,5 +1,4 @@
 # Learner CI: application checks only. No version/hash gate, no packaging.
-# Maintainer release gate lives in starter-release.yml (manual trigger).
 name: App CI
 on:
   push:

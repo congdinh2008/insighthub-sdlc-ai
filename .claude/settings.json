@@ -12,14 +12,7 @@
       "Bash(rm -rf *)",
       "Bash(git push --force *)",
       "Bash(git push -f *)",
-      "Bash(git reset --hard *)",
-      "Bash(make package *)",
-      "Bash(make verify-package *)",
-      "Bash(make test-release *)",
-      "Bash(python scripts/package_starter.py *)",
-      "Bash(python3 scripts/package_starter.py *)",
-      "Bash(python scripts/verify_package.py *)",
-      "Bash(python3 scripts/verify_package.py *)"
+      "Bash(git reset --hard *)"
     ]
   },
   "hooks": {

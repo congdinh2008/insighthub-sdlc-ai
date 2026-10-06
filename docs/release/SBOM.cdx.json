@@ -1247,9 +1247,9 @@
     {
       "type": "library",
       "name": "pypdf",
-      "version": "6.18.0",
+      "version": "6.19.0",
       "scope": "required",
-      "bom-ref": "library:pypdf@6.18.0"
+      "bom-ref": "library:pypdf@6.19.0"
     },
     {
       "type": "library",

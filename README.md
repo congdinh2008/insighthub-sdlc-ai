@@ -223,7 +223,6 @@ Từ Mốc 4 (M3.1), khi endpoint yêu cầu đăng nhập, đặt `INSIGHTHUB_S
 | --- | --- | --- |
 | [App CI](.github/workflows/app-ci.yml) job `governance` | Push vào `main`, pull request | Kiểm trace, chặn sửa test đã duyệt thiếu trailer `Test-Change-Approved`, test công cụ và hook |
 | [App CI](.github/workflows/app-ci.yml) job `application` | Push vào `main`, pull request | Build, test backend và web, smoke, `eval-fixture`, E2E, `npm audit` |
-| [Starter release gate](.github/workflows/starter-release.yml) | Chạy thủ công | Dành cho người bảo trì Starter |
 
 ## Giới hạn mặc định
 

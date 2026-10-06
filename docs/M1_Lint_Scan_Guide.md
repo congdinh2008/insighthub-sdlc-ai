@@ -4,15 +4,18 @@ Rubric M1 chấm "test và lint thực chạy" và "secret scan, dependency scan
 
 ## Baseline Starter có finding sẵn
 
-Đo trên Starter `v1.0.0-rc.3` ngày 27/09/2026:
+Đo trên Starter `learner-r1.3` ngày 06/10/2026:
 
 | Công cụ | Kết quả baseline |
 | --- | --- |
-| `ruff check api scripts --select E4,E7,E9,F,I,B` (ruff 0.16.9) | 50 finding (21 I001 import order, 26 E701/E702 nhiều lệnh một dòng, 2 B018, 1 F841) |
-| `ruff format --check api` | 21 file cần format |
+| `ruff check api scripts --select E4,E7,E9,F,I,B` (ruff 0.16.9, chưa có `api/pyproject.toml`) | 59 finding: 25 I001 (thứ tự import), 26 E701/E702 (nhiều lệnh một dòng), 3 B008, 2 B904, 2 B018, 1 E401 |
+| `ruff format --check api` | 28 file cần format |
+| ESLint với cấu hình gợi ý bên dưới | 6 finding: 4 `react-hooks/set-state-in-effect` (`ChatPanel.tsx`, `SourceView.tsx`, `UploadPanel.tsx`), 1 `no-explicit-any` (`lib/operations.ts`), 1 `no-empty` (`tests/e2e.mjs`) |
 | `pip-audit -r api/requirements.txt` (2.10.1) | Không có lỗ hổng đã biết |
 | `npm audit --omit=dev --audit-level=high --prefix web` | 0 lỗ hổng |
-| ESLint, gitleaks | Chưa đo (Starter chưa có cấu hình) |
+| gitleaks 8.30.1, toàn lịch sử | Không phát hiện |
+
+Kết quả audit phụ thuộc thời điểm chạy: advisory mới có thể xuất hiện sau ngày đo. Finding mới là việc cần triage, không phải lỗi của công cụ.
 
 Vì vậy **không bật gate toàn repo ngay**: khoanh phạm vi vào file học viên thay đổi (changed files), triage finding của baseline (sửa, ghi nhận có lý do hoặc để sau), ghi quyết định vào evidence M1. Không format lại toàn bộ Starter trong cùng PR với tính năng; nếu muốn, tách một PR `style:` riêng.
 
@@ -35,20 +38,24 @@ Chạy: `ruff check <file thay đổi>`; `ruff format --check <file thay đổi>
 
 ### Web: ESLint (thư mục `web/`)
 
-Next.js 16 không còn lệnh `next lint`; dùng ESLint CLI với flat config. Cài bằng `npm i -D --prefix web eslint @eslint/js typescript-eslint eslint-plugin-react-hooks` (lockfile ghi version), rồi tạo `web/eslint.config.mjs`:
+Next.js 16 không còn lệnh `next lint`; dùng ESLint CLI với flat config. Cài bằng `npm i -D -E --prefix web eslint @eslint/js typescript-eslint eslint-plugin-react-hooks globals` (lockfile ghi version), rồi tạo `web/eslint.config.mjs`:
 
 ```js
 import js from '@eslint/js';
+import globals from 'globals';
 import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 export default tseslint.config(
-  { ignores: ['.next/**', 'node_modules/**', 'out/**'] },
+  { ignores: ['.next/**', 'node_modules/**', 'out/**', 'next-env.d.ts', 'playwright-report/**', 'test-results/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
   { plugins: { 'react-hooks': reactHooks }, rules: reactHooks.configs.recommended.rules },
 );
 ```
+
+Thiếu khối `globals`, ESLint báo `no-undef` cho `process`, `console` trong file `.js`, `.mjs` (khoảng 36 finding giả).
 
 Thêm script `"lint": "eslint"` vào `web/package.json`; chạy `npx eslint <file thay đổi>` trong `web/`.
 

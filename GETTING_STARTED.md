@@ -39,7 +39,7 @@ git switch -c milestone/m0.1
 
 `origin` phải trỏ tới fork cá nhân, `upstream` trỏ tới starter. Ghi commit nền và nguồn starter vào hồ sơ dự án; giữ nguyên lịch sử Git. Thiết lập `user.name` và `user.email` của học viên. Cách commit, tạo PR trong repository cá nhân, gửi bài cho giảng viên và thời hạn tại [Requirements](docs/learner/01_Requirements_InsightHub.md).
 
-Bật workflow `.github/workflows/app-ci.yml` trên fork nếu dùng GitHub Actions. Workflow chạy trên push vào `main` và trên pull request, dùng fixture, không cần khóa AI. Workflow `starter-release.yml` dành cho người bảo trì Starter, chỉ chạy thủ công; học viên không cần chạy. Xác nhận kết quả khi workflow thực chạy; không giả định quyền Actions hoặc secret của repository gốc được chuyển sang fork.
+Bật workflow `.github/workflows/app-ci.yml` trên fork nếu dùng GitHub Actions. Workflow chạy trên push vào `main` và trên pull request, dùng fixture, không cần khóa AI. Xác nhận kết quả khi workflow thực chạy; không giả định quyền Actions hoặc secret của repository gốc được chuyển sang fork.
 
 ## Chuẩn bị Claude Code và GitHub CLI
 
@@ -198,8 +198,6 @@ COMPOSE_PROJECT_NAME=insighthub-c07-starter ENV_FILE=.env make backup-restore-ch
 ```
 
 Backup drill yêu cầu corpus có dữ liệu, một chat thành công và một failed attempt; xem lệnh seed riêng và cách thêm bảng mới của bài làm vào drill trong [Runbook](docs/Runbook_Starter_v1.md#backup-và-restore-drill).
-
-Đóng gói và phát hành gói Starter (`make package`, `make verify-package`, `make test-release`) là việc của người bảo trì, xem [Release Starter](docs/maintainer/Release_Starter.md). Học viên và coding agent không chạy các lệnh này.
 
 ## Dừng
 
