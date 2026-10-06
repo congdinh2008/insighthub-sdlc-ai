@@ -137,3 +137,19 @@ Bật/tắt reranker hoặc đổi chat model không đổi embedding identity. 
 | `CONTEXT_MAX_TOKENS` | Ngân sách context ước lượng | 4000 |
 
 Threshold 0,20 chưa được hiệu chỉnh bằng real AEV của lớp. Không hạ threshold chỉ để tăng tỷ lệ `Answered`. Provider lỗi, timeout hoặc response sai contract là lỗi kỹ thuật; không fallback sang fixture hoặc tự tắt reranker. Fixture không chứng minh chất lượng semantic.
+
+<a id="fallback-usage"></a>
+
+## Retry, provider dự phòng và usage (IH-AI-005)
+
+Starter chỉ cấp phần chung; fallback là việc của học viên ở LR-18. **Không sửa `validate_configuration` trong `config.py`** khi làm phần này: hàm là baseline của phần legacy trong ASG01 ở M5. Cấu hình của provider dự phòng đặt trong module hoặc file cấu hình riêng của bài làm.
+
+| Phần | Starter có sẵn | Học viên làm |
+| --- | --- | --- |
+| Retry có giới hạn | `providers.post_json` retry với timeout, 429, 502, 503, 504, lỗi kết nối, nằm trong deadline còn lại; số lần theo `PROVIDER_RETRY_ATTEMPTS` (mặc định 3) | Không đổi; ghi số lần thử vào usage |
+| Provider dự phòng | Chưa có. Profile real vẫn không fallback ngầm | Gọi provider dự phòng đã cấu hình khi provider chính hết retry với lỗi khả dụng; không fallback sang fixture; kết quả qua cùng bước kiểm schema, grounding, citation. Lỗi sai schema hoặc thiếu căn cứ không kích hoạt fallback |
+| Usage | `llm.generate` trả `usage` (token vào, ra); `ai_jobs.record_usage` lưu từng lời gọi | Ghi provider, model, `prompt_version`, token, latency, `finish_reason`, chi phí ước tính, `fallback` cho mỗi lời gọi, kể cả lời gọi lỗi |
+| Trần token | `LLM_MAX_TOKENS` (mặc định 1024) gửi tới provider | Đầu ra có `finish_reason` báo chạm trần không lưu là `Succeeded` |
+| Kiểm thử | `app/core/fault_injection.py`: `inject_provider_faults` trong test, `AI_FIXTURE_FAULTS=deepseek:timeout` khi chạy thủ công ở fixture | Test fallback và ghi usage bằng giả lập, không gọi dịch vụ trả phí |
+
+Provider dự phòng là luồng dữ liệu ra ngoài thứ hai: cập nhật threat model, AI-BOM và AI Usage Charter. Chi tiết cơ chế job tại [AI Job Framework](AI_Job_Framework.md).

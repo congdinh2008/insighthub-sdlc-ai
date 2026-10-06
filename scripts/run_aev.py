@@ -24,7 +24,7 @@ def call(base, path, method="GET", data=None, headers=None, timeout=130):
         return exc.code, exc.read(), dict(exc.headers)
 
 
-def upload(base: str, path: Path):
+def upload(base: str, path: Path, headers: dict | None = None):
     boundary = "----aev" + uuid.uuid4().hex
     mime = "application/pdf" if path.suffix == ".pdf" else "text/plain"
     body = (
@@ -39,6 +39,7 @@ def upload(base: str, path: Path):
         {
             "Content-Type": "multipart/form-data; boundary=" + boundary,
             "Idempotency-Key": "aev-upload-" + uuid.uuid4().hex,
+            **(headers or {}),
         },
     )
 

@@ -24,11 +24,13 @@ Vẽ sơ đồ (Mermaid hoặc ảnh) gồm: trình duyệt, Next.js, FastAPI, P
 
 ## 4. Threat riêng của ứng dụng AI và coding agent
 
-| Threat | Ví dụ trong InsightHub | Control | Test |
-| --- | --- | --- | --- |
-| Prompt injection gián tiếp qua tài liệu | `evaluation/corpus/04_injection_vi.md` | | |
-| Lộ dữ liệu qua citation, cache | | | |
-| Agent đọc secret hoặc vượt quyền | | `.claude/settings.json`, hook | |
+| Threat | Ví dụ trong InsightHub | Điều kiện lethal trifecta đã cắt | Control | Test |
+| --- | --- | --- | --- | --- |
+| Prompt injection gián tiếp qua tài liệu | `evaluation/corpus/04_injection_vi.md` | | | |
+| Lộ dữ liệu qua citation, cache | | | | |
+| Agent đọc secret hoặc vượt quyền | | | `.claude/settings.json`, hook | |
+
+Lethal trifecta gồm ba điều kiện: truy cập dữ liệu riêng tư, tiếp xúc nội dung không tin cậy, có kênh gửi dữ liệu ra ngoài. Đủ cả ba thì prompt injection có thể lấy dữ liệu. Với mỗi threat AI, ghi điều kiện đã cắt và control tương ứng; guardrail của model không thay cho việc cắt điều kiện.
 
 ## 5. Tự phân loại rủi ro AI
 

@@ -1,5 +1,7 @@
 # AEV-01 - RAG evaluation corpus
 
+> Golden set, grader bằng code và pass^k cho Summary/Quiz (LR-23) nằm ở [eval harness](harness/README.md) (`make eval`). Trang này mô tả bộ AEV-01 cho hỏi đáp RAG của Starter. Từ M3.1, đặt `INSIGHTHUB_SESSION_COOKIE` trước khi chạy AEV hoặc harness ([Runbook](../docs/Runbook_Starter_v1.md#kiem-tra-sau-khi-bao-ve-endpoint)).
+
 Bộ nhỏ dùng để kiểm `Answered`, `NoEvidence`, citation và prompt injection trước release. Fixture không được tính là kết quả AEV.
 
 1. Khởi động một real-provider profile trên database/index riêng.

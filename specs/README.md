@@ -15,4 +15,13 @@ Quy tắc:
 - Mỗi task nhỏ đủ review trong một PR (khoảng 400 dòng diff trở xuống), có AC, lệnh kiểm và stop condition (điều kiện dừng).
 - Khi code khác plan, cập nhật plan/tasks trong cùng PR và ghi lý do. Thay đổi hành vi phải quay lại spec.
 
+## Hai cổng duyệt
+
+| Cổng | Duyệt trước khi | Tiêu chí đạt |
+| --- | --- | --- |
+| 1. Duyệt spec | Lập plan | Mỗi mục trỏ mã AC hoặc yêu cầu SRS. Không chứa cách cài đặt (bảng, endpoint, thư viện). Có nhánh lỗi và sai quyền cho yêu cầu rủi ro cao. NFR có điều kiện và số đo. Điểm chưa rõ nằm ở câu hỏi mở, không thành yêu cầu |
+| 2. Duyệt plan, tasks | Giao agent code | Mỗi task trỏ mã AC, vừa một PR, có lệnh kiểm và stop condition. Task theo thứ tự phụ thuộc. Không có task ngoài spec |
+
+Ghi kết quả duyệt (đạt, sửa gì, phần AI đề xuất bị bác) trong PR hoặc AI Delivery Log.
+
 Template: [spec](_template/spec.md), [plan](_template/plan.md), [tasks](_template/tasks.md).

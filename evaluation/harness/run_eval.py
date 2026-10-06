@@ -140,6 +140,8 @@ def main(argv=None):
     parser.add_argument("--validate", action="store_true", help="Only validate the suite file")
     parser.add_argument("--allow-fixture", action="store_true")
     parser.add_argument("--output")
+    parser.add_argument("--min-pass-hat-k", type=float,
+                        help="Exit 1 when the pass^k rate is below this value (0-1). Use in CI as a quality gate")
     args = parser.parse_args(argv)
     if args.validate:
         problems = validate_suite(json.loads(Path(args.suite).read_text(encoding="utf-8")))
@@ -151,6 +153,9 @@ def main(argv=None):
     output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     s = report["summary"]
     print(f"{output}\nruns {s['runs_passed']}/{s['runs']} | pass^k {s['pass_hat_k_rate']:.0%} | pass@k {s['pass_at_k_rate']:.0%} | semantic review pending")
+    if args.min_pass_hat_k is not None and s["pass_hat_k_rate"] < args.min_pass_hat_k:
+        print(f"FAIL: pass^k {s['pass_hat_k_rate']:.0%} < {args.min_pass_hat_k:.0%}")
+        return 1
     return 0
 
 

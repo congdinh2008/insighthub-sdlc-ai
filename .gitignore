@@ -1,6 +1,9 @@
 # --- Secrets ---
 .env
-.env.local
+.env.*
+!.env.example
+secrets/
+.mcp.json
 .claude/settings.local.json
 *.pem
 *.key
@@ -19,6 +22,8 @@ node_modules/
 .next/
 out/
 npm-debug.log*
+test-results/
+playwright-report/
 yarn-error.log*
 
 # --- IDE / OS ---

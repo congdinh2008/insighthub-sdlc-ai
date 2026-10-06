@@ -1,6 +1,11 @@
-"""Local fixture smoke. Deletes only documents created by this invocation."""
+"""Local fixture smoke. Deletes only documents created by this invocation.
+
+Sau khi khóa endpoint bằng phiên (LR-12), đặt INSIGHTHUB_SESSION_COOKIE (xem scripts/session_cookie.py);
+smoke gửi cookie này kèm mọi request. Không đặt thì chạy như Starter gốc (endpoint demo công khai).
+"""
 import argparse
 import json
+import os
 import uuid
 from pathlib import Path
 from urllib.request import Request, urlopen
@@ -11,8 +16,13 @@ parser.add_argument("--api-url", default="http://127.0.0.1:8107")
 parser.add_argument("--web-url", default="http://127.0.0.1:3107")
 args = parser.parse_args()
 
+SESSION_COOKIE = os.environ.get("INSIGHTHUB_SESSION_COOKIE", "")
+
 def call(base, path, method="GET", data=None, headers=None):
-    req = Request(base + path, data=data, method=method, headers=headers or {})
+    headers = dict(headers or {})
+    if SESSION_COOKIE:
+        headers.setdefault("Cookie", SESSION_COOKIE)
+    req = Request(base + path, data=data, method=method, headers=headers)
     try:
         with urlopen(req, timeout=130) as res:
             return res.status, res.read()

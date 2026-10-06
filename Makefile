@@ -3,7 +3,7 @@ PYTHON ?= python3
 API_URL ?= http://127.0.0.1:8107
 WEB_URL ?= http://127.0.0.1:3107
 
-.PHONY: trace-check trace-sample eval ai-bom delivery-report up down build test test-db test-backend test-web test-tools test-e2e test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
+.PHONY: seed-users mcp-role mcp-check trace-check trace-sample eval ai-bom delivery-report up down build test test-db test-backend test-web test-tools test-e2e test-pw test-release mail-up mail-down smoke migrate sbom package verify-package aev backup-restore-check reranker-local-up reranker-local-down
 up:
 	$(COMPOSE) up --build -d --wait
 
@@ -19,6 +19,10 @@ mail-down:
 
 build:
 	$(COMPOSE) build api web
+
+# Auth scaffold: dịch vụ api bắt buộc BETTER_AUTH_SECRET. Test dùng giá trị cố định, không phải secret,
+# để `--env-file .env.example` (giá trị trống) vẫn chạy được. Giá trị trong môi trường shell được ưu tiên.
+test-db test-backend test-web: export BETTER_AUTH_SECRET ?= test-only-not-a-secret-0123456789abcdef
 
 test-db:
 	$(COMPOSE) up -d --wait postgres
@@ -41,6 +45,10 @@ test-release:
 test-e2e:
 	cd web && npm run test:e2e
 
+# Playwright Test trong web/e2e (cần stack fixture đang chạy).
+test-pw:
+	cd web && npm run test:pw
+
 test: test-backend test-web test-tools
 
 smoke:
@@ -62,7 +70,7 @@ aev:
 	$(PYTHON) scripts/run_aev.py --api-url "$(API_URL)"
 
 backup-restore-check:
-	$(PYTHON) scripts/backup_restore_check.py --project "$${COMPOSE_PROJECT_NAME:?Set COMPOSE_PROJECT_NAME}" --env-file "$${ENV_FILE:-.env.example}"
+	$(PYTHON) scripts/backup_restore_check.py --project "$${COMPOSE_PROJECT_NAME:?Set COMPOSE_PROJECT_NAME}" --env-file "$${ENV_FILE:-$$([ -f .env ] && echo .env || echo .env.example)}"
 
 # AI Engineering Kit (docs/ai/README.md)
 trace-check:
@@ -85,3 +93,18 @@ reranker-local-up:
 
 reranker-local-down:
 	docker compose -f infra/reranker/docker-compose.yml down
+
+# MCP chỉ đọc (LR-05): bật đăng nhập cho role insighthub_readonly bằng mật khẩu trong .env.
+# Không in mật khẩu. Chạy lại khi đổi mật khẩu.
+mcp-role:
+	@pw=$$(grep -E '^MCP_DB_READONLY_PASSWORD=' .env 2>/dev/null | cut -d= -f2-); \
+	if [ -z "$$pw" ]; then echo "Thiếu MCP_DB_READONLY_PASSWORD trong .env"; exit 1; fi; \
+	printf "ALTER ROLE insighthub_readonly LOGIN PASSWORD :'pw';\n" | \
+	$(COMPOSE) exec -T postgres psql -q -v ON_ERROR_STOP=1 -v pw="$$pw" -U insighthub -d insighthub && echo "Đã bật đăng nhập cho insighthub_readonly"
+
+mcp-check:
+	uv run --no-project --python 3.12 --with mcp==2.2.0 --with "psycopg[binary]==3.3.5" tools/mcp/insighthub_db_readonly.py --check
+
+# Auth scaffold: tạo tài khoản thử A và B đã xác minh (cần stack đang chạy).
+seed-users:
+	$(PYTHON) scripts/seed_auth_users.py --web-url "$(WEB_URL)" --compose "$(COMPOSE)"

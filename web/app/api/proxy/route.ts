@@ -1,5 +1,6 @@
 import { API_URL } from "@/lib/api";
 import { allowsMutation } from "@/lib/errors";
+import { apiHeaders } from "@/lib/forward";
 
 export async function POST(req: Request) {
   if (!allowsMutation(req)) {
@@ -25,11 +26,10 @@ export async function POST(req: Request) {
   try {
     const options: RequestInit & { duplex: "half" } = {
       method: "POST", body: boundedBody, duplex: "half",
-      headers: {
+      headers: apiHeaders(req.headers, {
         "Content-Type": req.headers.get("content-type") || "application/json",
         "Idempotency-Key": req.headers.get("idempotency-key") || crypto.randomUUID(),
-        "X-Request-ID": req.headers.get("x-request-id") || crypto.randomUUID(),
-      },
+      }),
       signal: AbortSignal.timeout(target === "upload" ? 125000 : 65000), cache: "no-store",
     };
     const res = await fetch(`${API_URL}/${target === "upload" ? "documents" : "chat"}`, options);

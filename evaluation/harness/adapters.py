@@ -1,8 +1,9 @@
 """Adapters turn a golden-set case into an API call and a normalized output.
 
 ChatAdapter works against the Starter API as shipped. After Auth is added, set
-INSIGHTHUB_EVAL_COOKIE (session cookie of test account A) in the shell; it is
-sent as a Cookie header and never written to reports.
+INSIGHTHUB_EVAL_COOKIE or INSIGHTHUB_SESSION_COOKIE (session cookie of test
+account A, see scripts/session_cookie.py) in the shell; it is sent as a Cookie
+header on upload, chat and cleanup and never written to reports.
 
 SummaryAdapter and QuizAdapter are learner work (LR-16..18, LR-23): implement
 `run()` against your own API and return the normalized shape in graders.py.
@@ -22,7 +23,7 @@ CORPUS = ROOT / "evaluation" / "corpus"
 
 
 def auth_headers():
-    cookie = os.environ.get("INSIGHTHUB_EVAL_COOKIE", "")
+    cookie = os.environ.get("INSIGHTHUB_EVAL_COOKIE", "") or os.environ.get("INSIGHTHUB_SESSION_COOKIE", "")
     return {"Cookie": cookie} if cookie else {}
 
 
@@ -38,7 +39,7 @@ class Adapter:
         for name in names:
             if name in self.documents:
                 continue
-            status, raw, _ = upload(self.base, CORPUS / name)
+            status, raw, _ = upload(self.base, CORPUS / name, auth_headers())
             body = json.loads(raw or b"{}")
             identifier = body.get("id") or body.get("document_id")
             if status not in (200, 201) or not identifier:

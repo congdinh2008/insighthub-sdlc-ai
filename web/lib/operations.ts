@@ -1,7 +1,10 @@
 export type OperationType = "upload" | "retry" | "chat" | "delete";
 export type PendingOperation = { type: OperationType; key: string; startedAt: number; deadlineAt: number; documentId?: number };
 export type OperationResult = { status: "succeeded" | "failed"; response: any; http_status: number };
-const STORAGE = "insighthub.pending.v1";
+import { scopedKey } from "./client-state.ts";
+
+// Khóa gắn người dùng ("anon" cho trang demo chưa đăng nhập). Logout xóa mọi khóa insighthub.* (lib/client-state.ts).
+const STORAGE = scopedKey("pending.v1");
 
 export function pendingOperations(): PendingOperation[] {
   try {

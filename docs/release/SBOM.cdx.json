@@ -42,10 +42,108 @@
     },
     {
       "type": "library",
+      "name": "@alloc/quick-lru",
+      "version": "5.3.0",
+      "scope": "required",
+      "bom-ref": "library:@alloc/quick-lru@5.3.0"
+    },
+    {
+      "type": "library",
+      "name": "@better-auth/core",
+      "version": "1.7.6",
+      "scope": "required",
+      "bom-ref": "library:@better-auth/core@1.7.6"
+    },
+    {
+      "type": "library",
+      "name": "@better-auth/drizzle-adapter",
+      "version": "1.7.6",
+      "scope": "required",
+      "bom-ref": "library:@better-auth/drizzle-adapter@1.7.6"
+    },
+    {
+      "type": "library",
+      "name": "@better-auth/kysely-adapter",
+      "version": "1.7.6",
+      "scope": "required",
+      "bom-ref": "library:@better-auth/kysely-adapter@1.7.6"
+    },
+    {
+      "type": "library",
+      "name": "@better-auth/memory-adapter",
+      "version": "1.7.6",
+      "scope": "required",
+      "bom-ref": "library:@better-auth/memory-adapter@1.7.6"
+    },
+    {
+      "type": "library",
+      "name": "@better-auth/mongo-adapter",
+      "version": "1.7.6",
+      "scope": "required",
+      "bom-ref": "library:@better-auth/mongo-adapter@1.7.6"
+    },
+    {
+      "type": "library",
+      "name": "@better-auth/prisma-adapter",
+      "version": "1.7.6",
+      "scope": "required",
+      "bom-ref": "library:@better-auth/prisma-adapter@1.7.6"
+    },
+    {
+      "type": "library",
+      "name": "@better-auth/telemetry",
+      "version": "1.7.6",
+      "scope": "required",
+      "bom-ref": "library:@better-auth/telemetry@1.7.6"
+    },
+    {
+      "type": "library",
+      "name": "@better-auth/utils",
+      "version": "0.4.2",
+      "scope": "required",
+      "bom-ref": "library:@better-auth/utils@0.4.2"
+    },
+    {
+      "type": "library",
+      "name": "@better-fetch/fetch",
+      "version": "1.3.2",
+      "scope": "required",
+      "bom-ref": "library:@better-fetch/fetch@1.3.2"
+    },
+    {
+      "type": "library",
       "name": "@emnapi/runtime",
       "version": "1.11.3",
       "scope": "optional",
       "bom-ref": "library:@emnapi/runtime@1.11.3"
+    },
+    {
+      "type": "library",
+      "name": "@floating-ui/core",
+      "version": "1.8.0",
+      "scope": "required",
+      "bom-ref": "library:@floating-ui/core@1.8.0"
+    },
+    {
+      "type": "library",
+      "name": "@floating-ui/dom",
+      "version": "1.8.0",
+      "scope": "required",
+      "bom-ref": "library:@floating-ui/dom@1.8.0"
+    },
+    {
+      "type": "library",
+      "name": "@floating-ui/react-dom",
+      "version": "2.1.9",
+      "scope": "required",
+      "bom-ref": "library:@floating-ui/react-dom@2.1.9"
+    },
+    {
+      "type": "library",
+      "name": "@floating-ui/utils",
+      "version": "0.2.12",
+      "scope": "required",
+      "bom-ref": "library:@floating-ui/utils@0.2.12"
     },
     {
       "type": "library",
@@ -238,66 +336,262 @@
     },
     {
       "type": "library",
-      "name": "@next/env",
-      "version": "16.3.4",
+      "name": "@jridgewell/gen-mapping",
+      "version": "0.3.13",
       "scope": "required",
-      "bom-ref": "library:@next/env@16.3.4"
+      "bom-ref": "library:@jridgewell/gen-mapping@0.3.13"
+    },
+    {
+      "type": "library",
+      "name": "@jridgewell/remapping",
+      "version": "2.3.5",
+      "scope": "required",
+      "bom-ref": "library:@jridgewell/remapping@2.3.5"
+    },
+    {
+      "type": "library",
+      "name": "@jridgewell/resolve-uri",
+      "version": "3.1.2",
+      "scope": "required",
+      "bom-ref": "library:@jridgewell/resolve-uri@3.1.2"
+    },
+    {
+      "type": "library",
+      "name": "@jridgewell/sourcemap-codec",
+      "version": "1.6.0",
+      "scope": "required",
+      "bom-ref": "library:@jridgewell/sourcemap-codec@1.6.0"
+    },
+    {
+      "type": "library",
+      "name": "@jridgewell/trace-mapping",
+      "version": "0.3.31",
+      "scope": "required",
+      "bom-ref": "library:@jridgewell/trace-mapping@0.3.31"
+    },
+    {
+      "type": "library",
+      "name": "@next/env",
+      "version": "16.3.8",
+      "scope": "required",
+      "bom-ref": "library:@next/env@16.3.8"
     },
     {
       "type": "library",
       "name": "@next/swc-darwin-arm64",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "scope": "optional",
-      "bom-ref": "library:@next/swc-darwin-arm64@16.3.4"
+      "bom-ref": "library:@next/swc-darwin-arm64@16.3.8"
     },
     {
       "type": "library",
       "name": "@next/swc-darwin-x64",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "scope": "optional",
-      "bom-ref": "library:@next/swc-darwin-x64@16.3.4"
+      "bom-ref": "library:@next/swc-darwin-x64@16.3.8"
     },
     {
       "type": "library",
       "name": "@next/swc-linux-arm64-gnu",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "scope": "optional",
-      "bom-ref": "library:@next/swc-linux-arm64-gnu@16.3.4"
+      "bom-ref": "library:@next/swc-linux-arm64-gnu@16.3.8"
     },
     {
       "type": "library",
       "name": "@next/swc-linux-arm64-musl",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "scope": "optional",
-      "bom-ref": "library:@next/swc-linux-arm64-musl@16.3.4"
+      "bom-ref": "library:@next/swc-linux-arm64-musl@16.3.8"
     },
     {
       "type": "library",
       "name": "@next/swc-linux-x64-gnu",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "scope": "optional",
-      "bom-ref": "library:@next/swc-linux-x64-gnu@16.3.4"
+      "bom-ref": "library:@next/swc-linux-x64-gnu@16.3.8"
     },
     {
       "type": "library",
       "name": "@next/swc-linux-x64-musl",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "scope": "optional",
-      "bom-ref": "library:@next/swc-linux-x64-musl@16.3.4"
+      "bom-ref": "library:@next/swc-linux-x64-musl@16.3.8"
     },
     {
       "type": "library",
       "name": "@next/swc-win32-arm64-msvc",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "scope": "optional",
-      "bom-ref": "library:@next/swc-win32-arm64-msvc@16.3.4"
+      "bom-ref": "library:@next/swc-win32-arm64-msvc@16.3.8"
     },
     {
       "type": "library",
       "name": "@next/swc-win32-x64-msvc",
-      "version": "16.3.4",
+      "version": "16.3.8",
       "scope": "optional",
-      "bom-ref": "library:@next/swc-win32-x64-msvc@16.3.4"
+      "bom-ref": "library:@next/swc-win32-x64-msvc@16.3.8"
+    },
+    {
+      "type": "library",
+      "name": "@noble/ciphers",
+      "version": "2.4.0",
+      "scope": "required",
+      "bom-ref": "library:@noble/ciphers@2.4.0"
+    },
+    {
+      "type": "library",
+      "name": "@noble/hashes",
+      "version": "2.4.0",
+      "scope": "required",
+      "bom-ref": "library:@noble/hashes@2.4.0"
+    },
+    {
+      "type": "library",
+      "name": "@opentelemetry/semantic-conventions",
+      "version": "1.43.0",
+      "scope": "required",
+      "bom-ref": "library:@opentelemetry/semantic-conventions@1.43.0"
+    },
+    {
+      "type": "library",
+      "name": "@playwright/test",
+      "version": "1.62.1",
+      "scope": "required",
+      "bom-ref": "library:@playwright/test@1.62.1"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/number",
+      "version": "1.1.3",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/number@1.1.3"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/primitive",
+      "version": "1.1.7",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/primitive@1.1.7"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-compose-refs",
+      "version": "1.1.5",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-compose-refs@1.1.5"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-context",
+      "version": "1.2.2",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-context@1.2.2"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-direction",
+      "version": "1.1.4",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-direction@1.1.4"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-focus-guards",
+      "version": "1.1.6",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-focus-guards@1.1.6"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-id",
+      "version": "1.1.4",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-id@1.1.4"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-slot",
+      "version": "1.3.3",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-slot@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-use-callback-ref",
+      "version": "1.1.4",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-use-callback-ref@1.1.4"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-use-controllable-state",
+      "version": "1.2.6",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-use-controllable-state@1.2.6"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-use-effect-event",
+      "version": "0.0.5",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-use-effect-event@0.0.5"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-use-escape-keydown",
+      "version": "1.1.5",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-use-escape-keydown@1.1.5"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-use-is-hydrated",
+      "version": "0.1.3",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-use-is-hydrated@0.1.3"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-use-layout-effect",
+      "version": "1.1.4",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-use-layout-effect@1.1.4"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-use-previous",
+      "version": "1.1.4",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-use-previous@1.1.4"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-use-rect",
+      "version": "1.1.4",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-use-rect@1.1.4"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/react-use-size",
+      "version": "1.1.4",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/react-use-size@1.1.4"
+    },
+    {
+      "type": "library",
+      "name": "@radix-ui/rect",
+      "version": "1.1.3",
+      "scope": "required",
+      "bom-ref": "library:@radix-ui/rect@1.1.3"
+    },
+    {
+      "type": "library",
+      "name": "@standard-schema/spec",
+      "version": "1.1.0",
+      "scope": "required",
+      "bom-ref": "library:@standard-schema/spec@1.1.0"
     },
     {
       "type": "library",
@@ -308,10 +602,129 @@
     },
     {
       "type": "library",
+      "name": "@tailwindcss/node",
+      "version": "4.3.3",
+      "scope": "required",
+      "bom-ref": "library:@tailwindcss/node@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-android-arm64",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-android-arm64@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-darwin-arm64",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-darwin-arm64@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-darwin-x64",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-darwin-x64@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-freebsd-x64",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-freebsd-x64@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-linux-arm-gnueabihf",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-linux-arm-gnueabihf@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-linux-arm64-gnu",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-linux-arm64-gnu@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-linux-arm64-musl",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-linux-arm64-musl@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-linux-x64-gnu",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-linux-x64-gnu@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-linux-x64-musl",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-linux-x64-musl@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-wasm32-wasi",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-wasm32-wasi@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-win32-arm64-msvc",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-win32-arm64-msvc@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide-win32-x64-msvc",
+      "version": "4.3.3",
+      "scope": "optional",
+      "bom-ref": "library:@tailwindcss/oxide-win32-x64-msvc@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/oxide",
+      "version": "4.3.3",
+      "scope": "required",
+      "bom-ref": "library:@tailwindcss/oxide@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "@tailwindcss/postcss",
+      "version": "4.3.3",
+      "scope": "required",
+      "bom-ref": "library:@tailwindcss/postcss@4.3.3"
+    },
+    {
+      "type": "library",
       "name": "@types/node",
       "version": "24.10.1",
       "scope": "required",
       "bom-ref": "library:@types/node@24.10.1"
+    },
+    {
+      "type": "library",
+      "name": "@types/nodemailer",
+      "version": "8.0.2",
+      "scope": "required",
+      "bom-ref": "library:@types/nodemailer@8.0.2"
+    },
+    {
+      "type": "library",
+      "name": "@types/pg",
+      "version": "8.23.1",
+      "scope": "required",
+      "bom-ref": "library:@types/pg@8.23.1"
     },
     {
       "type": "library",
@@ -343,10 +756,38 @@
     },
     {
       "type": "library",
+      "name": "aria-hidden",
+      "version": "1.2.6",
+      "scope": "required",
+      "bom-ref": "library:aria-hidden@1.2.6"
+    },
+    {
+      "type": "library",
       "name": "baseline-browser-mapping",
       "version": "2.11.21",
       "scope": "required",
       "bom-ref": "library:baseline-browser-mapping@2.11.21"
+    },
+    {
+      "type": "library",
+      "name": "better-auth",
+      "version": "1.7.6",
+      "scope": "required",
+      "bom-ref": "library:better-auth@1.7.6"
+    },
+    {
+      "type": "library",
+      "name": "better-call/node_modules/@better-auth/utils",
+      "version": "0.5.0",
+      "scope": "required",
+      "bom-ref": "library:better-call/node_modules/@better-auth/utils@0.5.0"
+    },
+    {
+      "type": "library",
+      "name": "better-call",
+      "version": "1.4.0",
+      "scope": "required",
+      "bom-ref": "library:better-call@1.4.0"
     },
     {
       "type": "library",
@@ -364,6 +805,13 @@
     },
     {
       "type": "library",
+      "name": "class-variance-authority",
+      "version": "0.7.1",
+      "scope": "required",
+      "bom-ref": "library:class-variance-authority@0.7.1"
+    },
+    {
+      "type": "library",
       "name": "click",
       "version": "8.5.0",
       "scope": "required",
@@ -378,6 +826,13 @@
     },
     {
       "type": "library",
+      "name": "clsx",
+      "version": "2.1.1",
+      "scope": "required",
+      "bom-ref": "library:clsx@2.1.1"
+    },
+    {
+      "type": "library",
       "name": "csstype",
       "version": "3.2.3",
       "scope": "required",
@@ -385,10 +840,31 @@
     },
     {
       "type": "library",
+      "name": "defu",
+      "version": "6.1.7",
+      "scope": "required",
+      "bom-ref": "library:defu@6.1.7"
+    },
+    {
+      "type": "library",
       "name": "detect-libc",
       "version": "2.1.2",
-      "scope": "optional",
+      "scope": "required",
       "bom-ref": "library:detect-libc@2.1.2"
+    },
+    {
+      "type": "library",
+      "name": "detect-node-es",
+      "version": "1.1.0",
+      "scope": "required",
+      "bom-ref": "library:detect-node-es@1.1.0"
+    },
+    {
+      "type": "library",
+      "name": "enhanced-resolve",
+      "version": "5.26.0",
+      "scope": "required",
+      "bom-ref": "library:enhanced-resolve@5.26.0"
     },
     {
       "type": "library",
@@ -403,6 +879,20 @@
       "version": "2.3.2",
       "scope": "optional",
       "bom-ref": "library:fsevents@2.3.2"
+    },
+    {
+      "type": "library",
+      "name": "get-nonce",
+      "version": "1.0.1",
+      "scope": "required",
+      "bom-ref": "library:get-nonce@1.0.1"
+    },
+    {
+      "type": "library",
+      "name": "graceful-fs",
+      "version": "4.2.11",
+      "scope": "required",
+      "bom-ref": "library:graceful-fs@4.2.11"
     },
     {
       "type": "library",
@@ -441,6 +931,125 @@
     },
     {
       "type": "library",
+      "name": "jiti",
+      "version": "2.7.0",
+      "scope": "required",
+      "bom-ref": "library:jiti@2.7.0"
+    },
+    {
+      "type": "library",
+      "name": "jose",
+      "version": "6.2.12",
+      "scope": "required",
+      "bom-ref": "library:jose@6.2.12"
+    },
+    {
+      "type": "library",
+      "name": "kysely",
+      "version": "0.29.6",
+      "scope": "required",
+      "bom-ref": "library:kysely@0.29.6"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss-android-arm64",
+      "version": "1.32.0",
+      "scope": "optional",
+      "bom-ref": "library:lightningcss-android-arm64@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss-darwin-arm64",
+      "version": "1.32.0",
+      "scope": "optional",
+      "bom-ref": "library:lightningcss-darwin-arm64@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss-darwin-x64",
+      "version": "1.32.0",
+      "scope": "optional",
+      "bom-ref": "library:lightningcss-darwin-x64@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss-freebsd-x64",
+      "version": "1.32.0",
+      "scope": "optional",
+      "bom-ref": "library:lightningcss-freebsd-x64@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss-linux-arm-gnueabihf",
+      "version": "1.32.0",
+      "scope": "optional",
+      "bom-ref": "library:lightningcss-linux-arm-gnueabihf@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss-linux-arm64-gnu",
+      "version": "1.32.0",
+      "scope": "optional",
+      "bom-ref": "library:lightningcss-linux-arm64-gnu@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss-linux-arm64-musl",
+      "version": "1.32.0",
+      "scope": "optional",
+      "bom-ref": "library:lightningcss-linux-arm64-musl@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss-linux-x64-gnu",
+      "version": "1.32.0",
+      "scope": "optional",
+      "bom-ref": "library:lightningcss-linux-x64-gnu@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss-linux-x64-musl",
+      "version": "1.32.0",
+      "scope": "optional",
+      "bom-ref": "library:lightningcss-linux-x64-musl@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss-win32-arm64-msvc",
+      "version": "1.32.0",
+      "scope": "optional",
+      "bom-ref": "library:lightningcss-win32-arm64-msvc@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss-win32-x64-msvc",
+      "version": "1.32.0",
+      "scope": "optional",
+      "bom-ref": "library:lightningcss-win32-x64-msvc@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lightningcss",
+      "version": "1.32.0",
+      "scope": "required",
+      "bom-ref": "library:lightningcss@1.32.0"
+    },
+    {
+      "type": "library",
+      "name": "lucide-react",
+      "version": "1.48.0",
+      "scope": "required",
+      "bom-ref": "library:lucide-react@1.48.0"
+    },
+    {
+      "type": "library",
+      "name": "magic-string",
+      "version": "0.30.21",
+      "scope": "required",
+      "bom-ref": "library:magic-string@0.30.21"
+    },
+    {
+      "type": "library",
       "name": "nanoid",
       "version": "3.3.18",
       "scope": "required",
@@ -448,10 +1057,80 @@
     },
     {
       "type": "library",
-      "name": "next",
-      "version": "16.3.4",
+      "name": "nanostores",
+      "version": "1.5.4",
       "scope": "required",
-      "bom-ref": "library:next@16.3.4"
+      "bom-ref": "library:nanostores@1.5.4"
+    },
+    {
+      "type": "library",
+      "name": "next",
+      "version": "16.3.8",
+      "scope": "required",
+      "bom-ref": "library:next@16.3.8"
+    },
+    {
+      "type": "library",
+      "name": "nodemailer",
+      "version": "10.0.11",
+      "scope": "required",
+      "bom-ref": "library:nodemailer@10.0.11"
+    },
+    {
+      "type": "library",
+      "name": "pg-cloudflare",
+      "version": "1.4.1",
+      "scope": "optional",
+      "bom-ref": "library:pg-cloudflare@1.4.1"
+    },
+    {
+      "type": "library",
+      "name": "pg-connection-string",
+      "version": "2.14.1",
+      "scope": "required",
+      "bom-ref": "library:pg-connection-string@2.14.1"
+    },
+    {
+      "type": "library",
+      "name": "pg-int8",
+      "version": "1.0.1",
+      "scope": "required",
+      "bom-ref": "library:pg-int8@1.0.1"
+    },
+    {
+      "type": "library",
+      "name": "pg-pool",
+      "version": "3.14.0",
+      "scope": "required",
+      "bom-ref": "library:pg-pool@3.14.0"
+    },
+    {
+      "type": "library",
+      "name": "pg-protocol",
+      "version": "1.16.1",
+      "scope": "required",
+      "bom-ref": "library:pg-protocol@1.16.1"
+    },
+    {
+      "type": "library",
+      "name": "pg-types",
+      "version": "2.2.0",
+      "scope": "required",
+      "bom-ref": "library:pg-types@2.2.0"
+    },
+    {
+      "type": "library",
+      "name": "pg",
+      "version": "8.23.0",
+      "scope": "required",
+      "bom-ref": "library:pg@8.23.0"
+    },
+    {
+      "type": "library",
+      "name": "pgpass",
+      "version": "1.0.5",
+      "scope": "required",
+      "bom-ref": "library:pgpass@1.0.5"
     },
     {
       "type": "library",
@@ -487,6 +1166,34 @@
       "version": "8.5.23",
       "scope": "required",
       "bom-ref": "library:postcss@8.5.23"
+    },
+    {
+      "type": "library",
+      "name": "postgres-array",
+      "version": "2.0.0",
+      "scope": "required",
+      "bom-ref": "library:postgres-array@2.0.0"
+    },
+    {
+      "type": "library",
+      "name": "postgres-bytea",
+      "version": "1.0.1",
+      "scope": "required",
+      "bom-ref": "library:postgres-bytea@1.0.1"
+    },
+    {
+      "type": "library",
+      "name": "postgres-date",
+      "version": "1.0.7",
+      "scope": "required",
+      "bom-ref": "library:postgres-date@1.0.7"
+    },
+    {
+      "type": "library",
+      "name": "postgres-interval",
+      "version": "1.2.0",
+      "scope": "required",
+      "bom-ref": "library:postgres-interval@1.2.0"
     },
     {
       "type": "library",
@@ -567,6 +1274,307 @@
     },
     {
       "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-accessible-icon",
+      "version": "1.1.15",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-accessible-icon@1.1.15"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-accordion",
+      "version": "1.2.20",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-accordion@1.2.20"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-alert-dialog",
+      "version": "1.1.23",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-alert-dialog@1.1.23"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-arrow",
+      "version": "1.1.15",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-arrow@1.1.15"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-aspect-ratio",
+      "version": "1.1.15",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-aspect-ratio@1.1.15"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-avatar",
+      "version": "1.2.6",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-avatar@1.2.6"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-checkbox",
+      "version": "1.3.11",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-checkbox@1.3.11"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-collapsible",
+      "version": "1.1.20",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-collapsible@1.1.20"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-collection",
+      "version": "1.1.15",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-collection@1.1.15"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-context-menu",
+      "version": "2.3.7",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-context-menu@2.3.7"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-dialog",
+      "version": "1.1.23",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-dialog@1.1.23"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-dismissable-layer",
+      "version": "1.1.19",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-dismissable-layer@1.1.19"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-dropdown-menu",
+      "version": "2.1.24",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-dropdown-menu@2.1.24"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-focus-scope",
+      "version": "1.1.16",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-focus-scope@1.1.16"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-form",
+      "version": "0.1.16",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-form@0.1.16"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-hover-card",
+      "version": "1.1.23",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-hover-card@1.1.23"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-label",
+      "version": "2.1.15",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-label@2.1.15"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-menu",
+      "version": "2.1.24",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-menu@2.1.24"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-menubar",
+      "version": "1.1.24",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-menubar@1.1.24"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-navigation-menu",
+      "version": "1.2.22",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-navigation-menu@1.2.22"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-one-time-password-field",
+      "version": "0.1.16",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-one-time-password-field@0.1.16"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-password-toggle-field",
+      "version": "0.1.11",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-password-toggle-field@0.1.11"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-popover",
+      "version": "1.1.23",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-popover@1.1.23"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-popper",
+      "version": "1.3.7",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-popper@1.3.7"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-portal",
+      "version": "1.1.17",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-portal@1.1.17"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-presence",
+      "version": "1.1.10",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-presence@1.1.10"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-primitive",
+      "version": "2.1.10",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-primitive@2.1.10"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-progress",
+      "version": "1.1.16",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-progress@1.1.16"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-radio-group",
+      "version": "1.4.7",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-radio-group@1.4.7"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-roving-focus",
+      "version": "1.1.19",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-roving-focus@1.1.19"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-scroll-area",
+      "version": "1.2.18",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-scroll-area@1.2.18"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-select",
+      "version": "2.3.7",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-select@2.3.7"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-separator",
+      "version": "1.1.15",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-separator@1.1.15"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-slider",
+      "version": "1.4.7",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-slider@1.4.7"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-switch",
+      "version": "1.3.7",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-switch@1.3.7"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-tabs",
+      "version": "1.1.21",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-tabs@1.1.21"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-toast",
+      "version": "1.2.23",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-toast@1.2.23"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-toggle-group",
+      "version": "1.1.19",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-toggle-group@1.1.19"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-toggle",
+      "version": "1.1.18",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-toggle@1.1.18"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-toolbar",
+      "version": "1.1.19",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-toolbar@1.1.19"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-tooltip",
+      "version": "1.2.16",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-tooltip@1.2.16"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui/node_modules/@radix-ui/react-visually-hidden",
+      "version": "1.2.11",
+      "scope": "required",
+      "bom-ref": "library:radix-ui/node_modules/@radix-ui/react-visually-hidden@1.2.11"
+    },
+    {
+      "type": "library",
+      "name": "radix-ui",
+      "version": "1.6.7",
+      "scope": "required",
+      "bom-ref": "library:radix-ui@1.6.7"
+    },
+    {
+      "type": "library",
       "name": "react-dom",
       "version": "19.2.8",
       "scope": "required",
@@ -574,10 +1582,38 @@
     },
     {
       "type": "library",
+      "name": "react-remove-scroll-bar",
+      "version": "2.3.8",
+      "scope": "required",
+      "bom-ref": "library:react-remove-scroll-bar@2.3.8"
+    },
+    {
+      "type": "library",
+      "name": "react-remove-scroll",
+      "version": "2.7.2",
+      "scope": "required",
+      "bom-ref": "library:react-remove-scroll@2.7.2"
+    },
+    {
+      "type": "library",
+      "name": "react-style-singleton",
+      "version": "2.2.3",
+      "scope": "required",
+      "bom-ref": "library:react-style-singleton@2.2.3"
+    },
+    {
+      "type": "library",
       "name": "react",
       "version": "19.2.8",
       "scope": "required",
       "bom-ref": "library:react@19.2.8"
+    },
+    {
+      "type": "library",
+      "name": "rou3",
+      "version": "0.9.2",
+      "scope": "required",
+      "bom-ref": "library:rou3@0.9.2"
     },
     {
       "type": "library",
@@ -595,6 +1631,13 @@
     },
     {
       "type": "library",
+      "name": "set-cookie-parser",
+      "version": "3.1.2",
+      "scope": "required",
+      "bom-ref": "library:set-cookie-parser@3.1.2"
+    },
+    {
+      "type": "library",
       "name": "sharp",
       "version": "0.35.4",
       "scope": "optional",
@@ -603,9 +1646,16 @@
     {
       "type": "library",
       "name": "source-map-js",
-      "version": "1.2.1",
+      "version": "1.2.2",
       "scope": "required",
-      "bom-ref": "library:source-map-js@1.2.1"
+      "bom-ref": "library:source-map-js@1.2.2"
+    },
+    {
+      "type": "library",
+      "name": "split2",
+      "version": "4.2.0",
+      "scope": "required",
+      "bom-ref": "library:split2@4.2.0"
     },
     {
       "type": "library",
@@ -623,10 +1673,38 @@
     },
     {
       "type": "library",
+      "name": "tailwind-merge",
+      "version": "3.7.0",
+      "scope": "required",
+      "bom-ref": "library:tailwind-merge@3.7.0"
+    },
+    {
+      "type": "library",
+      "name": "tailwindcss",
+      "version": "4.3.3",
+      "scope": "required",
+      "bom-ref": "library:tailwindcss@4.3.3"
+    },
+    {
+      "type": "library",
+      "name": "tapable",
+      "version": "2.3.3",
+      "scope": "required",
+      "bom-ref": "library:tapable@2.3.3"
+    },
+    {
+      "type": "library",
       "name": "tslib",
       "version": "2.8.1",
       "scope": "required",
       "bom-ref": "library:tslib@2.8.1"
+    },
+    {
+      "type": "library",
+      "name": "tw-animate-css",
+      "version": "1.4.0",
+      "scope": "required",
+      "bom-ref": "library:tw-animate-css@1.4.0"
     },
     {
       "type": "library",
@@ -665,6 +1743,20 @@
     },
     {
       "type": "library",
+      "name": "use-callback-ref",
+      "version": "1.3.3",
+      "scope": "required",
+      "bom-ref": "library:use-callback-ref@1.3.3"
+    },
+    {
+      "type": "library",
+      "name": "use-sidecar",
+      "version": "1.1.3",
+      "scope": "required",
+      "bom-ref": "library:use-sidecar@1.1.3"
+    },
+    {
+      "type": "library",
       "name": "uvicorn",
       "version": "0.52.4",
       "scope": "required",
@@ -690,6 +1782,20 @@
       "version": "17.1",
       "scope": "required",
       "bom-ref": "library:websockets@17.1"
+    },
+    {
+      "type": "library",
+      "name": "xtend",
+      "version": "4.0.2",
+      "scope": "required",
+      "bom-ref": "library:xtend@4.0.2"
+    },
+    {
+      "type": "library",
+      "name": "zod",
+      "version": "4.6.5",
+      "scope": "required",
+      "bom-ref": "library:zod@4.6.5"
     }
   ]
 }

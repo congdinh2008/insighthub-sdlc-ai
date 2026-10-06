@@ -8,7 +8,7 @@ Cập nhật: <ngày> | Commit: <SHA> | Người duy trì: <tên>
 
 | Loại câu hỏi | Nguồn có thẩm quyền | Phiên bản / vị trí |
 | --- | --- | --- |
-| Hành vi sản phẩm, AC | SRS | `docs/learner/02_SRS_InsightHub_v1.0.md#...` |
+| Hành vi sản phẩm, AC | SRS | `docs/learner/02_SRS_InsightHub_v1.1.md#...` |
 | Công việc, rubric | Requirements | `docs/learner/01_Requirements_InsightHub.md#...` |
 | Thiết kế API/dữ liệu | Hồ sơ M2, ADR | |
 | Hành vi hiện tại | Code, test | |

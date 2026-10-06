@@ -19,6 +19,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           fetch-depth: 0
+          # Kiểm đúng commit của PR, không kiểm merge commit tạm (refs/pull/N/merge) vốn không có trailer.
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - name: Trace consistency
         run: python3 scripts/trace_check.py
       - name: Approved tests changed only with trailer
@@ -34,6 +36,8 @@ jobs:
       RAG_MODE: fixture
       LLM_PROVIDER: fixture
       EMBEDDING_PROVIDER: fixture
+      # Khóa chỉ dùng trong CI cho stack fixture, không phải secret thật.
+      BETTER_AUTH_SECRET: ci-only-not-a-secret-0123456789abcdef
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
@@ -47,10 +51,20 @@ jobs:
         run: make test
       - name: Smoke test
         run: make smoke
+      - name: Eval suites are valid
+        run: for suite in evaluation/harness/suites/*.json; do python3 evaluation/harness/run_eval.py --suite "$suite" --validate || exit 1; done
+      # eval-fixture: kiểm pipeline của tính năng AI ở chế độ fixture, không gọi provider, không cần secret.
+      # Starter để ở chế độ báo cáo. LR-23: khi đã có golden set Summary/Quiz, bỏ continue-on-error để chặn merge.
+      - name: eval-fixture
+        continue-on-error: true
+        run: python3 evaluation/harness/run_eval.py --suite evaluation/harness/suites/fixture-pipeline.json --allow-fixture --min-pass-hat-k 1.0 --output reports/evaluation/ci-fixture.json
       - name: Install web dependencies
         run: npm ci --prefix web
       - name: Playwright E2E
         run: cd web && npx playwright install --with-deps chromium && npm run test:e2e
+      # Playwright Test (web/e2e). Học viên bổ sung spec hành trình M3.1 ở LR-20.
+      - name: Playwright Test
+        run: cd web && npm run test:pw
       - name: npm audit
         run: npm audit --omit=dev --audit-level=high --prefix web
       - if: always()

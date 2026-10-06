@@ -2,13 +2,25 @@
 
 
 class ServiceError(Exception):
+    """Lỗi công khai theo envelope chung (SRS mục 3.3.1): code ổn định, message an toàn,
+    request_id, fields[] cho lỗi theo trường và retry_after_seconds khi bị giới hạn."""
+
     status_code = 500
     code = "internal_error"
     message = "Không thể xử lý yêu cầu."
 
-    def __init__(self, message: str | None = None):
+    def __init__(
+        self,
+        message: str | None = None,
+        *,
+        fields: list[dict] | None = None,
+        retry_after_seconds: int | None = None,
+    ):
         if message is not None:
             self.message = message
+        # fields: [{"field": "source_ids", "code": "duplicate"}]. Chỉ mã, không chép dữ liệu người dùng.
+        self.fields = list(fields or [])
+        self.retry_after_seconds = retry_after_seconds
         super().__init__(self.message)
 
 
@@ -108,3 +120,43 @@ class MailDeliveryError(ServiceError):
     status_code = 502
     code = "mail_delivery_error"
     message = "Không gửi được email. Hãy thử lại sau."
+
+
+class NotAuthenticated(ServiceError):
+    status_code = 401
+    code = "not_authenticated"
+    message = "Phiên đăng nhập không hợp lệ hoặc đã hết hạn. Hãy đăng nhập lại."
+
+
+class RequestInvalid(ServiceError):
+    status_code = 422
+    code = "validation_error"
+    message = "Dữ liệu yêu cầu không hợp lệ."
+
+
+class AiJobRunning(ServiceError):
+    """LIM-10: mỗi người dùng tối đa 1 tác vụ AI đang chạy (tính chung hỏi đáp và công cụ)."""
+    status_code = 429
+    code = "ai_job_running"
+    message = "Bạn đang có một tác vụ AI chưa hoàn tất. Hãy chờ tác vụ đó kết thúc rồi thử lại."
+
+
+class AiRateLimited(ServiceError):
+    """LIM-10: tối đa 10 yêu cầu AI mới trong 60 giây."""
+    status_code = 429
+    code = "ai_rate_limited"
+    message = "Bạn đã gửi quá nhiều yêu cầu AI. Hãy thử lại sau."
+
+
+class AiJobNotFound(ServiceError):
+    """Dùng chung cho không tồn tại và không có quyền, để không tiết lộ tác vụ của người khác."""
+    status_code = 404
+    code = "ai_job_not_found"
+    message = "Không tìm thấy tác vụ AI."
+
+
+class PublishBlocked(ServiceError):
+    """BR-08, BR-09: điều kiện công bố không còn (nguồn, Notebook hoặc hội thoại đích đã bị xóa)."""
+    status_code = 409
+    code = "publish_blocked"
+    message = "Kết quả không được lưu vì nguồn hoặc nơi lưu kết quả không còn khả dụng."
