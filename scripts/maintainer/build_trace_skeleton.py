@@ -1,80 +1,96 @@
 #!/usr/bin/env python3
-"""Maintainer tool: build trace/ac-trace.csv from the learner Requirements AC table.
+"""Maintainer tool: rebuild trace/ac-trace.csv from the learner Requirements AC table.
 
-Instructor-owned columns (from Requirements section 15.4 plus the suggested risk
-and tier maps below) are regenerated; learner columns start empty. Run again
-only when Requirements changes, before a learner snapshot is published.
+Instructor columns come from Requirements section 15.4 (AC, scope, tier, LR, due,
+UAT) and from the suggested risk already recorded in the current trace file.
+Learner columns start empty. Run when Requirements changes, before publishing.
+
+    python3 scripts/maintainer/build_trace_skeleton.py            # write trace/ac-trace.csv
+    python3 scripts/maintainer/build_trace_skeleton.py --check    # only compare, exit 1 on drift
+    python3 scripts/maintainer/build_trace_skeleton.py --risk IH-NB-001-AC03=R1   # risk for a new AC
 """
+import argparse
 import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from trace_lib import COLUMNS, REQUIREMENTS, ROOT, write_rows  # noqa: E402
-from trace_lib import TRACE as OUTPUT
+from trace_lib import COLUMNS, REQUIREMENTS, RISKS, ROOT, read_rows, write_rows  # noqa: E402
+from trace_lib import TRACE as OUTPUT  # noqa: E402
 
-SRS = "docs/learner/02_SRS_InsightHub_v1.0.md"
-
-R1 = set("""
-IH-AUTH-001-AC01 IH-AUTH-001-AC02 IH-AUTH-002-AC01 IH-AUTH-002-AC02 IH-AUTH-003-AC01 IH-AUTH-003-AC02
-IH-AUTH-004-AC01 IH-AUTH-004-AC02 IH-AUTH-005-AC01 IH-AUTH-005-AC02 IH-AUTH-005-AC03 IH-AUTH-006-AC01
-IH-AUTH-007-AC01 IH-AUTH-007-AC02 IH-AUTH-007-AC03 IH-AUTH-008-AC01 IH-AUTH-008-AC02 IH-AUTH-010-AC01
-IH-AUTH-010-AC02 IH-NB-001-AC01 IH-NB-003-AC02 IH-NB-004-AC01 IH-NB-004-AC02 IH-DOC-004-AC02
-IH-DOC-006-AC01 IH-CHAT-001-AC02 IH-CHAT-002-AC01 IH-CHAT-002-AC02 IH-CHAT-003-AC01 IH-CHAT-005-AC02
-IH-AI-004-AC02 IH-SUM-001-AC02 IH-QUIZ-001-AC02 IH-QUIZ-002-AC01 IH-OUT-001-AC02 IH-OUT-003-AC01
-IH-DATA-001-AC04 IH-DATA-002-AC01 IH-DATA-002-AC02 IH-DATA-002-AC03 IH-DATA-002-AC04 IH-UX-004-AC02
-IH-MSG-003-AC02 IH-MSG-004-AC02 IH-INT-002-AC02 IH-INT-002-AC03 IH-INT-004-AC02 IH-NFR-001-AC01
-IH-NFR-001-AC02 IH-NFR-001-AC03 IH-NFR-001-AC04 IH-NFR-001-AC05 IH-NFR-002-AC01 IH-NFR-002-AC02
-IH-NFR-003-AC01 IH-NFR-003-AC02 IH-NFR-004-AC01 IH-NFR-008-AC02 IH-NFR-009-AC01 IH-NFR-009-AC02
-IH-NFR-011-AC01 IH-NFR-011-AC02 IH-REL-001-AC02
-""".split())
-R3 = set("""
-IH-AUTH-009-AC01 IH-AUTH-009-AC02 IH-UX-001-AC01 IH-UX-001-AC02 IH-MSG-001-AC01 IH-MSG-001-AC02
-IH-MSG-002-AC01 IH-MSG-002-AC02 IH-INT-001-AC01 IH-INT-003-AC02 IH-NFR-008-AC01 IH-REL-002-AC01
-IH-REL-002-AC02
-""".split())
-# D7 công bố 29/09/2026: Core = Auth, Notebook (gồm Document, Chat/Conversation), Summary, Quiz,
-# nền AI Job/Output và các mục kiểm M4/M5; Extended = danh sách dưới (45 AC). Auth giữ quyết định QĐ3 28/09.
-EXTENDED = set("""
-IH-AUTH-002-AC02 IH-AUTH-003-AC02 IH-AUTH-005-AC01 IH-AUTH-005-AC03 IH-AUTH-005-AC04 IH-AUTH-006-AC02 IH-AUTH-007-AC03 IH-AUTH-009-AC02 IH-MSG-003-AC03
-IH-NB-002-AC02 IH-NB-003-AC01 IH-DOC-003-AC02 IH-DOC-005-AC01 IH-DOC-006-AC02 IH-CHAT-004-AC03 IH-CHAT-004-AC04 IH-CHAT-004-AC05
-IH-NOTE-001-AC01 IH-NOTE-001-AC02 IH-NOTE-001-AC03 IH-NOTE-001-AC04 IH-NOTE-002-AC01 IH-NOTE-002-AC02 IH-SUM-002-AC01 IH-SUM-002-AC02
-IH-OUT-002-AC01 IH-OUT-002-AC02 IH-OUT-003-AC02 IH-AI-003-AC02 IH-DATA-001-AC01 IH-DATA-001-AC03 IH-DATA-001-AC05 IH-DATA-001-AC06
-IH-UX-001-AC02 IH-UX-002-AC02 IH-UX-003-AC01 IH-UX-003-AC02 IH-UX-004-AC01 IH-MSG-001-AC01 IH-MSG-001-AC02 IH-MSG-002-AC01 IH-MSG-002-AC02 IH-INT-001-AC01 IH-INT-001-AC02 IH-INT-004-AC01
-""".split())
-
-ROW = re.compile(r"^\| (IH-[A-Z]+-\d{3}) \| (IH-[A-Z]+-\d{3}-AC\d{2}) \| (A|D\d|N) \| (Core|Extended|Ngoài phạm vi) \| ([^|]*)\| ([^|]*)\| ([^|]*)\|", re.M)
+ROW = re.compile(
+    r"^\| (IH-[A-Z]+-\d{3}) \| (IH-[A-Z]+-\d{3}-AC\d{2}) \| (A|D\d|N) \| (Core|Extended|Ngoài phạm vi) \| "
+    r"([^|]*)\| ([^|]*)\| ([^|]*)\|",
+    re.M,
+)
+TIER = {"Core": "Core", "Extended": "Extended", "Ngoài phạm vi": "OutOfScope"}
 
 
-def main():
-    rows = []
-    for req, ac, scope, listed_tier, lr, due, uat in ROW.findall(REQUIREMENTS.read_text(encoding="utf-8")):
-        group = req.rsplit("-", 1)[0].replace("IH-", "")
-        if scope == "N":
-            tier = "OutOfScope"
-        else:
-            tier = "Extended" if ac in EXTENDED else "Core"
-        expected_label = {"OutOfScope": "Ngoài phạm vi"}.get(tier, tier)
-        assert listed_tier == expected_label, f"{ac}: Requirements 15.4 ghi {listed_tier}, bản đồ ghi {tier}"
-        risk = "" if scope == "N" else ("R1" if ac in R1 else "R3" if ac in R3 else "R2")
+def srs_path():
+    found = sorted((ROOT / "docs" / "learner").glob("02_SRS_InsightHub_v*.md"))
+    if len(found) != 1:
+        sys.exit(f"Expected exactly one SRS in docs/learner, found {[p.name for p in found]}")
+    return found[0].relative_to(ROOT).as_posix()
+
+
+def parse_overrides(items):
+    overrides = {}
+    for item in items:
+        ac, _, risk = item.partition("=")
+        if risk not in RISKS:
+            sys.exit(f"--risk {item}: risk must be one of {sorted(RISKS)}")
+        overrides[ac] = risk
+    return overrides
+
+
+def build(overrides):
+    _, current = read_rows(OUTPUT) if OUTPUT.exists() else ([], [])
+    known_risk = {row["ac_id"]: row["risk_suggested"] for row in current}
+    known_risk.update(overrides)
+    srs = srs_path()
+    rows, missing = [], []
+    for req, ac, scope, tier_label, lr, due, uat in ROW.findall(REQUIREMENTS.read_text(encoding="utf-8")):
+        tier = TIER[tier_label]
+        if (scope == "N") != (tier == "OutOfScope"):
+            sys.exit(f"{ac}: scope {scope} does not match tier {tier_label} in Requirements 15.4")
+        risk = "" if scope == "N" else known_risk.get(ac, "")
+        if scope != "N" and risk not in RISKS:
+            missing.append(ac)
         row = dict.fromkeys(COLUMNS, "")
         row.update(
-            ac_id=ac, req_id=req, group=group, scope=scope, tier=tier, risk_suggested=risk,
-            lr=lr.strip(), due=due.strip().replace("→", "->"), uat=uat.strip(),
-            srs_ref=f"{SRS}#req-{req.lower()}", risk=risk,
+            ac_id=ac, req_id=req, group=req.rsplit("-", 1)[0].replace("IH-", ""), scope=scope, tier=tier,
+            risk_suggested=risk, lr=lr.strip(), due=due.strip().replace("→", "->"), uat=uat.strip(),
+            srs_ref=f"{srs}#req-{req.lower()}", risk=risk,
             verification="" if scope == "N" else "Unverified",
             verdict="OutOfScope" if scope == "N" else "NotRun",
         )
         rows.append(row)
-    assert len(rows) == 163 and len({r["ac_id"] for r in rows}) == 163, f"Expected 163 AC rows, got {len(rows)}"
-    unknown = (R1 | R3 | EXTENDED) - {r["ac_id"] for r in rows}
-    assert not unknown, f"Unknown AC in maps: {sorted(unknown)}"
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    write_rows(OUTPUT, COLUMNS, rows)
+    if missing:
+        sys.exit(f"No suggested risk for {missing}; pass --risk <AC>=R1|R2|R3")
+    ids = [r["ac_id"] for r in rows]
+    if not rows or len(ids) != len(set(ids)):
+        sys.exit(f"Requirements 15.4 has {len(ids)} rows, {len(set(ids))} unique AC")
+    return rows
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--check", action="store_true", help="compare with trace/ac-trace.csv without writing")
+    parser.add_argument("--risk", action="append", default=[], metavar="AC=R1", help="suggested risk for a new AC")
+    args = parser.parse_args()
+    rows = build(parse_overrides(args.risk))
     count = lambda key, value: sum(r[key] == value for r in rows)  # noqa: E731
-    print(f"Wrote {OUTPUT.relative_to(ROOT)}: 163 AC; R1={count('risk', 'R1')} R2={count('risk', 'R2')} "
-          f"R3={count('risk', 'R3')}; Core={count('tier', 'Core')} Extended={count('tier', 'Extended')} "
-          f"Pending={count('tier', 'Pending')} OutOfScope={count('tier', 'OutOfScope')}")
+    summary = (f"{len(rows)} AC; R1={count('risk', 'R1')} R2={count('risk', 'R2')} R3={count('risk', 'R3')}; "
+               f"Core={count('tier', 'Core')} Extended={count('tier', 'Extended')} "
+               f"OutOfScope={count('tier', 'OutOfScope')}")
+    if args.check:
+        _, current = read_rows(OUTPUT)
+        if current != rows:
+            sys.exit(f"Drift: trace/ac-trace.csv differs from Requirements 15.4 ({summary})")
+        print(f"OK: trace/ac-trace.csv matches Requirements 15.4 ({summary})")
+        return
+    write_rows(OUTPUT, COLUMNS, rows)
+    print(f"Wrote {OUTPUT.relative_to(ROOT)}: {summary}")
 
 
 if __name__ == "__main__":
