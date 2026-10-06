@@ -32,4 +32,4 @@ compare-starter:
 # Ví dụ: make -f maintainer.mk link-starter STARTER=../insighthub-starter TAG=learner-r1.3.1
 link-starter:
 	git fetch --no-tags "$${STARTER:?Set STARTER}" "refs/tags/$${TAG:?Set TAG}:refs/tags/$${TAG}"
-	git merge -s ours --no-ff -m "chore(release): link Starter $${TAG} history" "$${TAG}^{commit}"
+	git merge -s ours --no-ff --allow-unrelated-histories -m "chore(release): link Starter $${TAG} history" "$${TAG}^{commit}"
