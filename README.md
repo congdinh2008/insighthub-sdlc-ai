@@ -5,7 +5,7 @@ Starter cho ứng dụng khai thác tài liệu bằng AI, dùng làm Running Pr
 | Thông tin | Giá trị |
 | --- | --- |
 | Runtime | `v1.0.0-rc.3` |
-| Starter revision | `learner-r1.3.2` |
+| Starter revision | `learner-r1.3.3` |
 | Đề bài | Requirements 1.5, SRS v1.1 |
 | Chế độ mặc định | Fixture, chạy offline, không cần API key |
 | Chủ dự án | Đinh Xuân Công |
