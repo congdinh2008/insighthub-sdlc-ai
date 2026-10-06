@@ -70,10 +70,13 @@ Script từ chối database rỗng. Nó hash mọi giá trị của tám bảng,
 Tạo corpus fixture cho drill trong namespace test riêng:
 
 ```sh
+# .env.example để trống BETTER_AUTH_SECRET; namespace test dùng giá trị cố định, không phải secret.
+export BETTER_AUTH_SECRET=test-only-not-a-secret-0123456789abcdef
 API_PORT=8127 WEB_PORT=3127 DB_PORT=5436 docker compose --env-file .env.example -p insighthub-c07-recovery up --build -d --wait
 python3 scripts/seed_recovery_fixture.py --api-url http://127.0.0.1:8127
 python3 scripts/backup_restore_check.py --project insighthub-c07-recovery --env-file .env.example
 docker compose --env-file .env.example -p insighthub-c07-recovery down
+unset BETTER_AUTH_SECRET
 ```
 
 Dừng mutation trong khi kiểm hash. Seed gồm TXT/MD/PDF, một failed attempt và chat, không dùng dữ liệu người thật. Cần giữ dump để diễn tập thủ công thì thêm `--keep-backup`: quyền file 600, thư mục riêng 700, chỉ instructor truy cập, không commit/gửi cùng starter. Đề xuất giữ tối đa 7 ngày trong sandbox rồi xóa sau khi đã kiểm restore; dữ liệu lớp thật áp dụng policy lớp đã xác nhận. Không dùng backup fixture làm evidence semantic của real embedding.
