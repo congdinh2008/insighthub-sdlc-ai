@@ -112,6 +112,9 @@ services:
     command: ["sh", "-c", "npm run typecheck && npm test"]
     environment:
       NEXT_TELEMETRY_DISABLED: "1"
+    # tests/tokens.test.mjs đối chiếu token của web với design/prototype/_base (nằm ngoài build context ./web).
+    volumes:
+      - ./design:/design:ro
   mailpit:
     # Local mail catcher for Auth/Email practice. Start with: make mail-up
     image: axllent/mailpit:v1.31.2@sha256:74d609a42ec279aa63c6b4622a6fa9b5408d1ad5b1d76a1c4be40a265ce0863d
