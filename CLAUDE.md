@@ -4,7 +4,7 @@
 
 - Bắt đầu mỗi task bằng plan mode: trình bày plan, chờ học viên duyệt rồi mới sửa code. Task giao agent dùng issue template "Task giao agent" hoặc một dòng trong `specs/<feature>/tasks.md`.
 - Không tắt permission prompt (không dùng `--dangerously-skip-permissions` hoặc `bypassPermissions`). Đọc kỹ từng lệnh trước khi duyệt.
-- `.claude/settings.json` đặt chế độ quyền khởi đầu là Manual (`defaultMode: default`), chặn đọc `.env`, `.env.*` (kể cả `.env.example`), `secrets/`, file khóa; chặn `rm -rf`, `git push --force`, `git reset --hard` và các lệnh đóng gói. Không tự chuyển sang `auto` hoặc `bypassPermissions` khi làm bài.
+- `.claude/settings.json` đặt chế độ quyền khởi đầu là Manual (`defaultMode: default`), chặn đọc `.env`, `.env.*` (kể cả `.env.example`), `secrets/`, file khóa; chặn `rm -rf`, `git push --force`, `git reset --hard`. Không tự chuyển sang `auto` hoặc `bypassPermissions` khi làm bài.
 - Hai hook `PreToolUse` chạy bằng `python3`, ghi log tại `reports/hooks/events.jsonl`:
   - `block-secrets` chặn lệnh đọc, in hoặc dump `.env`, `secrets/`, file khóa (ví dụ `cat .env`, `printenv`, `docker compose config`, `grep -r` không có `--exclude`).
   - `protect-approved-tests` chặn sửa các test liệt kê trong `.claude/approved-tests.txt` (test-as-spec). Khi test đã duyệt thất bại, dừng lại và báo học viên; không sửa assertion, expected hoặc fixture để test đạt.

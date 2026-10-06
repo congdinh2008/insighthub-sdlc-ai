@@ -1,5 +1,5 @@
 # Maintainer release gate for the Starter package. Manual trigger only.
-# Learners do not need this workflow; see docs/maintainer/Release_Starter.md.
+# Source repository only (not published to insighthub-starter); see docs/maintainer/Release_Starter.md.
 name: Starter release gate
 on:
   workflow_dispatch:
@@ -27,7 +27,7 @@ jobs:
       - run: python3 scripts/check_project.py
       - run: make up
       - run: make test
-      - run: make test-release
+      - run: make -f maintainer.mk test-release
       - run: make smoke
       - run: npm ci --prefix web
       - run: cd web && npx playwright install --with-deps chromium && npm run test:e2e
@@ -35,7 +35,7 @@ jobs:
       - run: make backup-restore-check
       - run: npm audit --omit=dev --audit-level=high --prefix web
       - run: make sbom
-      - run: make package
-      - run: make verify-package
+      - run: make -f maintainer.mk package
+      - run: make -f maintainer.mk verify-package
       - if: always()
         run: docker compose --profile checks down --volumes --remove-orphans

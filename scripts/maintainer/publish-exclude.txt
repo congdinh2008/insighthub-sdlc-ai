@@ -1,0 +1,11 @@
+# Đường dẫn chỉ có ở repository nguồn (insighthub-sdlc-ai), không xuất bản sang insighthub-starter.
+# Mỗi dòng một đường dẫn tính từ gốc repository. Thư mục kết thúc bằng "/".
+scripts/maintainer/
+scripts/package_starter.py
+scripts/verify_package.py
+scripts/tests/test_delivery.py
+maintainer.mk
+docs/maintainer/
+docs/archive/
+.github/workflows/starter-release.yml
+dist/
