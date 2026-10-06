@@ -6,7 +6,7 @@
   "requirements_source": "04_Requirements/SRS_InsightHub_v1.1_ISO29148_20261004.md",
   "learner_requirements": "docs/learner/01_Requirements_InsightHub.md",
   "api_schema_reference": "docs/learner/03_API_Schema_Reference_v1.1.zip",
-  "documentation_revision": "20261004",
+  "documentation_revision": "20261006",
   "runtime_reference_commit": "3335e2b67077b09af21e4c9f0ee539fdc9464096",
   "default_mode": "fixture",
   "release_gate": "runtime-reference-verified; updated-documentation; classroom-pilot-pending",
@@ -17,5 +17,5 @@
     "ai-tools",
     "local-sandbox-release-and-recovery"
   ],
-  "learner_release": "learner-r1.3"
+  "learner_release": "learner-r1.3.1"
 }

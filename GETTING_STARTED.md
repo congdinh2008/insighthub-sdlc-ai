@@ -26,7 +26,10 @@ WSL2 là đường chính thức trên Windows vì Makefile và script cần bas
 
 ## Fork starter và khởi tạo bài làm
 
-Học viên C07 bắt buộc fork repository starter theo URL và phiên bản giảng viên công bố. Trên dịch vụ Git, tạo fork cá nhân hoặc trong không gian lớp được cấp, sau đó thay các giá trị ví dụ dưới đây bằng URL thực:
+Học viên C07 bắt buộc fork repository starter theo URL và phiên bản giảng viên công bố. Trên dịch vụ Git, tạo fork cá nhân hoặc trong không gian lớp được cấp, sau đó thay các giá trị ví dụ dưới đây bằng URL thực.
+
+**Fork là public** vì Starter public. Chỉ commit dữ liệu giả và tài liệu mẫu. Không commit `.env`, API key, mật khẩu, dữ liệu thật của công ty hoặc thông tin cá nhân. Lỡ commit secret thì thu hồi key trước, rồi báo mentor.
+
 
 ```sh
 git clone 'URL_FORK_CA_NHAN' insighthub
