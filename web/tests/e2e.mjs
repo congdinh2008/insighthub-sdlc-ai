@@ -9,11 +9,12 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE_ROOT ? path.join(process.
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const web=process.env.E2E_WEB_URL||'http://127.0.0.1:3107';
 const api=process.env.E2E_API_URL||'http://127.0.0.1:8107';
-const channel=process.env.E2E_BROWSER;
+// Mặc định Microsoft Edge (SRS LIM-16: Chrome hoặc Edge có ghi phiên bản). Đổi bằng E2E_BROWSER=chrome|chromium.
+const channel=process.env.E2E_BROWSER||'msedge';
 const out=path.resolve(process.env.E2E_OUTPUT||path.join(root,'reports/e2e'));
 await fs.mkdir(out,{recursive:true});
 const browser=await chromium.launch({headless:true,...(channel?{channel}:{})});
-const report={browser:channel||'chromium',version:browser.version(),runs:[]};
+const report={browser:channel,version:browser.version(),runs:[]};
 let failed=false;
 for (const viewport of [{width:1440,height:900},{width:390,height:844}]) {
   const context=await browser.newContext({viewport});
@@ -61,9 +62,12 @@ for (const viewport of [{width:1440,height:900},{width:390,height:844}]) {
     record('deletion invalidates open source and historical citation');
     const bad=await upload(`empty-${suffix}.txt`,' '.repeat(20+Math.floor(Math.random()*100)));
     assert.equal(bad.status,422);
+    // Đăng ký filechooser TRƯỚC khi focus: Playwright bật chặn file chooser bất đồng bộ khi có listener.
+    // keyboard.press không có bước chờ nên có thể tới trình duyệt trước, chooser mở native và event bị mất (flaky).
+    const chooserPromise=page.waitForEvent('filechooser');chooserPromise.catch(()=>{});// tránh unhandled rejection nếu fail trước khi await
     const retry=page.getByLabel(`Thử lại empty-${suffix}.txt`);await retry.focus();
-    assert.equal(await retry.evaluate(el=>el===document.activeElement),true);
-    const chooserPromise=page.waitForEvent('filechooser');await page.keyboard.press('Enter');const chooser=await chooserPromise;
+    assert.equal(await retry.evaluate(el=>el===document.activeElement&&!el.disabled),true);
+    await page.keyboard.press('Enter');const chooser=await chooserPromise;
     const attemptPromise=page.waitForResponse(r=>r.url().endsWith(`/api/documents/${bad.id}/retry`));
     // Reuse the same bytes; invalid content remains failed and adds an attempt.
     const bytes=(await request.get(api+`/documents/${bad.id}`)).ok();assert.ok(bytes);

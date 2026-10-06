@@ -60,12 +60,24 @@ jobs:
       - name: Install web dependencies
         run: npm ci --prefix web
       - name: Playwright E2E
-        run: cd web && npx playwright install --with-deps chromium && npm run test:e2e
+        run: cd web && npx playwright install --with-deps msedge && npm run test:e2e
       # Playwright Test (web/e2e). Học viên bổ sung spec hành trình M3.1 ở LR-20.
       - name: Playwright Test
         run: cd web && npm run test:pw
       - name: npm audit
         run: npm audit --omit=dev --audit-level=high --prefix web
+      # Giữ screenshot, JSON report và trace để chẩn đoán khi E2E fail (log không đủ).
+      - if: failure()
+        name: Upload E2E report
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: e2e-report
+          path: |
+            reports/e2e/
+            web/playwright-report/
+            web/test-results/
+          retention-days: 7
+          if-no-files-found: ignore
       - if: always()
         name: Tear down
         run: docker compose --profile checks down --volumes --remove-orphans

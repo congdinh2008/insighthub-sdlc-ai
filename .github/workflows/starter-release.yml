@@ -30,7 +30,7 @@ jobs:
       - run: make -f maintainer.mk test-release
       - run: make smoke
       - run: npm ci --prefix web
-      - run: cd web && npx playwright install --with-deps chromium && npm run test:e2e
+      - run: cd web && npx playwright install --with-deps msedge && npm run test:e2e
       - run: python3 scripts/seed_recovery_fixture.py --api-url http://127.0.0.1:8107
       - run: make backup-restore-check
       - run: npm audit --omit=dev --audit-level=high --prefix web
